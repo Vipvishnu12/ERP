@@ -1,0 +1,243 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Placement Status Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+        <!-- Import the existing sidebar.css file -->
+        <link rel="stylesheet" href="sidebar.css">
+        <link rel="stylesheet" href="Placement.css">
+    </head>
+    <body>
+        <div>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">HOD Portal</div>
+            <div class="sidebar-menu">
+                <div class="sidebar-menu-item">
+                    <i>📊</i> Dashboard
+                </div>
+                <div class="sidebar-menu-item">
+                    <i>👨‍🎓</i> Students
+                </div>
+                <div class="sidebar-menu-item" id="facultyMenuItem">
+                    <i>👨‍🏫</i> Faculty
+                </div>
+                <div class="sidebar-menu-item active">
+                    <i>💼</i> Placements
+                </div>
+                <div class="sidebar-menu-item">
+                    <i>📅</i> Attendance
+                </div>
+                <div class="sidebar-menu-item" id="logoutMenuItem">
+                    <i>🚪</i> Logout
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="dashboard">
+                <div class="card" id="totalStudents">
+                    <h2>Total Students Eligible</h2>
+                    <div class="number" id="totstudents">--</div>
+                </div>
+                <div class="card" id="placedStudents">
+                    <h2>Students Placed</h2>
+                    <div class="number" id="noplaced">--</div>
+                </div>
+                <div class="card" id="notPlacedStudents">
+                    <h2>Students Not Placed</h2>
+                    <div class="number" id="nonotplaced">--</div>
+                </div>
+                <div class="card" id="placementPercentage">
+                    <h2>Placement Percentage</h2>
+                    <div class="number" id="place%">--</div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card">
+                    <div class="chart-title">Company Wise Placement Distribution</div>
+                    <div class="chart-wrapper">
+                        <canvas id="companyPieChart" class="PieChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Placement Trend by Year</div>
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Modal for Placed Students -->
+            <div id="placedModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Placed Students Details</div>
+                        <span class="close" id="closePlacedModal">&times;</span>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" id="placedSearch" placeholder="Search by name, company, or package...">
+                    </div>
+                    <table id="placedStudentsTable">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Company</th>
+                                <th>Package (LPA)</th>
+                                <th>Placement Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CS001</td>
+                                <td>Rahul Kumar</td>
+                                <td>Microsoft</td>
+                                <td>24.5</td>
+                                <td>15-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS007</td>
+                                <td>Priya Sharma</td>
+                                <td>Google</td>
+                                <td>32.0</td>
+                                <td>10-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS012</td>
+                                <td>Amit Singh</td>
+                                <td>Amazon</td>
+                                <td>26.5</td>
+                                <td>12-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS015</td>
+                                <td>Neha Patel</td>
+                                <td>Infosys</td>
+                                <td>8.5</td>
+                                <td>20-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS018</td>
+                                <td>Raj Malhotra</td>
+                                <td>Wipro</td>
+                                <td>7.2</td>
+                                <td>25-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS022</td>
+                                <td>Anjali Gupta</td>
+                                <td>TCS</td>
+                                <td>7.8</td>
+                                <td>18-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS025</td>
+                                <td>Vikram Joshi</td>
+                                <td>Microsoft</td>
+                                <td>24.5</td>
+                                <td>15-Sep-2024</td>
+                            </tr>
+                            <tr>
+                                <td>CS031</td>
+                                <td>Pooja Verma</td>
+                                <td>Amazon</td>
+                                <td>26.5</td>
+                                <td>12-Sep-2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal for Not Placed Students -->
+            <div id="notPlacedModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Students Not Placed</div>
+                        <span class="close" id="closeNotPlacedModal">&times;</span>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" id="notPlacedSearch" placeholder="Search by name or roll number...">
+                    </div>
+                    <table id="notPlacedStudentsTable">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>CGPA</th>
+                                <th>Interviews Attended</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CS005</td>
+                                <td>Sanjay Dubey</td>
+                                <td>7.2</td>
+                                <td>3</td>
+                                <td>In Process</td>
+                            </tr>
+                            <tr>
+                                <td>CS009</td>
+                                <td>Meera Reddy</td>
+                                <td>6.8</td>
+                                <td>2</td>
+                                <td>In Process</td>
+                            </tr>
+                            <tr>
+                                <td>CS019</td>
+                                <td>Karan Kohli</td>
+                                <td>7.5</td>
+                                <td>4</td>
+                                <td>In Process</td>
+                            </tr>
+                            <tr>
+                                <td>CS027</td>
+                                <td>Lakshmi Narayan</td>
+                                <td>6.5</td>
+                                <td>1</td>
+                                <td>Yet to Qualify</td>
+                            </tr>
+                            <tr>
+                                <td>CS032</td>
+                                <td>Rajesh Kumar</td>
+                                <td>6.9</td>
+                                <td>2</td>
+                                <td>In Process</td>
+                            </tr>
+                            <tr>    
+                                <td>CS041</td>
+                                <td>Divya Mehta</td>
+                                <td>7.8</td>
+                                <td>3</td>
+                                <td>In Process</td>
+                            </tr>
+                            <tr>
+                                <td>CS045</td>
+                                <td>Prakash Jha</td>
+                                <td>6.7</td>
+                                <td>1</td>
+                                <td>Yet to Qualify</td>
+                            </tr>
+                            <tr>
+                                <td>CS048</td>
+                                <td>Ananya Desai</td>
+                                <td>7.1</td>
+                                <td>2</td>
+                                <td>In Process</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- <script src="navigation.js"></script> -->
+        <script src="Placement.js"></script>
+    </body>
+    </html>

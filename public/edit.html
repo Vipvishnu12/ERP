@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student Information</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            width: 205px;
+            min-height: 100vh;
+            background-color: #4559e6;
+            color: white;
+            padding-top: 20px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu li.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .navbar {
+            background-color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        
+        .navbar-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        /* Form container */
+        .form-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4559e6;
+            box-shadow: 0 0 0 2px rgba(69, 89, 230, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Button styles */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-cancel {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #d1d5db;
+        }
+        
+        .btn-primary {
+            background-color: #3949ab;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #303f9f;
+        }
+        
+        /* Year selector tabs */
+        .year-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .year-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #f3f4f6;
+            border: none;
+            margin-right: 5px;
+            font-weight: 500;
+        }
+        
+        .year-tab.active {
+            background-color: #38bdf8;
+            color: white;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Alert message styles */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .alert-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+        
+        /* Icons for sidebar */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            vertical-align: middle;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">HOD Portal</div>
+        <ul class="sidebar-menu">
+            <li id="dash">
+                <span class="icon">📊</span>
+                Dashboard
+            </li>
+            <li class="active" id="studentMenuItem">
+                <span class="icon">👨‍🎓</span>
+                Students
+            </li>
+            <li id="facultyMenuItem">
+                <span class="icon">👨‍🏫</span>
+                Faculty
+            </li>
+            <li id="placementMenuItem">
+                <span class="icon">📌</span>
+                Placements
+            </li>
+            <li id="AttendanceMenuItem">
+                <span class="icon">📋</span>
+                Attendance
+            </li>
+            <li id="logoutMenuItem">
+                <span class="icon">🚪</span>
+                Logout
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <div id="alert-success" class="alert alert-success">
+            Student information updated successfully!
+        </div>
+        
+        <div id="alert-error" class="alert alert-error">
+            There was an error updating the student information.
+        </div>
+
+        <div class="form-container">
+            <h2 class="form-title">Edit Student Information</h2>
+            
+            <form id="studentEditForm">
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" name="Name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rollNo">Year(eg:cse I)</label>
+                    <input type="text" id="Class" name="Class" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="Address" class="form-control" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentContact">Student Contact No</label>
+                    <input type="tel" id="studentContact" name="Mobile" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="parentsNo">Parents No</label>
+                    <input type="tel" id="parentsNo" name="Father_Mobile" class="form-control" required>
+                </div>
+                
+                <!-- <div class="form-group">
+                    <label for="year">Year</label>
+                    <select id="year" name="year" class="form-control" required>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+                 -->
+                <div class="btn-container">
+                    <button type="button" id="cancelBtn" class="btn btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    const params = new URLSearchParams(window.location.search);
+const regNumber = params.get("reg");
+const dept = params.get("dept");
+const Name = params.get("Name");
+const Address = params.get("Address");
+const Mobile = params.get("Mobile");
+const Father_Mobile = params.get("Father_Mobile");
+console.log("Reg Number:", regNumber);
+console.log("Department:", dept);
+document.getElementById("Class").placeholder = `${dept} IV`;
+document.getElementById("studentName").value = `${Name}`;
+document.getElementById("studentContact").value = `${Mobile}`;
+document.getElementById("parentsNo").value = `${Father_Mobile}`;
+document.getElementById("address").value = `${Address}`;
+        
+
+    const form = document.getElementById("studentEditForm");
+    const successAlert = document.getElementById("alert-success");
+    const errorAlert = document.getElementById("alert-error");
+
+    // Dummy ID – you can replace it dynamically when you load student info for edit
+    
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const studentData = {
+            Name: form.studentName.value,
+            Reg_Number: regNumber,
+            Address: form.address.value,
+            Mobile: form.studentContact.value,
+            Father_Mobile: form.parentsNo.value,
+         
+        };
+        console.log(studentData);
+
+        try {
+            const response = await fetch(`/students8/${studentData.Reg_Number}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(studentData)
+            });
+
+            if (response.ok) {
+                successAlert.style.display = "block";
+                errorAlert.style.display = "none";
+            } else {
+                throw new Error("Update failed");
+            }
+        } catch (error) {
+            errorAlert.style.display = "block";
+            successAlert.style.display = "none";
+            console.error("Error:", error);
+        }
+    });
+
+    // Cancel button – clear form or redirect
+    document.getElementById("cancelBtn").addEventListener("click", function () {
+        window.history.back(); // or window.location.href = "/dashboard";
+    });
+    document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default anchor behavior
+    window.location.href = `login.html`;
+});
+document.getElementById('facultyMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `faculty.html?dept=${dept}`;
+});
+document.getElementById('placementMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `placement.html?dept=${dept}`;
+});
+document.getElementById('studentMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Student.html?dept=${dept}`;
+});
+
+
+document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Attendance.html?dept=${dept}`;
+});
+
+document.getElementById('dash').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `dashboard.html?dept=${dept}`;
+});
+
+ </script>
+  
+</body>
+</html>

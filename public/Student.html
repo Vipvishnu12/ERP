@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Students Management</title>
+  <link rel="stylesheet" href="Student.css" />
+  <link rel="stylesheet" href="sidebar.css" />  
+</head>
+<body>
+  <!-- Sidebar (loaded dynamically) -->
+  <div id="sidebar-container"></div>
+    <div class="sidebar-menu">
+      <li class="sidebar-menu-item" id="dashboardLink">
+        <i>📊</i><span>Dashboard</span>
+      </li>
+      <li class="sidebar-menu-item active" id="studentsLink">
+        <i>👨‍🎓</i><span>Students</span>
+      </li>
+      <li class="sidebar-menu-item"><i>👨‍🏫</i><span>Faculty</span></li>
+      <li class="sidebar-menu-item"><i>🏢</i><span>Placements</span></li>
+      <li class="sidebar-menu-item"><i>📋</i><span>Attendance</span></li>
+      <li class="sidebar-menu-item"><i>🔒</i><span>Logout</span></li>      
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Student Management</h2>
+
+    <!-- Tabs -->
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'year1')">1st Year</button>
+      <button class="tablinks" onclick="openTab(event, 'year2')">2nd Year</button>
+      <button class="tablinks" onclick="openTab(event, 'year3')">3rd Year</button>
+      <button class="tablinks" onclick="openTab(event, 'year4')">4th Year</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="year1" class="tabcontent">
+      <h3>1st Year Students</h3>
+      <div class="table-wrapper">
+        <table class="student-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Roll No</th>
+              <th>Address</th>
+              <th>Student Contact No</th>
+              <th>Parents No</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody">
+            </tbody>
+          
+        </table>
+      </div>
+    </div>
+
+    <div id="year2" class="tabcontent">
+      <h3>2nd Year Students</h3>
+      <div class="table-wrapper">
+        <table class="student-table">
+          <tbody id="st1">
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="year3" class="tabcontent">
+      <h3>3rd Year Students</h3>
+      <div class="table-wrapper">
+        <table class="student-table">
+          <tbody id="st2">
+           
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="year4" class="tabcontent">
+      <h3>4th Year Students</h3>
+      <div class="table-wrapper">
+        <table class="student-table">
+          <tbody id="st3">
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+   
+
+  
+<!-- Modal Dialog Box -->
+<div id="dialogBox" style="display: none;">
+  <h3>Student Placement Details</h3>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Section</th>
+        <th>Placed</th>
+        <th>Placed Company</th>
+        <th>Arrear Status</th>
+      </tr>
+    </thead>
+    <tbody id="placementBody">
+      <!-- Data will be inserted here -->
+    </tbody>
+  </table>
+  <br>
+   <button onclick="closeDialog()">Close</button>
+</div>
+
+ <script src="Student.js"></script> 
+  <!-- <script src="navigation.js"></script> -->
+  <script>
+    function openTab(evt, tabName) {
+      const tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      const tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    // Default open tab
+    window.onload = () => {
+      document.querySelector('.tab button').click();
+    };
+
+  
+  </script>
+    <!-- <script src="Student.js"></script> -->
+   
+</body>
+</html>

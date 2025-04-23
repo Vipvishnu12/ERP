@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Dashboard | ClixAX - Add Faculty</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+
+        #faculty1 {
+  cursor: pointer;
+background-color: #3498db;
+  color: white;
+  padding: 12px 20px;
+  width: fit-content;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, ;
+}
+
+#faculty1:hover {
+  background-color: #2980b9; 
+  transform: scale(1.05);
+}
+
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 15%;
+            background-color: #4a5af0;
+            color: white;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .sidebar-title {
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu li.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .sidebar-menu span {
+            font-size: 14px;
+        }
+        
+        .main-content {
+            width: 85%;
+            padding: 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            color: #3a4374;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 8px 15px;
+            border: 1px solid #e0e0e0;
+            width: 250px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            color: #3a4374;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-title i {
+            margin-right: 10px;
+            color: #4a5af0;
+        }
+        
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4a5af0;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #4a5af0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a49d0;
+        }
+        
+        .btn-secondary {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .breadcrumb a {
+            text-decoration: none;
+            color: #4a5af0;
+        }
+        
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #999;
+        }
+        
+        .profile-image-upload {
+            border: 2px dashed #ddd;
+            width: 100%;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .profile-image-upload:hover {
+            border-color: #4a5af0;
+        }
+        
+        .upload-icon {
+            font-size: 30px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-title">HOD Portal</div>
+        <div class="sidebar-menu">
+            <li>
+                <i>📊</i>
+                <span>Dashboard</span>
+            </li>
+            <li>
+                <i>👨‍🎓</i>
+                <span>Students</span>
+            </li>
+            <li class="active">
+                <i>👨‍🏫</i>
+                <span>Faculty</span>
+            </li>
+            <li>
+                <i>🏢</i>
+                <span>Placements</span>
+            </li>
+            <li>
+                <i>📋</i>
+                <span>Attendance</span>
+            </li>
+            <li>
+                <i>🚪</i>
+                <span>Logout</span>
+            </li>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="breadcrumb">
+            <div id="faculty1">Faculty</div>
+            <span>›</span>
+            <span>Add Faculty</span>
+        </div>
+        
+        <div class="page-header">
+            <h1 class="page-title">Add Faculty</h1>
+        </div>
+        
+        <div class="form-container">
+            <h2 class="form-title"><i>👨‍🏫</i> Faculty Information</h2>
+            <form id="addFacultyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Faculty ID</label>
+                        <input type="text" class="form-control" id="facultyId" placeholder="Enter faculty ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Joining Date</label>
+                        <input type="date" class="form-control" id="joiningDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Profile Image</label>
+                        <input type="text" class="form-control" id="profilepath" placeholder="Enter the image path" required>
+                 
+                   
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="Enter phone number">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Designation</label>
+                        <select class="form-select" id="designation" required>
+                            <option value="">Select designation</option>
+                            <option value="professor">Professor</option>
+                            <option value="associate-professor">Associate Professor</option>
+                            <option value="assistant-professor">Assistant Professor</option>
+                            <option value="lecturer">Lecturer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="department" required>
+                            <option value="">Select domain</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="database-systems">Database Systems</option>
+                            <option value="ai">Artificial Intelligence</option>
+                            <option value="networks">Networks</option>
+                            <option value="hci">Human-Computer Interaction</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Highest Degree</label>
+                        <select class="form-select" id="degree" required>
+                            <option value="">Select highest degree</option>
+                            <option value="phd">PhD</option>
+                            <option value="masters">Masters</option>
+                            <option value="bachelors">Bachelors</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">University</label>
+                        <input type="text" class="form-control" id="university" placeholder="Enter university name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Experience (Years)</label>
+                        <input type="number" class="form-control" id="experience" min="0" placeholder="Enter years of experience" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="status" required>
+                            <option value="active">Active</option>
+                            <option value="on-leave">On Leave</option>
+                            <option value="visiting">Visiting</option>
+                            <option value="retired">Retired</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Office Address</label>
+                        <input type="text" class="form-control" id="officeAddress" placeholder="Enter office location">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Office Hours</label>
+                        <input type="text" class="form-control" id="officeHours" placeholder="e.g., Mon, Wed 2-4 PM">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Research Areas</label>
+                        <textarea class="form-control" id="researchAreas" rows="3" placeholder="Enter research areas, separated by commas"></textarea>
+               
+                </div> <!-- Close last .form-group -->
+            </div> <!-- Close last .form-row -->
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add Faculty</button>
+                <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+            </form>
+            
+               
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Faculty member added successfully!</div>
+    <!-- <script src="addfaculty.js"></script> -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+const dept = urlParams.get('dept');
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('addFacultyForm');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const notification = document.getElementById('notification');
+            // const profileImageUpload = document.getElementById('profileImageUpload');
+            // const profileImageInput = document.getElementById('profileImage');
+            
+            // // Set default date value for joining date
+            // const today = new Date().toISOString().split('T')[0];
+            // document.getElementById('joiningDate').value = today;
+            
+            // // Profile image upload
+            // profileImageUpload.addEventListener('click', function() {
+            //     profileImageInput.click();
+            // });
+            
+            // profileImageInput.addEventListener('change', function() {
+            //     const file = this.files[0];
+            //     if (file) {
+            //         const reader = new FileReader();
+            //         reader.onload = function(e) {
+            //             profileImageUpload.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 140px;">`;
+            //         }
+            //         reader.readAsDataURL(file);
+            //     }
+            // });
+            
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+            //     // Get form values
+            //     const facultyId = document.getElementById('facultyId').value;
+            //     const firstName = document.getElementById('firstName').value;
+            //     const lastName = document.getElementById('lastName').value;
+            //     const designation = document.getElementById('designation');
+            //     const designationText = designation.options[designation.selectedIndex].text;
+            //     const department = document.getElementById('department');
+            //     const departmentText = department.options[department.selectedIndex].text;
+            //     const qualification = document.getElementById('degree');
+            //    const qualificationText= qualification.options[qualification.selectedIndex].text;
+            //     const university=document.getElementById('degree');
+            //     const status=document.getElementById('status');
+            //     const officeAddress=document.getElementById('officeAddress');
+            //     const officeHours=document.getElementById('officeHours');
+            //     const researchAreas=document.getElementById('researchAreas');
+                
+            
+
+                // In a real app, you would send this data to the server
+                // For demo purposes, we'll just show a notification
+                
+                // Show notification
+                notification.style.display = 'block';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                    
+                    // Redirect to faculty page
+                   window.location.href = `faculty.html?dept=${dept}`;
+                }, 2000);
+            });
+            
+            // Cancel button handler
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to cancel? All entered information will be lost.')) {
+                    window.location.href = `faculty.html?dept=${dept}`;
+                }
+            });
+            
+            // Sidebar navigation
+            const sidebarItems = document.querySelectorAll('.sidebar-menu li');
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const pageName = this.querySelector('span').textContent;
+                    if (pageName !== 'Faculty') {
+                        // In a real app, you would navigate to the corresponding page
+                        alert(`Navigate to ${pageName} page`);
+                    } else {
+                       window.location.href = `faculty.html?dept=${dept}`;
+                    }
+                });
+            });
+        });
+        document.getElementById("addFacultyForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const facultyData = {
+            Staff_Code: document.getElementById("facultyId").value,
+            joiningDate: document.getElementById("joiningDate").value,
+            Staff_Name: `${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`,
+            photo: document.getElementById("profilepath").value,
+            E_Mail: document.getElementById("email").value,
+            Mobile: document.getElementById("phone").value,
+            Designation: document.getElementById("designation").value,
+            roleofwork: document.getElementById("department").value,
+            qualification: document.getElementById("degree").value,
+            university: document.getElementById("university").value,
+            Experience_Year: document.getElementById("experience").value,
+            Status1: document.getElementById("status").value,
+            officeAddress: document.getElementById("officeAddress").value,
+            officeHours: document.getElementById("officeHours").value
+        ,Department:dept
+        };
+
+        try {
+            const response = await fetch(`/addfaculty1`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(facultyData)
+            });
+
+            if (response.ok) {
+                alert("Faculty added successfully!");
+             document.getElementById("addFacultyForm").reset();
+            } else {
+                alert("Failed to add faculty. Server error.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error adding faculty. Check console for details.");
+        }
+    });
+    
+document.getElementById('faculty1').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `faculty.html?dept=${dept}`;
+});
+
+    </script>
+</body>
+</html>

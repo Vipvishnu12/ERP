@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="min.css"> -->
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #3d17c5;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .course-table th, .course-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .course-table th {
+            background-color: #260c97;
+            color: white;
+        }
+
+        .dept-name {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <a class="back-button" id="back">← Back to Dashboard</a>
+
+    <div class="title">All Courses - <span class="dept-name" id="deptName">Department</span></div>
+
+    <table class="course-table">
+        <thead>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Faculty</th>
+                <th>Attendees</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>90-100</th>
+                <th>80-90</th>
+                <th>70-80</th>
+                <th>Arrears</th>
+            </tr>
+        </thead>
+        <tbody id="courseData">
+            <!-- Dynamic rows will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const dept = params.get('dept') || 'CSE';
+        document.getElementById('deptName').textContent = dept;
+
+        async function loadCourses() {
+            try {
+                const response = await fetch(`/courses/${dept}`);
+                const data = await response.json();
+
+                const tbody = document.getElementById('courseData');
+                tbody.innerHTML = ""; // Clear existing data
+
+                data.forEach(course => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${course.course_code}</td>
+                        <td>${course.course_name}</td>
+                        <td>${course.faculty}</td>
+                        <td>${course.noofattendees}</td>
+                        <td>${course.noofpass}</td>
+                        <td>${course.nooffail}</td>
+                        <td>${course.mark1}</td>
+                        <td>${course.mark2}</td>
+                        <td>${course.mark3}</td>
+                        <td>${course.noofarrears}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Failed to fetch course data", err);
+            }
+        }
+
+        document.getElementById('back').addEventListener('click', function() {
+            window.location.href = `dashboard.html?dept=${dept}`;
+        });
+
+        loadCourses(); // Call the async function
+    </script>
+
+</body>
+</html>

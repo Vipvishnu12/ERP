@@ -1,0 +1,67 @@
+GET http://localhost:3000/studentatt1/?department=agri&semester=1
+Content-Type: application/json
+###
+GET http://localhost:3000/hostelcount/agri
+###
+
+
+### Search for students in a department (example: CSE) with query 'john'
+GET http://localhost:3000/studentsearch/agri?q=kumar
+
+
+####
+
+PUT http://localhost:3000/studentdet/23AG001
+Content-Type: application/json
+
+{
+  "Name": "Kumar",
+  "Reg_Number": "23AG001",
+  "Address": "Salem",
+  "Mobile": "9876543210",
+  "Father_Mobile": "9123456789"
+}
+
+####
+POST http://localhost:3000/addfaculty1
+Content-Type: application/json
+
+{
+  "Department": "CSE",
+  "Staff_Code": "12345",
+  "joiningDate": "2023-06-01",
+  "Staff_Name": "Dr. Ramesh",
+  "photo": "ramesh.jpg",
+  "E_Mail": "ramesh@college.edu",
+  "Mobile": "9876543210",
+  "Designation": "Assistant Professor",
+  "roleofwork": "Teaching",
+  "qualification": "PhD",
+  "university": "Anna University",
+  "Experience_Year": "5",
+  "Status1": "Active",
+  "officeAddress": "Room 205, Block B",
+  "officeHours": "9 AM - 4 PM"
+}
+### Get Student Attendance Details
+GET http://localhost:3000/attendanceup/?department=agri&semester=II
+
+
+### Search Faculty by Name and Department
+GET http://localhost:3000/searchUsers?search=ram&department=agri
+
+####
+### Get students with CGPA <= 5 from a specific department
+GET http://localhost:3000/attendanceup/agri/1
+
+####
+### Get students with CGPA <= 5 from a specific department
+GET http://localhost:3000/studentacadamicdet/agri
+
+### Get students with CGPA <= 5 from a specific department
+http://localhost:3000/studentatt1?department=agri&semester=II
+
+### Get students with CGPA <= 5 from a specific department
+GET http://localhost:3000/excellentstudentacadamicdet/agri
+
+

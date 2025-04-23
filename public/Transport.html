@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Transport Information System</title>
+    <link rel="stylesheet" href="sidebar.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 250px; /* Space for sidebar */
+            transition: margin-left 0.3s;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+        
+        header h1 {
+            color: #3a3a3a;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #4a6cf7;
+        }
+        
+        .filter-dropdown {
+            min-width: 200px;
+        }
+        
+        .filter-dropdown select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .filter-dropdown select:focus {
+            border-color: #4a6cf7;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background-color: #f8f9fa;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5eb;
+        }
+        
+        th {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .not-paid {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .na {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        
+        /* For when sidebar is collapsed */
+        body.sidebar-collapsed .main-content {
+            margin-left: 60px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 60px;
+                padding: 15px;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box, .filter-dropdown {
+                width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">HOD Portal</div>
+        <div class="sidebar-subheader">Department Dashboard</div>
+        <div class="sidebar-menu">
+            <div class="sidebar-menu-item">
+                <i>📊</i> Dashboard
+            </div>
+            <div class="sidebar-menu-item" id="studentMenuItem">
+                <i>👨‍🎓</i> Students
+            </div>
+            <div class="sidebar-menu-item" id="facultyMenuItem">
+                <i>👨‍🏫</i> Faculty
+            </div>
+            <div class="sidebar-menu-item" id="placementMenuItem">
+                <i>💼</i> Placements
+            </div>
+            <div class="sidebar-menu-item active" id="transportMenuItem">
+                <i>🚌</i> Transport
+            </div>
+            <div class="sidebar-menu-item" id="AttendanceMenuItem">
+                <i>📅</i> Attendance
+            </div>
+            <div class="sidebar-menu-item">
+                <i>📄</i> Reports
+            </div>
+            <div class="sidebar-menu-item">
+                <i>⚙</i> Settings
+            </div>
+            <div class="sidebar-menu-item">
+                <i>🚪</i> Logout
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <header>
+                <h1>Student Transport Information System</h1>
+                <p>Manage and track student transportation details</p>
+            </header>
+            
+            <div class="filters">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by name or register number...">
+                </div>
+                
+                <div class="filter-dropdown">
+                    <select id="transportFilter">
+                        <option value="all">All Transport Types</option>
+                        <option value="College Bus">College Bus</option>
+                        <option value="Out Bus">Out Bus</option>
+                        <option value="yes">Hostel</option>
+                    </select>
+                </div>
+            </div>
+            
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Roll Number</th>
+                        <th>Student Name</th>
+                        <th>Transport Type</th>
+                        <th>Hosteler</th>
+                        <th>Bus Number</th>
+                        <th>Bus Fees</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Student data will be loaded here -->
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No students found matching your criteria.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="navigation.js"></script> -->
+    <script>
+   const urlParams = new URLSearchParams(window.location.search);
+const dept = urlParams.get('dept');
+
+let students = []; // 🛠️ Changed from const to let
+
+document.addEventListener('DOMContentLoaded', async function () {
+  try {
+    const response = await fetch(`/transport/${dept}`);
+    students = await response.json(); // ✅ No error now
+    renderTable(students); // 🟢 render after data load
+  } catch (err) {
+    console.error('Error loading student academic data:', err);
+  }
+});
+       // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const transportFilter = document.getElementById('transportFilter');
+        const tableBody = document.getElementById('tableBody');
+        const noResults = document.getElementById('noResults');
+
+        // Function to render table rows
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            data.forEach(student => {
+                const row = document.createElement('tr');
+                
+                // Create status class for fee status
+                let statusClass = '';
+                if (student.feeStatus === 'Paid') {
+                    statusClass = 'paid';
+                } else if (student.feeStatus === 'Not Paid') {
+                    statusClass = 'not-paid';
+                } else {
+                    statusClass = 'na';
+                }
+                
+                row.innerHTML = `
+                       <td>${student.Reg_Number}</td>
+                    <td>${student.Name}</td>
+                    <td>${student.Transport_Details}</td>
+                    <td>${student.Hosteler}</td>
+                    <td>${student.busNumber}</td>
+                    <td><span class="status ${statusClass}">${student.feeStatus}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to filter data
+        function filterData() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filterValue = transportFilter.value;
+            
+            const filteredData = students.filter(student => {
+                // Match search term
+                const nameMatch = student.Name.toLowerCase().includes(searchTerm);
+                const rollMatch = student.Reg_Number.toLowerCase().includes(searchTerm);
+                
+                // Match transport type filter
+                const transportMatch = filterValue === 'all' || student.Transport_Details === filterValue||student.Hosteler===filterValue;
+                
+                return (nameMatch || rollMatch) && transportMatch;
+            });
+            
+            renderTable(filteredData);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterData);
+        transportFilter.addEventListener('change', filterData);
+
+        // Menu item event listeners
+        document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items
+                document.querySelectorAll('.sidebar-menu-item').forEach(menuItem => {
+                    menuItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked menu item
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize table
+        renderTable(students);
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+  
+  const menuItems = document.querySelectorAll('.sidebar-menu-item');
+  const pageMap = {
+    'dashboard.html': 0,
+    'Student.html': 1,
+    'faculty.html': 2,
+    'Placement.Html': 3,
+    'Attendance.html': 4,
+    'reports.html': 5,
+    'settings.html': 6,
+    'login.html': 7
+  };
+
+  // Get current file name from URL
+  const currentPage = window.location.pathname.split('/').pop();
+
+  if (pageMap[currentPage] !== undefined) {
+    menuItems[pageMap[currentPage]].classList.add('active');
+  }
+
+  // Navigation logic
+  menuItems[0].addEventListener('click', () => window.location.href = `dashboard.html?dept=${dept}`);
+  menuItems[1].addEventListener('click', () => window.location.href = `Student.html?dept=${dept}`);
+  menuItems[2].addEventListener('click', () => window.location.href = `faculty.html?dept=${dept}`);
+  menuItems[3].addEventListener('click', () => window.location.href = `Placement.Html?dept=${dept}`);
+  menuItems[4].addEventListener('click', () => window.location.href = `Attendance.html?dept=${dept}`);
+  
+});
+
+    </script>
+</body>
+</html>

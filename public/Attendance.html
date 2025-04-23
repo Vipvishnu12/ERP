@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Dashboard</title>
+  <link rel="stylesheet" href="Attendence1.css" />
+  <link rel="stylesheet" href="Sidebar.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">HOD Portal</div>
+        <div class="sidebar-menu">
+            <div class="sidebar-menu-item">
+                <i>📊</i> Dashboard
+            </div>
+            <div class="sidebar-menu-item">
+                <i>👨‍🎓</i> Students
+            </div>
+            <div class="sidebar-menu-item" id="facultyMenuItem">
+                <i>👨‍🏫</i> Faculty
+            </div>
+            <div class="sidebar-menu-item">
+                <i>💼</i> Placements
+            </div>
+            <div class="sidebar-menu-item active">
+                <i>📅</i> Attendance
+            </div>
+            <div class="sidebar-menu-item">
+                <i>🚪</i> Logout
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+     <div class="main-content">
+  <div class="header">
+    <h2>Attendance Dashboard</h2>
+    <select id="semesterSelect">
+      <option value="I">Semester I</option>
+      <option value="II">Semester II</option>
+      <option value="III">Semester III</option>
+      <option value="IV">Semester IV</option>
+      <option value="V">Semester V</option>
+      <option value="VI">Semester VI</option>
+      <option value="VII">Semester VII</option>
+      <option value="VIII">Semester VIII</option>
+    </select>
+  </div>
+
+  <div class="cards-container">
+    <div class="card" onclick="showModal('Poor')">
+      <h4>Attendance < 50%</h4>
+      <p id="below50">--</p>
+    </div>
+    <div class="card" onclick="showModal('Good')">
+      <h4>Attendance < 60%</h4>
+      <p id="below60">--</p>
+    </div>
+    <div class="card" onclick="showModal('studentattended1')">
+      <h4>Today's Attendance</h4>
+      <p id="todayAttendance">--</p>
+    </div>
+    <div class="card" onclick="showModal('staffattended1')">
+      <h4>Staff Present Today</h4>
+      <p id="staffPresent">--</p>
+    </div>
+  </div>
+
+  <div class="charts-container">
+    <canvas id="pieChart"></canvas>
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <div id="studentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+</div>
+
+  <script src="Attendence.js"></script>
+  <!-- <script src="navigation.js"></script> -->
+</body>
+</html>

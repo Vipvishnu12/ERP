@@ -1,0 +1,377 @@
+/* Base styles - work with sidebar.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: #333;
+    overflow-x: hidden; /* Prevent horizontal scroll at body level */
+    height: 100vh;
+}
+
+/* Main content area - adjusted to work with sidebar.css */
+.main-content {
+    margin-left: 220px; /* Match sidebar width from sidebar.css */
+    padding: 20px;
+    transition: margin 0.3s ease;
+    overflow-x: hidden; 
+    width: calc(100% - 220px);
+    box-sizing: border-box;
+    /* border: 2px solid rebeccapurple;  */
+    height: 100vh;
+}
+
+/* Header styling */
+header {
+    background: linear-gradient(135deg, #4355e8 0%, #3949ab 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* Dashboard cards */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card h2 {
+    font-size: 17px;
+    color: #555;
+    margin-bottom: 18px;
+    font-weight: 500;
+}
+
+.card .number {
+    font-size: 42px;
+    font-weight: bold;
+}
+
+/* Card specific styling */
+#totalStudents {
+    border-bottom-color: #4355e8;
+}
+#totalStudents .number {
+    color: #4355e8;
+}
+#totalStudents::before {
+    background: #4355e8;
+}
+
+#placedStudents {
+    border-bottom-color: #4caf50;
+}
+#placedStudents .number {
+    color: #4caf50;
+}
+#placedStudents::before {
+    background: #4caf50;
+}
+
+#notPlacedStudents {
+    border-bottom-color: #f44336;
+}
+#notPlacedStudents .number {
+    color: #f44336;
+}
+#notPlacedStudents::before {
+    background: #f44336;
+}
+
+#placementPercentage {
+    border-bottom-color: #ff9800;
+}
+#placementPercentage .number {
+    color: #ff9800;
+}
+#placementPercentage::before {
+    background: #ff9800;
+}
+
+/* Charts styling */
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Changed from 500px to 300px */
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.chart-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    height: auto; /* Changed from fixed height */
+    min-height: 400px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.chart-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.chart-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4355e8, transparent);
+}
+
+/* Chart wrapper to center and constrain pie chart */
+.chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 350px;
+}
+
+/* Control pie chart size */
+canvas.PieChart {
+    max-height: 300px !important;
+    max-width: 300px !important;
+    margin: 0 auto;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 85%;
+    max-width: 900px;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Modal header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4355e8;
+}
+
+/* Search functionality */
+.search-container {
+    margin-bottom: 25px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-container input:focus {
+    border-color: #4355e8;
+    box-shadow: 0 2px 10px rgba(67, 85, 232, 0.1);
+    outline: none;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #f7f9fc;
+    font-weight: 600;
+    color: #555;
+    position: sticky;
+    top: 0;
+}
+
+tr:hover {
+    background-color: #f9fafc;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Ensure chart containers have proper spacing on smaller screens */
+    .chart-card {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 220px; /* Keep consistent with sidebar */
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 24px;
+    }
+    
+    header p {
+        font-size: 15px;
+    }
+    
+    .card .number {
+        font-size: 36px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    /* Make sure tables don't overflow on small screens */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        margin-left: 0; /* For when sidebar is collapsed/hidden on small screens */
+        padding: 15px;
+        width: 100%; /* Full width when sidebar collapsed */
+    }
+    
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    th, td {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+    
+    .modal-title {
+        font-size: 20px;
+    }
+}
+

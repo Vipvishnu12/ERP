@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "msnodesqlv8": "^4.5.0",
+    "mssql": "^11.0.1"
+  },
+  "name": "new-folder-(6)",
+  "version": "1.0.0",
+  "main": "back.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

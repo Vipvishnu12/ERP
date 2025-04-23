@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Tasks - Department Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="min.css"> -->
+    <style>
+        :root {
+            --primary-color: #3d17c5;
+            --primary-dark: #260c97;
+            --text-color: #333;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --border-color: #e0e4e8;
+            --accent-color: #6c47ff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .dept-name {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .course-table th, .course-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .course-table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .course-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .course-table tr:hover {
+            background-color: rgba(108, 71, 255, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-completed {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #155724;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #856404;
+        }
+
+        .status-overdue {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #721c24;
+        }
+
+        .date {
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .course-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 15px;
+            }
+            
+            .course-table th, .course-table td {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <h1 class="title">Faculty Tasks - <span class="dept-name" id="deptName">Department</span></h1>
+        </div>
+        <a class="back-button" id="back">← Back to Dashboard</a>
+    </header>
+
+    <div class="card">
+        <table class="course-table">
+            <thead>
+                <tr>
+                    <th>Staff Name</th>
+                    <th>Task Details</th>
+                    <th>Assigned Date</th>
+                    <th>Target Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="courseData">
+                <tr>
+                    <td colspan="5" class="loading">Loading tasks data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const dept = params.get('dept') || 'CSE';
+        document.getElementById('deptName').textContent = dept;
+
+        // Format date function
+        function formatDate(dateString) {
+            if (!dateString) return "—";
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // Return original if invalid
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Get status class based on completion status
+        function getStatusClass(status) {
+            status = status?.toLowerCase() || '';
+            if (status.includes('complete') || status.includes('done')) {
+                return 'status-completed';
+            } else if (status.includes('overdue') || status.includes('late')) {
+                return 'status-overdue';
+            } else {
+                return 'status-pending';
+            }
+        }
+
+        async function loadCourses() {
+            try {
+                const response = await fetch(`/facultytask/${dept}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const tbody = document.getElementById('courseData');
+                tbody.innerHTML = ""; // Clear existing data
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                No tasks found for this department.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                data.forEach(task => {
+                    const row = document.createElement('tr');
+                    
+                    // Correcting the data mapping based on field names
+                    row.innerHTML = `
+                        <td>${task.Work_Assign_By || '—'}</td>
+                        <td>${task.Work_Details || '—'}</td>
+                        <td class="date">${formatDate(task.Work_Assign_Dt)}</td>
+                        <td class="date">${formatDate(task.Target_Dt)}</td>
+                        <td>
+                            <span class="status-badge ${getStatusClass(task.Completion_Status)}">
+                                ${task.Completion_Status || 'Pending'}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Failed to fetch task data", err);
+                document.getElementById('courseData').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            Error loading tasks. Please try again later.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        document.getElementById('back').addEventListener('click', function() {
+            window.location.href = `faculty.html?dept=${dept}`;
+        });
+
+        // Initialize the page
+        loadCourses();
+    </script>
+</body>
+</html>

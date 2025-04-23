@@ -1,0 +1,776 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="min.css">
+    <style>
+        
+  .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    margin-bottom: 20px;
+  }
+  .faculty-image img.faculty-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+  
+  .card-title {
+    font-size: 18px;
+    color: #3a4374;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .card-title i {
+    margin-right: 10px;
+    color: #4a5af0;
+  }
+  
+  .faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .faculty-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  
+  .faculty-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .faculty-image {
+    height: 120px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #999;
+  }
+  
+  .faculty-info {
+    padding: 15px;
+  }
+  
+  .faculty-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  .faculty-designation {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .faculty-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .performance-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .performance-item:last-child {
+    border-bottom: none;
+  }
+  
+  .performance-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: white;
+    flex-shrink: 0;
+  }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #3d17c5;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .course-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .course-table th, .course-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .course-table th {
+            background-color: #260c97;
+            color: white;
+        }
+
+        .dept-name {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <a class="back-button" id="back">← Back to Dashboard</a>
+
+    <div class="title">All Faculties - <span class="dept-name" id="deptName">Department</span></div>
+
+    <div class="card">
+        <h2 class="card-title"><i>👨‍🏫</i> Faculty Members</h2>
+        <div id="faculty-container" class="faculty-grid">
+             Faculty cards will be loaded here dynamically 
+        </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const dept = params.get('dept') || 'CSE';
+        document.getElementById('deptName').textContent = dept;
+
+        async function loadFacultyCards() {
+    try {
+        const response = await fetch(`/facultyinfo1/${dept}`); // your API endpoint
+        if (!response.ok) throw new Error("Failed to fetch faculty data");
+
+        const data = await response.json();
+        const container = document.getElementById("faculty-container");
+        container.innerHTML = ""; // Clear existing content
+
+        data.forEach(faculty => {
+    const card = document.createElement("div");
+    card.classList.add("faculty-card");
+
+    // Check if the faculty has a photo, if not, use the gender icon
+    const photo = faculty.photo ? 
+        `<img src="${faculty.photo}" alt="${faculty.Staff_Name}" class="faculty-photo" />` :
+        (faculty.gender === "female" ? "👩‍🏫" : "👨‍🏫");
+
+    card.innerHTML = `
+        <div class="faculty-image">
+            ${photo}
+        </div>
+        <div class="faculty-info">
+            <div class="faculty-name">${faculty.Staff_Name}</div>
+            <div class="faculty-designation">${faculty.Designation}, ${faculty.roleofwork}</div>
+            <div class="faculty-meta">
+                <div>${faculty.qualification}</div>
+                <div>${faculty.Experience_Year} years</div>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(card);
+});
+       
+    } catch (error) {
+        console.error("Error loading faculty cards:", error);
+        document.getElementById("faculty-container").innerHTML = `<p>Error loading data</p>`;
+    }
+}
+  document.getElementById('back').addEventListener('click', function() {
+            window.location.href = `dashboard.html?dept=${dept}`;
+        });
+
+        loadFacultyCards(); // Call the async function
+    </script>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Search | HOD Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: #4361ee;
+            color: white;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            width: calc(100% - 220px);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #4361ee;
+            font-weight: 500;
+        }
+        
+        .search-container {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 4px 0 0 4px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            width: 400px;
+            border: 1px solid #e1e5eb;
+            border-right: none;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            padding: 0 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: #3b4fd7;
+        }
+        
+        .back-link {
+            color: #4361ee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .back-link i {
+            margin-right: 5px;
+        }
+        
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .faculty-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .faculty-image {
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .faculty-image img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .faculty-info {
+            padding: 20px;
+        }
+        
+        .faculty-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .faculty-title {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+  .faculty-image {
+    height: 120px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #999;
+  }
+        
+        .faculty-edu {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .faculty-exp {
+            font-size: 14px;
+            color: #4361ee;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .search-results {
+            margin-top: 30px;
+        }
+        
+        .search-results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px;
+            border-radius: 3px;
+        }
+        
+        .no-results {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .all-faculty {
+            margin-top: 40px;
+        }
+        
+        .all-faculty h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">HOD Portal</div>
+        <ul class="menu">
+            <li class="menu-item" id="dash">
+                <i>📊</i> Dashboard
+            </li>
+            <li class="menu-item" id="studentMenuItem">
+                <i>👨‍🎓</i> Students
+            </li>
+            <li class="menu-item active" id="facultyMenuItem">
+                <i>👨‍🏫</i> Faculty
+            </li>
+            <li class="menu-item" id="placementMenuItem">
+                <i>🏢</i> Placements
+            </li>
+            <li class="menu-item" id="AttendanceMenuItem">
+                <i>📅</i> Attendance
+            </li>
+            <li class="menu-item" id="logoutMenuItem">
+                <i>🚪</i> Logout
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <a id="facultyLink" class="back-link">Go to DashBoard</a>
+           
+        
+        <div class="header">
+            <h1>Faculty Search</h1>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <i>🔍</i>
+                <input type="text" placeholder="Search faculty by name, department, or specialization..." id="searchInput">
+            </div>
+            <button class="search-btn" id="searchBtn" onclick="loadsearch()">Search</button>
+        </div>
+
+        <div id="searchResultsContainer" class="search-results" >
+            <h2>Search Results</h2>
+            <div id="searchResults" class="faculty-grid">
+              no results found     <!-- Search results will be populated here -->
+            </div>
+        </div>
+        <div class="header">
+            <h1>Student Search</h1>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <i>🔍</i>
+                <input type="text" placeholder="Search faculty by name, department, or specialization..." id="searchInput1">
+            </div>
+            <button class="search-btn" id="searchBtn1" onclick="loadstudentsearch()">Search</button>
+        </div>
+
+        <div id="searchResultsContainer" class="search-results" >
+            <h2>Search Results</h2>
+            <div id="datacontainer" class="faculty-grid">
+              no results found     <!-- Search results will be populated here -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const dept = params.get('dept') || 'CSE';
+      
+        async function loadstudentsearch() {
+    const query = document.getElementById('searchInput1').value.trim();
+    console.log(query);
+    const dept = new URLSearchParams(window.location.search).get('dept') || 'CSE';
+    if (!query) return;
+
+    try {
+        const response = await fetch(`/studentsearch/${dept}?q=${query}`);
+        if (!response.ok) throw new Error("Search failed");
+        const results = await response.json();
+
+        const container = document.getElementById("datacontainer");
+        container.innerHTML = ""; // Clear previous results
+
+        if (results.length === 0) {
+            container.innerHTML = `<div class="no-results">No faculty found for "${query}"</div>`;
+            return;
+        }
+
+        results.forEach(faculty => {
+            const card = document.createElement("div");
+            card.classList.add("faculty-card");
+
+            const photo = faculty.photo ?
+                `<img src="${faculty.photo}" alt="${faculty.Staff_Name}" class="faculty-photo" />` :
+                (faculty.gender === "female" ? "👩‍🏫" : "👨‍🏫");
+
+            card.innerHTML = `
+                <div class="faculty-image">${photo}</div>
+                <div class="faculty-info">
+                    <div class="faculty-name">${faculty.Name}</div>
+                    <div class="faculty-title">placed:${faculty.placed}, ${faculty.placed_company}</div>
+                    <div class="faculty-edu">regno:${faculty.Reg_Number}</div>
+                    <div class="faculty-exp">No of Arrear ${faculty.Arrear_Status}</div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Error searching:", err);
+        document.getElementById("datacontainer").innerHTML = `<div class="no-results">Error loading search results</div>`;
+    }       
+   }
+// document.getElementById("searchInput").addEventListener("input", async function () {
+//   const searchTerm = this.value.toLowerCase();
+
+//   try {
+//     const res = await fetch(`/searchUsers?query=${encodeURIComponent(searchTerm)}`);
+//     const data = await res.json();
+//     renderTable(data);
+//   } catch (err) {
+//     console.error("Search fetch error:", err);
+//   }
+// });
+async function loadsearch() {
+    const query = document.querySelector('.search-box input').value.trim();
+    const dept = new URLSearchParams(window.location.search).get('dept') || 'CSE';
+    if (!query) return;
+
+    try {
+        const response = await fetch(`/facultysearch/${dept}?q=${query}`);
+        if (!response.ok) throw new Error("Search failed");
+        const results = await response.json();
+
+        const container = document.getElementById("searchResults");
+        container.innerHTML = ""; // Clear previous results
+
+        if (results.length === 0) {
+            container.innerHTML = `<div class="no-results">No faculty found for "${query}"</div>`;
+            return;
+        }
+
+        results.forEach(faculty => {
+            const card = document.createElement("div");
+            card.classList.add("faculty-card");
+
+            const photo = faculty.photo ?
+                `<img src="${faculty.photo}" alt="${faculty.Staff_Name}" class="faculty-photo" />` :
+                (faculty.gender === "female" ? "👩‍🏫" : "👨‍🏫");
+
+            card.innerHTML = `
+                <div class="faculty-image">${photo}</div>
+                <div class="faculty-info">
+                    <div class="faculty-name">${faculty.Staff_Name}</div>
+                    <div class="faculty-title">${faculty.Designation}, ${faculty.roleofwork}</div>
+                    <div class="faculty-edu">${faculty.qualification}</div>
+                    <div class="faculty-exp">${faculty.Experience_Year} years</div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Error searching:", err);
+        document.getElementById("faculty-container").innerHTML = `<div class="no-results">Error loading search results</div>`;
+    }       
+   } // Sample faculty data
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Load all faculty initially
+        //     loadFacultyCards();
+            
+        //     // Handle search button click
+        //     document.getElementById('searchBtn').addEventListener('click', performSearch);
+            
+        //     // Handle Enter key in search input
+        //     document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        //         if (e.key === 'Enter') {
+        //             performSearch();
+        //         }
+        //     });
+            
+        //     // Get search query from URL if it exists (for when page loads via form submission)
+        //     const urlParams = new URLSearchParams(window.location.search);
+        //     const query = urlParams.get('q');
+        //     if (query) {
+        //         document.getElementById('searchInput').value = query;
+        //         performSearch();
+        //     }
+        // });
+
+        // function performSearch() {
+        //     const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+        //     if (searchTerm === '') {
+        //         document.getElementById('searchResultsContainer').style.display = 'none';
+        //         return;
+        //     }
+            
+        //     const results = facultyData.filter(faculty => {
+        //         return faculty.name.toLowerCase().includes(searchTerm) ||
+        //                faculty.title.toLowerCase().includes(searchTerm) ||
+        //                faculty.education.toLowerCase().includes(searchTerm);
+        //     });
+            
+        //     // Display results
+        //     document.getElementById('searchResultsContainer').style.display = 'block';
+            
+        //     if (results.length === 0) {
+        //         document.getElementById('searchResults').innerHTML = `
+        //             <div class="no-results">
+        //                 No faculty members found matching your search for "${searchTerm}".
+        //             </div>`;
+        //     } else {
+        //         renderFacultyCards(results, 'searchResults', searchTerm);
+        //     }
+            
+        //     // Update URL with search query (without refreshing page)
+        //     const url = new URL(window.location);
+        //     url.searchParams.set('q', searchTerm);
+        //     window.history.pushState({}, '', url);
+        // }
+
+        // function renderFacultyCards(facultyList, containerId, highlightTerm = '') {
+        //     const container = document.getElementById(containerId);
+        //     container.innerHTML = '';
+            
+        //     facultyList.forEach(faculty => {
+        //         let nameDisplay = faculty.name;
+        //         let titleDisplay = faculty.title;
+        //         let educationDisplay = faculty.education;
+                
+        //         // Highlight search term if provided
+        //         if (highlightTerm) {
+        //             const term = highlightTerm.toLowerCase();
+        //             nameDisplay = highlightText(faculty.name, term);
+        //             titleDisplay = highlightText(faculty.title, term);
+        //             educationDisplay = highlightText(faculty.education, term);
+        //         }
+                
+        //         const card = document.createElement('div');
+        //         card.className = 'faculty-card';
+        //         card.innerHTML = `
+        //             <div class="faculty-image">
+        //                 <span style="font-size: 60px;">${faculty.image}</span>
+        //             </div>
+        //             <div class="faculty-info">
+        //                 <div class="faculty-name">${nameDisplay}</div>
+        //                 <div class="faculty-title">${titleDisplay}</div>
+        //                 <div class="faculty-edu">${educationDisplay}</div>
+        //                 <div class="faculty-exp">${faculty.experience}</div>
+        //             </div>
+        //         `;
+                
+        //         container.appendChild(card);
+        //     });
+        // }
+
+  //       function highlightText(text, term) {
+  //           if (!term) return text;
+            
+  //           const lowerText = text.toLowerCase();
+  //           const lowerTerm = term.toLowerCase();
+            
+  //           if (!lowerText.includes(lowerTerm)) return text;
+            
+  //           const startIndex = lowerText.indexOf(lowerTerm);
+  //           const endIndex = startIndex + term.length;
+            
+  //           return text.substring(0, startIndex) + 
+  //                  <span class="highlight">${text.substring(startIndex, endIndex)}</span> + 
+  //                  text.substring(endIndex);
+  //       }
+
+  //      // Function to open faculty search in new window
+  // function openFacultySearch() {
+  //           const searchTerm = document.getElementById('searchInput').value.trim();
+  //           const url = `faculty-search.html${searchTerm ? '?q=' + encodeURIComponent(searchTerm) : ''}`;
+  //           window.open(url, '_blank');
+  //       }
+  document.getElementById("facultyLink").href = `dashboard.html?dept=${dept}`;
+  document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default anchor behavior
+    window.location.href = `login.html`;
+});
+document.getElementById('facultyMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `faculty.html?dept=${dept}`;
+});
+document.getElementById('placementMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `placement.html?dept=${dept}`;
+});
+document.getElementById('studentMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Student.html?dept=${dept}`;
+});
+
+
+document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Attendance.html?dept=${dept}`;
+});
+
+document.getElementById('dash').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `dashboard.html?dept=${dept}`;
+});
+
+   </script>
+</body>
+</html>

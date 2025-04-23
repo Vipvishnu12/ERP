@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Performance | HOD Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: #4361ee;
+            color: white;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            width: calc(100% - 220px);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #4361ee;
+            font-weight: 500;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            width: 300px;
+            border: 1px solid #e1e5eb;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 5px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: #4361ee;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid #e1e5eb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #4361ee;
+            color: white;
+            border-color: #4361ee;
+        }
+        
+        .table-container {
+            flex: 1;
+            overflow: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5eb;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: #555;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-excellent {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+        
+        .status-good {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        
+        .status-average {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-poor {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .back-link {
+            color: #4361ee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .back-link i {
+            margin-right: 5px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid #e1e5eb;
+            transition: all 0.3s;
+        }
+        
+        .page-btn:hover, .page-btn.active {
+            background-color: #4361ee;
+            color: white;
+            border-color: #4361ee;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">HOD Portal</div>
+        <ul class="menu">
+            <li class="menu-item" id="dash">
+                <i>📊</i> Dashboard
+            </li>
+            <li class="menu-item" id="studentMenuItem">
+                <i>👨‍🎓</i> Students
+            </li>
+            <li class="menu-item active" id="facultyMenuItem">
+                <i>👨‍🏫</i> Faculty
+            </li>
+            <li class="menu-item" id="placementMenuItem">
+                <i>🏢</i> Placements
+            </li>
+            <li class="menu-item" id="AttendanceMenuItem">
+                <i>📅</i> Attendance
+            </li>
+            
+            <li class="menu-item" id="logoutMenuItem">
+                <i>🚪</i> Logout
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <a id="facperformpage" class="back-link">
+            <i>←</i> Back to Dashboard
+        </a>
+        
+        <div class="header">
+            <h1>Faculty Performance</h1>
+            <div class="search-box">
+                <i>🔍</i>
+                <input type="text" placeholder="Search faculty..." id="searchInput">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i>📊</i> Faculty Performance Overview
+                </div>
+                <div class="filters">
+                    <!-- <button class="filter-btn active">All</button>
+                    <button class="filter-btn">Research</button>
+                    <button class="filter-btn">Teaching</button>
+                    <button class="filter-btn">Workshops</button> -->
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="facultyTable">
+                    <thead>
+                        <tr>
+                            <th>Faculty ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Research Papers</th>
+                            <th>Student Feedback</th>
+                            <th>Workshops</th>
+                            <th>Performance</th>
+                                   </tr>
+                    </thead>
+                    <tbody id="st2">
+                        <!-- student rows here -->
+                      </tbody>
+                </table>
+            </div>
+            <div id="pagination" class="pagination"></div>
+
+        </div>
+    </div>
+
+    <script>
+    const urlParams = new URLSearchParams(window.location.search);
+const dept = urlParams.get('dept');
+    
+let allStudents = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let searchAdded = false;
+
+function renderStudents() {
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const studentsToShow = allStudents.slice(start, end);
+
+  const tbody = document.getElementById("st2");
+  tbody.innerHTML = "";
+
+  studentsToShow.forEach(course => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${course.Staff_Code}</td>
+      <td>${course.Staff_Name}</td>
+      <td>${course.Department}</td>
+      <td>${course.Research_Papers}</td>
+      <td>${course.Student_Feedback}</td>
+      <td>${course.Workshops}</td>
+      <td>${course.Performance}</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  if (!searchAdded) {
+    addSearchFunctionality();
+    searchAdded = true;
+  }
+
+  renderPaginationControls();
+}
+
+
+
+    function renderPaginationControls() {
+      const totalPages = Math.ceil(allStudents.length / itemsPerPage);
+      const controls = document.getElementById("pagination");
+      controls.innerHTML = "";
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.classList.add("page-btn");
+        btn.textContent = i;
+        btn.disabled = i === currentPage;
+        btn.onclick = () => {
+          currentPage = i;
+          renderStudents();
+        };
+        controls.appendChild(btn);
+      }
+    }
+
+    // Dummy fetch for now — replace with actual fetch later
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch(`/performance/agri`)  // Replace agri dynamically if needed
+        .then(res => res.json())
+        .then(data => {
+          allStudents = data;
+          renderStudents();
+        })
+        .catch(err => console.error("Error:", err));
+        
+    });
+    
+    function addSearchFunctionality() {
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('keyup', function () {
+    const searchTerm = searchInput.value.toLowerCase();
+    const tableRows = document.querySelectorAll('#st2 tr');
+
+    tableRows.forEach(row => {
+      const facultyName = row.cells[1].textContent.toLowerCase();
+      const facultyDept = row.cells[2].textContent.toLowerCase();
+      if (facultyName.includes(searchTerm) || facultyDept.includes(searchTerm)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+}
+document.getElementById("facperformpage").addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default anchor behavior
+    window.location.href = `dashboard.html?dept=${dept}`;
+});
+
+// document.addEventListener('DOMContentLoaded', function () {
+  
+  
+// });
+
+document.getElementById('facultyMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `faculty.html?dept=${dept}`;
+});
+document.getElementById('placementMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `placement.html?dept=${dept}`;
+});
+document.getElementById('studentMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Student.html?dept=${dept}`;
+});
+
+
+document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `Attendance.html?dept=${dept}`;
+});
+document.getElementById('dash').addEventListener('click', function() {
+    // Navigate to the faculty page
+  console.log(dept);
+    window.location.href = `dashboard.html?dept=${dept}`;
+});
+document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default anchor behavior
+    window.location.href = `login.html`;
+});
+    </script>
+   
+</body>
+</html>

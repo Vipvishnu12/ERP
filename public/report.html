@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management System</title>
+    <link rel="stylesheet" href="list.css">
+</head>
+<body>
+    <!-- Sidebar from Image 1 -->
+    <div class="sidebar">
+        <h1>HOD Portal</h1>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" data-section="dashboard-section">
+                <div class="menu-icon">📊</div>
+                <div class="menu-text">Dashboard</div>
+            </a>
+            <a href="#" class="menu-item" data-section="students-section">
+                <div class="menu-icon">👨‍🎓</div>
+                <div class="menu-text">Students</div>
+            </a>
+            <a href="#" class="menu-item">
+                <div class="menu-icon">👨‍🏫</div>
+                <div class="menu-text">Faculty</div>
+            </a>
+            <a href="#" class="menu-item">
+                <div class="menu-icon">🏢</div>
+                <div class="menu-text">Placements</div>
+            </a>
+            <a href="#" class="menu-item">
+                <div class="menu-icon">📝</div>
+                <div class="menu-text">Attendance</div>
+            </a>
+            <a href="#" class="menu-item">
+                <div class="menu-icon">📄</div>
+                <div class="menu-text">Reports</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Hostel Student Management System</h1>
+        </div>
+        
+        <!-- Dashboard Section (Image 2) -->
+        <div id="dashboard-section" class="content-section active">
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Students</h3>
+                    <div id="total-students" class="count">5</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Hostel Students</h3>
+                    <div id="hostel-students" class="count">3</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Day Scholars</h3>
+                    <div id="day-scholars" class="count">2</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Absentees Today</h3>
+                    <div id="absentees" class="count">2</div>
+                </div>
+            </div>
+            
+            <!-- Add Student Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Add New Student</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="add-student-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="full-name" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="registration-number" placeholder="Registration Number" required>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="student-type" required>
+                                    <option value="">Select Student Type</option>
+                                    <option value="hostel">Hostel Student</option>
+                                    <option value="day">Day Scholar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="room-number" placeholder="Room Number (for hostel students)">
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: flex-end;">
+                                <button type="submit" class="btn">Add Student</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Student Management Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Student Management</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search by name or registration number...">
+                        <button id="search-btn" class="btn">Search</button>
+                    </div>
+                    
+                    <div class="filters">
+                        <select id="filter-type" class="filter-select">
+                            <option value="all">All Students</option>
+                            <option value="hostel">Hostel Students</option>
+                            <option value="day">Day Scholars</option>
+                        </select>
+                        
+                        <select id="filter-status" class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                        </select>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all-students">All Students</div>
+                        <div class="tab" data-tab="absentees">Absentees</div>
+                    </div>
+                    
+                    <div id="all-students" class="tab-content active">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Reg No</th>
+                                        <th>Type</th>
+                                        <th>Room No</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-list">
+                                    <!-- Student data will be populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="absentees" class="tab-content">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Reg No</th>
+                                        <th>Type</th>
+                                        <th>Room No</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="absentees-list">
+                                    <!-- Absentee data will be populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Students Section -->
+        <div id="students-section" class="content-section">
+            <div class="year-tabs">
+                <button class="year-tab active">1st Year</button>
+                <button class="year-tab">2nd Year</button>
+                <button class="year-tab">3rd Year</button>
+                <button class="year-tab">4th Year</button>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>1st Year Students</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Registration No</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sarah Johnson</td>
+                                    <td>R20230001</td>
+                                    <td><span class="status-present">Present</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit">Edit</button>
+                                        <button class="action-btn btn-delete">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Michael Chen</td>
+                                    <td>R20230002</td>
+                                    <td><span class="status-absent">Absent</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit">Edit</button>
+                                        <button class="action-btn btn-delete">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="list.js">
+        
+    </script>
+</body>
+</html>
