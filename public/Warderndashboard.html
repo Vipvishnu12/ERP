@@ -432,9 +432,7 @@
                 <div class="menu-icon">🔔</div>
                 <div class="menu-text">Complaints</div>
             </a> -->
-            <a href="#" class="menu-item" data-section="rooms-section">
-                <div class="menu-icon">🏠</div>
-                <div class="menu-text">Room Management</div>
+         
             </a>
             <!-- <a href="#" class="menu-item" data-section="reports-section">
                 <div class="menu-icon">📄</div>
@@ -479,56 +477,6 @@
                 </div>-->
             </div>
             
-            <!-- Pending Approvals Panel -->
-            <!-- <div class="panel">
-                <div class="panel-header">
-                    <h2>Pending Approvals</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="notification-item">
-                        <div class="notification-header">
-                            <span class="notification-title">Leave Request</span>
-                            <span class="notification-time">2 hours ago</span>
-                        </div>
-                        <div class="notification-body">
-                            <p>Sarah Johnson (R20230001) has requested leave from April 25 to April 28 for medical reasons.</p>
-                        </div>
-                        <div class="notification-actions">
-                            <button class="action-btn btn-approve">Approve</button>
-                            <button class="action-btn btn-reject">Reject</button>
-                        </div>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-header">
-                            <span class="notification-title">Room Change Request</span>
-                            <span class="notification-time">5 hours ago</span>
-                        </div>
-                        <div class="notification-body">
-                            <p>Michael Chen (R20230002) has requested to change room from B-104 to B-212.</p>
-                        </div>
-                        <div class="notification-actions">
-                            <button class="action-btn btn-approve">Approve</button>
-                            <button class="action-btn btn-reject">Reject</button>
-                        </div>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-header">
-                            <span class="notification-title">Complaint</span>
-                            <span class="notification-time">Yesterday</span>
-                        </div>
-                        <div class="notification-body">
-                            <p>A complaint has been filed regarding plumbing issues in block C.</p>
-                        </div>
-                        <div class="notification-actions">
-                            <button class="action-btn btn-approve">Mark Resolved</button>
-                            <button class="action-btn btn-edit">Forward to Maintenance</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            
             <!-- Recently Absent Students Panel -->
             <div class="panel">
                 <div class="panel-header">
@@ -546,37 +494,8 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>David Wilson</td>
-                                    <td>R20230010</td>
-                                    <td>A-105</td>
-                                    <td>Yesterday, 6:30 PM</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">Contact</button>
-                                        <button class="action-btn">Report</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Sophia Martinez</td>
-                                    <td>R20230015</td>
-                                    <td>D-212</td>
-                                    <td>Yesterday, 9:45 PM</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">Contact</button>
-                                        <button class="action-btn">Report</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>James Brown</td>
-                                    <td>R20230022</td>
-                                    <td>B-118</td>
-                                    <td>April 22, 8:15 AM</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">Contact</button>
-                                        <button class="action-btn">Report</button>
-                                    </td>
-                                </tr>
+                            <tbody id="warden">
+                            
                             </tbody>
                         </table>
                     </div>
@@ -592,102 +511,41 @@
                 </div>
                 <div class="panel-body">
                     <div class="search-container">
-                        <input type="text" id="student-search" placeholder="Search by name, registration number or room...">
-                        <button id="student-search-btn" class="btn">Search</button>
-                    </div>
-                    
+                        <input type="text" id="searchInput" placeholder="Search by name, reg no, or room...">
+                      </div>
+                      
                     <div class="filters">
                         <select id="filter-block" class="filter-select">
-                            <option value="all">All Blocks</option>
-                            <option value="A">Block A</option>
-                            <option value="B">Block B</option>
-                            <option value="C">Block C</option>
-                            <option value="D">Block D</option>
+                            <option value="nri2">NRI 2</option>
+                            <option value="nri1">NRI 1</option>
+                            <option value="nri3">NRI 3</option>
+                            <option value="nri4">NRI 4</option>
                         </select>
                         
                         <select id="filter-year" class="filter-select">
                             <option value="all">All Years</option>
-                            <option value="1">1st Year</option>
-                            <option value="2">2nd Year</option>
-                            <option value="3">3rd Year</option>
-                            <option value="4">4th Year</option>
+                            <option value="I">1st Year</option>
+                            <option value="II">2nd Year</option>
+                            <option value="III">3rd Year</option>
+                            <option value="IV">4th Year</option>
                         </select>
                     </div>
                     
                     <div class="table-responsive">
                         <table>
-                            <thead>
+                            <thead >
                                 <tr>
                                     <th>Name</th>
                                     <th>Reg No</th>
                                     <th>Year</th>
-                                    <th>Block</th>
-                                    <th>Room No</th>
+                                  
+                                <th>Room No</th>
                                     <th>Contact</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Sarah Johnson</td>
-                                    <td>R20230001</td>
-                                    <td>1st Year</td>
-                                    <td>A</td>
-                                    <td>104</td>
-                                    <td>+1 234-567-8901</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn btn-edit">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Chen</td>
-                                    <td>R20230002</td>
-                                    <td>1st Year</td>
-                                    <td>B</td>
-                                    <td>104</td>
-                                    <td>+1 234-567-8902</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn btn-edit">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Emily Davis</td>
-                                    <td>R20220005</td>
-                                    <td>2nd Year</td>
-                                    <td>C</td>
-                                    <td>215</td>
-                                    <td>+1 234-567-8903</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn btn-edit">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Robert Wilson</td>
-                                    <td>R20220010</td>
-                                    <td>2nd Year</td>
-                                    <td>B</td>
-                                    <td>118</td>
-                                    <td>+1 234-567-8904</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn btn-edit">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Jessica Brown</td>
-                                    <td>R20210012</td>
-                                    <td>3rd Year</td>
-                                    <td>D</td>
-                                    <td>305</td>
-                                    <td>+1 234-567-8905</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn btn-edit">Edit</button>
-                                    </td>
-                                </tr>
+                            <tbody id="allhostalstudents">
+                              
                             </tbody>
                         </table>
                     </div>
@@ -695,621 +553,25 @@
             </div>
         </div>
         
-        <!-- Attendance Section
-        <div id="attendance-section" class="content-section">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Daily Attendance Management</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="date" class="form-control" id="attendance-date" value="2025-04-23">
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" id="attendance-block">
-                                <option value="all">All Blocks</option>
-                                <option value="A">Block A</option>
-                                <option value="B">Block B</option>
-                                <option value="C">Block C</option>
-                                <option value="D">Block D</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn">Load Students</button>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Reg No</th>
-                                    <th>Room No</th>
-                                    <th>Morning (6-8 AM)</th>
-                                    <th>Evening (7-9 PM)</th>
-                                    <th>Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Sarah Johnson</td>
-                                    <td>R20230001</td>
-                                    <td>A-104</td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent">Absent</option>
-                                            <option value="leave">On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent">Absent</option>
-                                            <option value="leave">On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" placeholder="Add remarks if any">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Chen</td>
-                                    <td>R20230002</td>
-                                    <td>B-104</td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent" selected>Absent</option>
-                                            <option value="leave">On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent" selected>Absent</option>
-                                            <option value="leave">On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" value="Did not return from weekend">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Emily Davis</td>
-                                    <td>R20220005</td>
-                                    <td>C-215</td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent">Absent</option>
-                                            <option value="leave" selected>On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="present">Present</option>
-                                            <option value="absent">Absent</option>
-                                            <option value="leave" selected>On Leave</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control" value="Medical leave approved">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="margin-top: 20px; text-align: right;">
-                        <button class="btn">Save Attendance</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Attendance Reports</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="report-from">From Date</label>
-                            <input type="date" class="form-control" id="report-from" value="2025-04-01">
-                        </div>
-                        <div class="form-group">
-                            <label for="report-to">To Date</label>
-                            <input type="date" class="form-control" id="report-to" value="2025-04-23">
-                        </div>
-                        <div class="form-group">
-                            <label for="report-student">Student (Optional)</label>
-                            <input type="text" class="form-control" id="report-student" placeholder="Registration number">
-                        </div>
-                        <div class="form-group" style="display: flex; align-items: flex-end;">
-                            <button class="btn">Generate Report</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        
-        <!-- Leave Requests Section -->
-        <!-- <div id="leave-requests-section" class="content-section">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Leave Requests</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="tabs">
-                        <div class="tab active" data-tab="pending-leaves">Pending (5)</div>
-                        <div class="tab" data-tab="approved-leaves">Approved</div>
-                        <div class="tab" data-tab="rejected-leaves">Rejected</div>
-                    </div>
-                    
-                    <div id="pending-leaves" class="tab-content active">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>Reg No</th>
-                                        <th>Room No</th>
-                                        <th>From Date</th>
-                                        <th>To Date</th>
-                                        <th>Reason</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Sarah Johnson</td>
-                                        <td>R20230001</td>
-                                        <td>A-104</td>
-                                        <td>April 25, 2025</td>
-                                        <td>April 28, 2025</td>
-                                        <td>Medical treatment</td>
-                                        <td>
-                                            <button class="action-btn btn-approve">Approve</button>
-                                            <button class="action-btn btn-reject">Reject</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Robert Wilson</td>
-                                        <td>R20220010</td>
-                                        <td>B-118</td>
-                                        <td>April 30, 2025</td>
-                                        <td>May 5, 2025</td>
-                                        <td>Family function</td>
-                                        <td>
-                                            <button class="action-btn btn-approve">Approve</button>
-                                            <button class="action-btn btn-reject">Reject</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jessica Brown</td>
-                                        <td>R20210012</td>
-                                        <td>D-305</td>
-                                        <td>April 24, 2025</td>
-                                        <td>April 26, 2025</td>
-                                        <td>Family emergency</td>
-                                        <td>
-                                            <button class="action-btn btn-approve">Approve</button>
-                                            <button class="action-btn btn-reject">Reject</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div id="approved-leaves" class="tab-content">
-                        <Approved leaves content 
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>Reg No</th>
-                                        <th>Room No</th>
-                                        <th>From Date</th>
-                                        <th>To Date</th>
-                                        <th>Reason</th>
-                                        <th>Approved On</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Emily Davis</td>
-                                        <td>R20220005</td>
-                                        <td>C-215</td>
-                                        <td>April 20, 2025</td>
-                                        <td>April 30, 2025</td>
-                                        <td>Medical treatment</td>
-                                        <td>April 19, 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>David Wilson</td>
-                                        <td>R20230010</td>
-                                        <td>A-105</td>
-                                        <td>April 15, 2025</td>
-                                        <td>April 18, 2025</td>
-                                        <td>Family function</td>
-                                        <td>April 14, 2025</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div id="rejected-leaves" class="tab-content">
-                         Rejected leaves content -->
-                        <!-- <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>Reg No</th>
-                                        <th>Room No</th>
-                                        <th>From Date</th>
-                                        <th>To Date</th>
-                                        <th>Reason</th>
-                                        <th>Rejected On</th>
-                                        <th>Remarks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Michael Chen</td>
-                                        <td>R20230002</td>
-                                        <td>B-104</td>
-                                        <td>April 10, 2025</td>
-                                        <td>April 20, 2025</td>
-                                        <td>Trip with friends</td>
-                                        <td>April 9, 2025</td>
-                                        <td>Too long absence during exam preparation period</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        Complaints Section 
-        <div id="complaints-section" class="content-section">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Student Complaints</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="tabs">
-                        <div class="tab active" data-tab="pending-complaints">Open (3)</div>
-                        <div class="tab" data-tab="resolved-complaints">Resolved</div>
-                    </div>
-                    
-                    <div id="pending-complaints" class="tab-content active">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Student</th>
-                                        <th>Room</th>
-                                        <th>Issue Type</th>
-                                        <th>Description</th>
-                                        <th>Filed On</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>C-2025-042</td>
-                                        <td>Sarah Johnson</td>
-                                        <td>A-104</td>
-                                        <td>Plumbing</td>
-                                        <td>Water leakage from bathroom pipe</td>
-                                        <td>April 22, 2025</td>
-                                        <td>
-                                            <button class="action-btn btn-edit">Forward to Maintenance</button>
-                                            <button class="action-btn btn-approve">Mark Resolved</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>C-2025-041</td>
-                                        <td>Jessica Brown</td>
-                                        <td>D-305</td>
-                                        <td>Electrical</td>
-                                        <td>Fan not working properly</td>
-                                        <td>April 21, 2025</td>
-                                        <td>
-                                            <button class="action-btn btn-edit">Forward to Maintenance</button>
-                                            <button class="action-btn btn-approve">Mark Resolved</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>C-2025-040</td>
-                                        <td>Michael Chen</td>
-                                        <td>B-104</td>
-                                        <td>Furniture</td>
-                                        <td>Broken chair</td>
-                                        <td>April 20, 2025</td>
-                                        <td>
-                                            <button class="action-btn btn-edit">Forward to Maintenance</button>
-                                            <button class="action-btn btn-approve">Mark Resolved</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div id="resolved-complaints" class="tab-content">
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Student</th>
-                                        <th>Room</th>
-                                        <th>Issue Type</th>
-                                        <th>Description</th>
-                                        <th>Filed On</th>
-                                        <th>Resolved On</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>C-2025-039</td>
-                                        <td>Robert Wilson</td>
-                                        <td>B-118</td>
-                                        <td>Electrical</td>
-                                        <td>Light not working</td>
-                                        <td>April 18, 2025</td>
-                                        <td>April 19, 2025</td>
-                                    </tr>
-                                    <tr>
-                                        <td>C-2025-038</td>
-                                        <td>Emily Davis</td>
-                                        <td>C-215</td>
-                                        <td>Internet</td>
-                                        <td>Poor WiFi connectivity</td>
-                                        <td>April 17, 2025</td>
-                                        <td>April 18, 2025</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-         --> 
-        <!-- Room Management Section -->
-        <div id="rooms-section" class="content-section">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Room Allocation & Management</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="filters">
-                        <select id="filter-block-rooms" class="filter-select">
-                            <option value="A">Block A</option>
-                            <option value="B">Block B</option>
-                            <option value="C">Block C</option>
-                            <option value="D">Block D</option>
-                        </select>
-                        
-                        <select id="filter-floor" class="filter-select">
-                            <option value="all">All Floors</option>
-                            <option value="1">1st Floor</option>
-                            <option value="2">2nd Floor</option>
-                            <option value="3">3rd Floor</option>
-                        </select>
-                        
-                        <select id="filter-status-rooms" class="filter-select">
-                            <option value="all">All Status</option>
-                            <option value="occupied">Occupied</option>
-                            <option value="vacant">Vacant</option>
-                            <option value="maintenance">Under Maintenance</option>
-                        </select>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Room No</th>
-                                    <th>Capacity</th>
-                                    <th>Occupants</th>
-                                    <th>Availability</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>A-101</td>
-                                    <td>3</td>
-                                    <td>3</td>
-                                    <td>0</td>
-                                    <td><span class="status-present">Fully Occupied</span></td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn">Manage</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>A-102</td>
-                                    <td>3</td>
-                                    <td>2</td>
-                                    <td>1</td>
-                                    <td><span class="status-leave">Partially Vacant</span></td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn">Manage</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>A-103</td>
-                                    <td>3</td>
-                                    <td>0</td>
-                                    <td>3</td>
-                                    <td><span class="status-absent">Vacant</span></td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn">Manage</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>A-104</td>
-                                    <td>3</td>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td><span class="status-leave">Partially Vacant</span></td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn">Manage</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>A-105</td>
-                                    <td>3</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td><span class="status-absent">Under Maintenance</span></td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View Details</button>
-                                        <button class="action-btn">Manage</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Reports Section -->
-        <!-- <div id="reports-section" class="content-section">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Generate Reports</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="report-type">Report Type</label>
-                            <select class="form-control" id="report-type">
-                                <option value="attendance">Attendance Report</option>
-                                <option value="occupancy">Room Occupancy Report</option>
-                                <option value="complaints">Complaints Report</option>
-                                <option value="leaves">Leave Report</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="report-period">Period</label>
-                            <select class="form-control" id="report-period">
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="custom">Custom Range</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row" id="custom-date-range">
-                        <div class="form-group">
-                            <label for="report-start-date">Start Date</label>
-                            <input type="date" class="form-control" id="report-start-date">
-                        </div>
-                        <div class="form-group">
-                            <label for="report-end-date">End Date</label>
-                            <input type="date" class="form-control" id="report-end-date">
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 20px; text-align: right;">
-                        <button class="btn">Generate Report</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="panel-header">
-                    <h2>Recent Reports</h2>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Report Name</th>
-                                    <th>Type</th>
-                                    <th>Period</th>
-                                    <th>Generated On</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Daily Attendance Report</td>
-                                    <td>Attendance</td>
-                                    <td>April 22, 2025</td>
-                                    <td>April 22, 2025</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View</button>
-                                        <button class="action-btn">Download</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Weekly Attendance Report</td>
-                                    <td>Attendance</td>
-                                    <td>April 15-21, 2025</td>
-                                    <td>April 21, 2025</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View</button>
-                                        <button class="action-btn">Download</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Monthly Room Occupancy</td>
-                                    <td>Occupancy</td>
-                                    <td>April 2025</td>
-                                    <td>April 20, 2025</td>
-                                    <td>
-                                        <button class="action-btn btn-edit">View</button>
-                                        <button class="action-btn">Download</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
+      
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-const dept = urlParams.get('dept');
+const block = urlParams.get('block');
 
-document.addEventListener('DOMContentLoaded', async function () {
-   try{ const res = await fetch(`/hostelcount/${dept}`);
-            const data = await res.json();
+// document.addEventListener('DOMContentLoaded', async function () {
+//    try{ const res = await fetch(`/hostelcount/'agri'`);
+//             const data = await res.json();
 
-            console.log(data);
-            document.getElementById("totcount").innerHTML = `${data.Totalcount}`;
-            document.getElementById("presentcount").innerHTML = `${data.present_today_count}`;
-            document.getElementById("absentcount").innerHTML = `${data.absent_today_count}`;
-        } 
-        catch (err) {
-            console.error(err);
-            document.getElementById("totalstudents").innerText = "Failed to load data.";
-        }
-})
+//             console.log(data);
+//             document.getElementById("totcount").innerHTML = `${data.Totalcount}`;
+//             document.getElementById("presentcount").innerHTML = `${data.present_today_count}`;
+//             document.getElementById("absentcount").innerHTML = `${data.absent_today_count}`;
+//         } 
+//         catch (err) {
+//             console.error(err);
+//             document.getElementById("totalstudents").innerText = "Failed to load data.";
+//         }
+// })
     
 // Toggle active menu items and sections
         document.querySelectorAll('.menu-item').forEach(item => {
@@ -1375,6 +637,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
         });
         
+
         document.querySelectorAll('.btn-reject').forEach(btn => {
             btn.addEventListener('click', function() {
                 const row = this.closest('tr');
@@ -1386,6 +649,188 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             });
         });
+
+
+
+        
+window.onload = () => {
+  
+    loadleavestudents();
+   // loadallstudents(); // Load courses on page load
+};
+
+async function loadleavestudents() {
+    try {
+        const response = await fetch(`/allhostelleavedata/${block}`); // <-- Replace with your actual API endpoint
+        const data = await response.json();
+
+        const tableBody = document.getElementById('warden');
+        tableBody.innerHTML = ""; // Clear existing data
+
+        data.LeaveStudents.forEach(course => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${course.Staff_Name}</td>
+                <td>${course.Reg_Number}</td>
+                <td>${course.Room}</td>
+                  <td>${course.Department}</td>
+                <td>${course.Mobile}</td>
+                    `;
+            tableBody.appendChild(row);
+        });
+        document.getElementById("totcount").innerHTML = `${data.totalStudents}`;
+            document.getElementById("presentcount").innerHTML = `${data.presentCount}`;
+            document.getElementById("absentcount").innerHTML = `${data.leaveCount}`;
+        
+       
+    } catch (error) {
+        console.error('Error fetching course data:', error);
+        document.getElementById('datacontainer').innerHTML = `
+            <tr><td colspan="10">Failed to load data</td></tr>
+        `;
+    }
+}
+
+// async function loadleavestudents() {
+//     try {
+//         const response = await fetch(`/nri2hosteldata/${dept}`); // <-- Replace with your actual API endpoint
+//         const data = await response.json();
+
+//         const tableBody = document.getElementById('warden');
+//         tableBody.innerHTML = ""; // Clear existing data
+
+//         data.forEach(course => {
+//             const row = document.createElement('tr');
+//             row.innerHTML = `
+//                 <td>${course.Staff_Name}</td>
+//                 <td>${course.Reg_Number}</td>
+//                 <td>${course.Room}</td>
+//                   <td>${course.Department}</td>
+//                 <td>${course.Mobile}</td>
+//                     `;
+//             tableBody.appendChild(row);
+//         });
+       
+//     } catch (error) {
+//         console.error('Error fetching course data:', error);
+//         document.getElementById('datacontainer').innerHTML = `
+//             <tr><td colspan="10">Failed to load data</td></tr>
+//         `;
+//     }
+// }
+//   async function loadBlockData() {
+//     const block = document.getElementById('filter-block').value;
+
+//     try {
+//       const response = await fetch(`/allhosteldata`);
+//       if (!response.ok) throw new Error("Fetch failed");
+
+//       const data = await response.json(); // assuming it returns array of students
+
+//       const tableBody = document.getElementById('allhostalstudents');
+//       tableBody.innerHTML = ''; // clear old data
+
+//       if (data.length === 0) {
+//         tableBody.innerHTML = '<tr><td colspan="3">No data found</td></tr>';
+//         return;
+//       }
+
+//       data.forEach(student => {
+//         tableBody.innerHTML += `
+//           <tr>
+//             <td>${student.Staff_Name}</td>
+//             <td>${student.Reg_Number}</td>
+//             <td>${student.s_Year}</td>
+//             <td>${student.Room}</td>
+//             <td>${student.Mobile}</td>
+//             <td>${student.Department}</td>
+//           </tr>
+//         `;
+//       });
+
+//     } catch (err) {
+//       console.error("Error loading data:", err);
+//     }
+//   }
+
+//   // Load default block on page load (optional)
+//   window.onload = loadBlockData;
+
+
+let allStudents = [];
+
+// Fetch data from server based on block
+async function fetchHostelData(block) {
+  try {
+    const response = await fetch(`/allhosteldata/${block}`);
+    if (!response.ok) throw new Error('Failed to fetch data');
+    allStudents = await response.json();
+    applyFilters();
+  } catch (err) {
+    console.error("Error loading data:", err.message);
+    allStudents = [];
+    displayStudents([]);
+  }
+}
+
+// Display filtered students
+function displayStudents(data) {
+  const tbody = document.getElementById("allhostalstudents");
+  if (data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6">No data available</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(student => `
+    <tr>
+      <td>${student.Staff_Name || ''}</td>
+      <td>${student.Reg_Number || ''}</td>
+      <td>${student.s_Year || ''}</td>
+      <td>${student.Room || ''}</td>
+      <td>${student.Mobile || ''}</td>
+      <td>${student.Department || ''}</td>
+    </tr>
+  `).join('');
+}
+
+// Filter data by year and search
+function applyFilters() {
+  const yearFilter = document.getElementById("filter-year").value;
+  const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+
+  let filtered = [...allStudents];
+
+  // Filter by year
+  if (yearFilter !== "all") {
+    filtered = filtered.filter(stu => String(stu.s_Year) === yearFilter);
+  }
+
+  // Filter by search query (name, reg no, room)
+  if (searchQuery) {
+    filtered = filtered.filter(stu =>
+      (stu.Staff_Name && stu.Staff_Name.toLowerCase().includes(searchQuery)) ||
+      (stu.Reg_Number && stu.Reg_Number.toLowerCase().includes(searchQuery)) ||
+      (stu.Room && stu.Room.toLowerCase().includes(searchQuery))
+    );
+  }
+
+  displayStudents(filtered);
+}
+
+// Event listeners
+document.getElementById("filter-block").addEventListener("change", function () {
+  const selectedBlock = this.value;
+  fetchHostelData(selectedBlock);
+});
+
+document.getElementById("filter-year").addEventListener("change", applyFilters);
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+
+// Default block load
+window.addEventListener("DOMContentLoaded", () => {
+  const defaultBlock = document.getElementById("filter-block").value;
+  fetchHostelData(defaultBlock);
+});
     </script>
 </body>
 </html>

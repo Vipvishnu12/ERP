@@ -4,9 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Attendance Dashboard</title>
-  <link rel="stylesheet" href="Attendence1.css" />
+  <link rel="stylesheet" href="Attendence.css" />
   <link rel="stylesheet" href="Sidebar.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Loading spinner styles */
+    .loading-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid #3498db;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    .loading-text {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .chart-wrapper {
+      position: relative;
+      min-height: 300px;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
     <!-- Sidebar -->
@@ -35,55 +72,129 @@
     </div>
 
     <!-- Main Content -->
-     <div class="main-content">
-  <div class="header">
-    <h2>Attendance Dashboard</h2>
-    <select id="semesterSelect">
-      <option value="I">Semester I</option>
-      <option value="II">Semester II</option>
-      <option value="III">Semester III</option>
-      <option value="IV">Semester IV</option>
-      <option value="V">Semester V</option>
-      <option value="VI">Semester VI</option>
-      <option value="VII">Semester VII</option>
-      <option value="VIII">Semester VIII</option>
-    </select>
-  </div>
+    <div class="main-content">
+        <div class="header">
+            <h2>Attendance Dashboard</h2>
+            <select id="semesterSelect">
+                <option value="I">Semester I</option>
+                <option value="II">Semester II</option>
+                <option value="III">Semester III</option>
+                <option value="IV">Semester IV</option>
+                <option value="V">Semester V</option>
+                <option value="VI">Semester VI</option>
+                <option value="VII">Semester VII</option>
+                <option value="VIII">Semester VIII</option>
+            </select>
+        </div>
 
-  <div class="cards-container">
-    <div class="card" onclick="showModal('Poor')">
-      <h4>Attendance < 50%</h4>
-      <p id="below50">--</p>
-    </div>
-    <div class="card" onclick="showModal('Good')">
-      <h4>Attendance < 60%</h4>
-      <p id="below60">--</p>
-    </div>
-    <div class="card" onclick="showModal('studentattended1')">
-      <h4>Today's Attendance</h4>
-      <p id="todayAttendance">--</p>
-    </div>
-    <div class="card" onclick="showModal('staffattended1')">
-      <h4>Staff Present Today</h4>
-      <p id="staffPresent">--</p>
-    </div>
-  </div>
+        <div class="cards-container">
+            <div class="card" onclick="showModal('Poor')">
+                <h4>Attendance < 50%</h4>
+                <p id="below50">--</p>
+            </div>
+            <div class="card" onclick="showModal('Good')">
+                <h4>Attendance < 60%</h4>
+                <p id="below60">--</p>
+            </div>
+            <div class="card" onclick="showModal('studentattended1')">
+                <h4>Today's Attendance</h4>
+                <p id="todayAttendance">--</p>
+            </div>
+            <div class="card" onclick="showModal('staffattended1')">
+                <h4>Staff Present Today</h4>
+                <p id="staffPresent">--</p>
+            </div>
+        </div>
 
-  <div class="charts-container">
-    <canvas id="pieChart"></canvas>
-    <canvas id="barChart"></canvas>
-  </div>
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <canvas id="pieChart"></canvas>
+                <div id="pieChartLoading" class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Loading data...</div>
+                </div>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="barChart"></canvas>
+                <div id="barChartLoading" class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Loading data...</div>
+                </div>
+            </div>
+        </div>
 
-  <div id="studentModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <h3 id="modalTitle"></h3>
-      <div id="modalBody"></div>
+        <div id="studentModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h3 id="modalTitle"></h3>
+                <div id="modalBody"></div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-  <script src="Attendence.js"></script>
-  <!-- <script src="navigation.js"></script> -->
+    <script>
+    // Add this at the top of your existing Attendence.js file
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show loading indicators initially
+        document.getElementById('pieChartLoading').style.display = 'block';
+        document.getElementById('barChartLoading').style.display = 'block';
+        
+        // Add these lines to your original chart initialization code
+        // For example, after your charts are created and data is loaded:
+        
+        // If you're using fetch or any async method to load data, hide loaders after data loads
+        // Example with fetch:
+        /*
+        fetch('/your-api-endpoint')
+            .then(response => response.json())
+            .then(data => {
+                // Process your data and update charts
+                
+                // After charts are updated, hide the loading indicators
+                document.getElementById('pieChartLoading').style.display = 'none';
+                document.getElementById('barChartLoading').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Hide loaders even on error
+                document.getElementById('pieChartLoading').style.display = 'none';
+                document.getElementById('barChartLoading').style.display = 'none';
+            });
+        */
+        
+        // If you're not using fetch but have another way to load data
+        // Add this line where you finish loading and displaying your chart data:
+        // document.getElementById('pieChartLoading').style.display = 'none';
+        // document.getElementById('barChartLoading').style.display = 'none';
+        
+        // For demonstration purposes only - remove this in production
+        // This simulates data loading with a delay
+        setTimeout(() => {
+            document.getElementById('pieChartLoading').style.display = 'none';
+            document.getElementById('barChartLoading').style.display = 'none';
+        }, 2000);
+    });
+    
+    // If you have event handlers that reload data (like when changing semesters)
+    // Add these lines to show/hide loaders during data reloading
+    document.getElementById('semesterSelect').addEventListener('change', function() {
+        // Show loading indicators again
+        document.getElementById('pieChartLoading').style.display = 'block';
+        document.getElementById('barChartLoading').style.display = 'block';
+        
+        // Then fetch new data for the selected semester...
+        // ...
+        
+        // After the new data is loaded and charts are updated, hide the loaders
+        // For demonstration purposes only - replace with your actual data loading code
+        setTimeout(() => {
+            document.getElementById('pieChartLoading').style.display = 'none';
+            document.getElementById('barChartLoading').style.display = 'none';
+        }, 1500);
+    });
+    </script>
+    <script src="Attendence.js"></script>
+    <!-- <script src="navigation.js"></script> -->
 </body>
 </html>

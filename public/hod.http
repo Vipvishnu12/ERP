@@ -1,7 +1,7 @@
 GET http://localhost:3000/studentatt1/?department=agri&semester=1
 Content-Type: application/json
 ###
-GET http://localhost:3000/hostelcount/agri
+GET http://localhost:3000/sample
 ###
 
 
@@ -51,17 +51,50 @@ GET http://localhost:3000/attendanceup/?department=agri&semester=II
 GET http://localhost:3000/searchUsers?search=ram&department=agri
 
 ####
+GET http://localhost:3000/hos/agri
+
+### Get hostelers absent today from department (eg: CSE)
+GET http://localhost:3000/hos/agri
+
 ### Get students with CGPA <= 5 from a specific department
-GET http://localhost:3000/attendanceup/agri/1
+GET http://localhost:3000/hosteldata/agri
 
 ####
 ### Get students with CGPA <= 5 from a specific department
-GET http://localhost:3000/studentacadamicdet/agri
+
+GET http://localhost:3000/allhosteldata
+
+GET http://localhost:3000/hosteldata/agri
 
 ### Get students with CGPA <= 5 from a specific department
 http://localhost:3000/studentatt1?department=agri&semester=II
 
 ### Get students with CGPA <= 5 from a specific department
 GET http://localhost:3000/excellentstudentacadamicdet/agri
+
+
+
+### Get hostel data from nri1 table
+GET http://localhost:3000/allhostelleavedata/nri2
+Content-Type: application/json
+
+###
+
+### Get hostel data from nri2 table
+GET http://localhost:3000/hosteldat/nri2
+Content-Type: application/json
+
+###
+
+### Get hostel data from nri3 table
+GET http://localhost:3000/hosteldat/nri3
+Content-Type: application/json
+
+###
+
+### Get hostel data from nri4 table
+GET http://localhost:3000/hosteldat/nri4
+Content-Type: application/json
+
 
 

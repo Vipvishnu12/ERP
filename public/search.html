@@ -523,26 +523,31 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const dept = params.get('dept') || 'CSE';
+        const dept = params.get('dept');
       
         async function loadstudentsearch() {
-    const query = document.getElementById('searchInput1').value.trim();
-    console.log(query);
-    const dept = new URLSearchParams(window.location.search).get('dept') || 'CSE';
-    if (!query) return;
+  const query = document.getElementById('searchInput1').value.trim();
+  const dept = new URLSearchParams(window.location.search).get('dept') ;
 
-    try {
-        const response = await fetch(`/studentsearch/${dept}?q=${query}`);
-        if (!response.ok) throw new Error("Search failed");
-        const results = await response.json();
+  if (!query) {
+    location.reload(); // Page refreshes only when query is empty
+    return;
+  }
 
-        const container = document.getElementById("datacontainer");
-        container.innerHTML = ""; // Clear previous results
+  try {
+    const response = await fetch(`/studentsearch/${dept}?q=${query}`);
+    if (!response.ok) throw new Error("Search failed");
 
-        if (results.length === 0) {
-            container.innerHTML = `<div class="no-results">No faculty found for "${query}"</div>`;
-            return;
-        }
+    const results = await response.json();
+
+    const container = document.getElementById("datacontainer");
+    container.innerHTML = ""; // Clear previous results
+
+    if (results.length === 0) {
+      container.innerHTML = `<div class="no-results">No faculty found for "${query}"</div>`;
+      return;
+    }
+
 
         results.forEach(faculty => {
             const card = document.createElement("div");
@@ -584,11 +589,16 @@
 async function loadsearch() {
     const query = document.querySelector('.search-box input').value.trim();
     const dept = new URLSearchParams(window.location.search).get('dept') || 'CSE';
-    if (!query) return;
+
+    if (!query) {
+        location.reload(); // Refresh page only when search query is empty
+        return;
+    }
 
     try {
         const response = await fetch(`/facultysearch/${dept}?q=${query}`);
         if (!response.ok) throw new Error("Search failed");
+
         const results = await response.json();
 
         const container = document.getElementById("searchResults");
@@ -597,9 +607,7 @@ async function loadsearch() {
         if (results.length === 0) {
             container.innerHTML = `<div class="no-results">No faculty found for "${query}"</div>`;
             return;
-        }
-
-        results.forEach(faculty => {
+        }        results.forEach(faculty => {
             const card = document.createElement("div");
             card.classList.add("faculty-card");
 
@@ -624,120 +632,8 @@ async function loadsearch() {
         console.error("Error searching:", err);
         document.getElementById("faculty-container").innerHTML = `<div class="no-results">Error loading search results</div>`;
     }       
-   } // Sample faculty data
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // Load all faculty initially
-        //     loadFacultyCards();
-            
-        //     // Handle search button click
-        //     document.getElementById('searchBtn').addEventListener('click', performSearch);
-            
-        //     // Handle Enter key in search input
-        //     document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        //         if (e.key === 'Enter') {
-        //             performSearch();
-        //         }
-        //     });
-            
-        //     // Get search query from URL if it exists (for when page loads via form submission)
-        //     const urlParams = new URLSearchParams(window.location.search);
-        //     const query = urlParams.get('q');
-        //     if (query) {
-        //         document.getElementById('searchInput').value = query;
-        //         performSearch();
-        //     }
-        // });
-
-        // function performSearch() {
-        //     const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-            
-        //     if (searchTerm === '') {
-        //         document.getElementById('searchResultsContainer').style.display = 'none';
-        //         return;
-        //     }
-            
-        //     const results = facultyData.filter(faculty => {
-        //         return faculty.name.toLowerCase().includes(searchTerm) ||
-        //                faculty.title.toLowerCase().includes(searchTerm) ||
-        //                faculty.education.toLowerCase().includes(searchTerm);
-        //     });
-            
-        //     // Display results
-        //     document.getElementById('searchResultsContainer').style.display = 'block';
-            
-        //     if (results.length === 0) {
-        //         document.getElementById('searchResults').innerHTML = `
-        //             <div class="no-results">
-        //                 No faculty members found matching your search for "${searchTerm}".
-        //             </div>`;
-        //     } else {
-        //         renderFacultyCards(results, 'searchResults', searchTerm);
-        //     }
-            
-        //     // Update URL with search query (without refreshing page)
-        //     const url = new URL(window.location);
-        //     url.searchParams.set('q', searchTerm);
-        //     window.history.pushState({}, '', url);
-        // }
-
-        // function renderFacultyCards(facultyList, containerId, highlightTerm = '') {
-        //     const container = document.getElementById(containerId);
-        //     container.innerHTML = '';
-            
-        //     facultyList.forEach(faculty => {
-        //         let nameDisplay = faculty.name;
-        //         let titleDisplay = faculty.title;
-        //         let educationDisplay = faculty.education;
-                
-        //         // Highlight search term if provided
-        //         if (highlightTerm) {
-        //             const term = highlightTerm.toLowerCase();
-        //             nameDisplay = highlightText(faculty.name, term);
-        //             titleDisplay = highlightText(faculty.title, term);
-        //             educationDisplay = highlightText(faculty.education, term);
-        //         }
-                
-        //         const card = document.createElement('div');
-        //         card.className = 'faculty-card';
-        //         card.innerHTML = `
-        //             <div class="faculty-image">
-        //                 <span style="font-size: 60px;">${faculty.image}</span>
-        //             </div>
-        //             <div class="faculty-info">
-        //                 <div class="faculty-name">${nameDisplay}</div>
-        //                 <div class="faculty-title">${titleDisplay}</div>
-        //                 <div class="faculty-edu">${educationDisplay}</div>
-        //                 <div class="faculty-exp">${faculty.experience}</div>
-        //             </div>
-        //         `;
-                
-        //         container.appendChild(card);
-        //     });
-        // }
-
-  //       function highlightText(text, term) {
-  //           if (!term) return text;
-            
-  //           const lowerText = text.toLowerCase();
-  //           const lowerTerm = term.toLowerCase();
-            
-  //           if (!lowerText.includes(lowerTerm)) return text;
-            
-  //           const startIndex = lowerText.indexOf(lowerTerm);
-  //           const endIndex = startIndex + term.length;
-            
-  //           return text.substring(0, startIndex) + 
-  //                  <span class="highlight">${text.substring(startIndex, endIndex)}</span> + 
-  //                  text.substring(endIndex);
-  //       }
-
-  //      // Function to open faculty search in new window
-  // function openFacultySearch() {
-  //           const searchTerm = document.getElementById('searchInput').value.trim();
-  //           const url = `faculty-search.html${searchTerm ? '?q=' + encodeURIComponent(searchTerm) : ''}`;
-  //           window.open(url, '_blank');
-  //       }
-  document.getElementById("facultyLink").href = `dashboard.html?dept=${dept}`;
+   } 
+    document.getElementById("facultyLink").href = `dashboard.html?dept=${dept}`;
   document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
     e.preventDefault(); // prevent default anchor behavior
     window.location.href = `login.html`;

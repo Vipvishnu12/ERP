@@ -4,7 +4,8 @@
     "express": "^5.1.0",
     "morgan": "^1.10.0",
     "msnodesqlv8": "^4.5.0",
-    "mssql": "^11.0.1"
+    "mssql": "^11.0.1",
+    "mysql2": "^3.14.0"
   },
   "name": "new-folder-(6)",
   "version": "1.0.0",

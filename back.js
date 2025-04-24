@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const mysqlPool = require('./mysql');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 // Middleware to serve static files
@@ -11,7 +12,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan('default')); 
   
-
 
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,'public','login.html'));    });
@@ -1057,6 +1057,7 @@ app.get('/transport/:dept', async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 app.get('/hostelcount/:dept', async (req, res) => {
   try {
     const dept = req.params.dept;
@@ -1079,39 +1080,157 @@ app.get('/hostelcount/:dept', async (req, res) => {
     )
     AND v.Today_Status = 'Present';
     `);
-
-    
-
-
-    res.status(200).json({
+ res.status(200).json({
     Totalcount: hosteler.recordset[0].count,
       present_today_count : hostellerpresent.recordset[0].count,
       absent_today_count: hosteler.recordset[0].count-hostellerpresent.recordset[0].count 
-    });
-
-    
-
-
-
-
-
-
-
-  } catch (err) {
+    }); } catch (err) {
     res.status(500).send('Error while fetching counts: ' + err.message);
   }
 });
 
 
+  
+
+const mysql = require('mysql2/promise');
+
+// Define connections for each DB
+const dbConfigs = {
+  nri1: {
+    host: 'localhost',
+    user: 'root',
+    password: '12345',
+    database: 'smartnri1'
+  },
+  nri2: {
+    host: 'localhost',
+    user: 'root',
+    password: '12345',
+    database: 'smartnri2'
+  },
+  nri3: {
+    host: 'localhost',
+    user: 'root',
+    password: '12345',
+    database: 'smartnri3'
+  },
+  nri4: {
+    host: 'localhost',
+    user: 'root',
+    password: '12345',
+    database: 'smartnri4'
+  }
+};
+
+// Route: /hosteldata/:block
+app.get('/allhosteldata/:block', async (req, res) => {
+  const block = req.params.block;
+  if (!dbConfigs[block]) return res.status(400).send('Invalid block');
+
+  try {
+    const pool = await mysql.createPool(dbConfigs[block]);
+    const [rows] = await pool.query('SELECT * FROM staff_master'); // common table name in all DBs
+    res.json(rows);
+    await pool.end();
+  } catch (err) {
+    res.status(500).send('Database Error: ' + err.message);
+  }
+});
 
 
+// app.get('/allhostelleavedata/:block', async (req, res) => {
+//   try {
+//     const block = req.params.block;
+//     const pool = await poolPromise;
 
+//     // Step 1: Get Mobile numbers from SQL Server
+//     const result = await pool
+//       .request()
+//       .query(`
+//         SELECT v.Mobile
+//         FROM Student_Master v
+//         WHERE v.Reg_Number IN (
+//             SELECT Reg_Number
+//             FROM vw_Attendance_Stats
+//             WHERE Today_Status = 'Present'
+//         )
+//         AND v.Hosteler = 'yes'
+//       `);
 
+//     const mobileNumbers = result.recordset.map(row => row.Mobile);
 
+//     // Step 2: Match with MySQL by Mobile
+//     const getMatchingFromMySQL = async (mobileNumbers) => {
+//       if (mobileNumbers.length === 0) return [];
+//       const placeholders = mobileNumbers.map(() => '?').join(',');
+//       const mysqlPool1 = await mysql.createPool(dbConfigs[block]);
+//       const [rows] = await mysqlPool1.query(
+//         `SELECT * FROM staff_master WHERE Mobile IN (${placeholders})`,
+//         mobileNumbers
+//       );
+//       await mysqlPool1.end();
+//       return rows;
+//     };
 
+//     const matchedRecords = await getMatchingFromMySQL(mobileNumbers);
 
+//     // Step 3: Send response
+//     res.status(200).json(matchedRecords);
 
+//   } catch (err) {
+//     console.error("Error fetching hostel data:", err);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
+app.get('/allhostelleavedata/:block', async (req, res) => {
+  try {
+    const block = req.params.block;
+    const pool = await poolPromise;
+
+    // Step 1: Get Present Students (SQL Server)
+    const result = await pool
+      .request()
+      .query(`
+        SELECT v.Mobile
+        FROM Student_Master v
+        WHERE v.Reg_Number IN (
+            SELECT Reg_Number
+            FROM vw_Attendance_Stats
+            WHERE Today_Status = 'Present'
+        )
+        AND v.Hosteler = 'yes'
+      `);
+
+    const mobileNumbers = result.recordset.map(row => row.Mobile);
+
+    // Step 2: Get all students from MySQL block
+    const mysqlPool = await mysql.createPool(dbConfigs[block]);
+    const [allStudents] = await mysqlPool.query(`SELECT * FROM staff_master where Institutions='NEC'`);
+
+    // Step 3: Filter matching (present) students
+    const presentStudents = allStudents.filter(student =>
+      mobileNumbers.includes(student.Mobile)
+    );
+
+    // Step 4: Calculate leave students
+    const leaveCount = allStudents.length - presentStudents.length;
+
+    // Step 5: Send both data and count
+    res.status(200).json({
+      totalStudents: allStudents.length,
+      leaveCount: presentStudents.length,
+      presentCount: leaveCount,
+      LeaveStudents: allStudents.filter(student => mobileNumbers.includes(student.Mobile))
+    });
+
+    await mysqlPool.end();
+
+  } catch (err) {
+    console.error("Error fetching hostel data:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
 
