@@ -2,59 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parent Portal</title>
+  <title>Assign Work</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+    button {
+      background: #4a6fdc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3a5dc5;
+    }
+  </style>
 </head>
 <body>
-  <h3>Welcome, Parent</h3>
-  <div id="regnoButtons"></div>
-  <hr>
-  <div id="studentDetails"></div>
+  <div class="container">
+    <h2>Assign Work</h2>
+    <form id="assignForm">
+      <label>Assigned By:</label>
+      <input type="text" id="assignBy" required>
+
+      <label>Work Details:</label>
+      <textarea id="workDetails" rows="4" required></textarea>
+
+      <label>Target Date:</label>
+      <input type="date" id="targetDate" required>
+
+      <label>Assign To:</label>
+      <select id="assignedTo" required>
+        <option value="all">All (One Per Duplicate Mobile)</option>
+        <!-- Add more options like specific users if needed -->
+      </select>
+
+      <button type="submit">Assign</button>
+    </form>
+
+    <p id="message" style="margin-top: 20px; font-weight: bold;"></p>
+  </div>
 
   <script>
-    async function fetchSiblings(initialRegno) {
-      const res = await fetch(`/api/children/${initialRegno}`);
-      const data = await res.json();
+    document.getElementById('assignForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-      const container = document.getElementById("regnoButtons");
-      container.innerHTML = "";
+      const assignBy = document.getElementById('assignBy').value;
+      const workDetails = document.getElementById('workDetails').value;
+      const targetDate = document.getElementById('targetDate').value;
+      const assignedTo = document.getElementById('assignedTo').value;
 
-      // If no regno is selected, default to first sibling
-      if (!localStorage.getItem("selectedRegno") && data.siblings.length > 0) {
-        localStorage.setItem("selectedRegno", data.siblings[0].Reg_Number);
-      }
-
-      data.siblings.forEach(child => {
-        const btn = document.createElement("button");
-        btn.textContent = `${child.Reg_Number} - ${child.Name}`;
-        btn.onclick = () => {
-          const current = localStorage.getItem("selectedRegno");
-          if (current !== child.Reg_Number) {
-            localStorage.setItem("selectedRegno", child.Reg_Number);
-            location.reload();
-          }
-        };
-        container.appendChild(btn);
+      const response = await fetch('/work/assign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ assignBy, workDetails, targetDate, assignedTo })
       });
-    }
 
-    async function loadStudentData() {
-      const regno = localStorage.getItem("selectedRegno");
-      if (!regno) return;
+      const result = await response.json();
+      const messageEl = document.getElementById('message');
 
-      const res = await fetch(`/api/siblingdata/${regno}`);
-      const data = await res.json();
-
-      document.getElementById("studentDetails").innerHTML = `
-        <p><strong>Register Number:</strong> ${data[0].Reg_Number}</p>
-        <p><strong>Name:</strong> ${data[0].Name}</p>
-        <!-- Add more details if needed -->
-      `;
-    }
-
-    // Entry point
-    const fallbackRegno = "23CS092";
-    fetchSiblings(fallbackRegno).then(loadStudentData);
+      if (response.ok) {
+        messageEl.textContent = result.message;
+        messageEl.style.color = 'green';
+      } else {
+        messageEl.textContent = result.message || result.error;
+        messageEl.style.color = 'red';
+      }
+    });
   </script>
 </body>
 </html>
