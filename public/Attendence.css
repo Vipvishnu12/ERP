@@ -53,13 +53,13 @@ body {
     justify-content: center;
     align-items: center;
   }
-  .modal-content {
+  /* .modal-content {
     background: white;
     padding: 20px;
     border-radius: 12px;
     min-width: 300px;
     max-width: 500px;
-  }
+  } */
   .close-btn {
     float: right;
     cursor: pointer;
@@ -74,5 +74,14 @@ body {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 500px;
+    max-height: 80vh; /* Limit height */
+    overflow-y: auto;  /* Enable vertical scrolling */
   }
   

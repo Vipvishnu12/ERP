@@ -102,7 +102,7 @@ FROM (
 
         WITH DistinctDays AS (
           SELECT DISTINCT att_date
-          FROM Student_Attendance
+          FROM Student_Subject_Hour
           WHERE Class LIKE '%'+@dept+'%'
             AND att_date <= CAST(GETDATE() AS DATE)  -- Only up to today
       ),
@@ -182,7 +182,6 @@ app.get('/facultycounts/:dept', async (req, res) => {
     const assistantProfCount = await pool
       .request()
       .input('dept', dept)
-      .input('absentees', 'ab')
       .input('Designation', 'Assistant Professor')
       .query("SELECT COUNT(*) AS count FROM Staff_Master WHERE Department = @dept AND Designation = @Designation");
 
@@ -288,7 +287,7 @@ app.get('/facultywork4/:dept', async (req, res) => {
     const result = await pool
       .request()
       .input('dept', sql.VarChar, dept)
-      .query(`SELECT TOP 3 * FROM faculty_work4 WHERE Department = @dept ORDER BY Work_Assign_Dt`);
+      .query(`SELECT TOP 3 * FROM Staff_To_DO WHERE Department = @dept ORDER BY Work_Assign_Dt`);
 console.log(result.recordset);
     res.status(200).json(result.recordset);
 
@@ -581,7 +580,7 @@ app.get('/place/:dept', async (req, res) => {
         FROM vw_Attendance_Stats
         WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
           AND Semester = @semester
-          AND attendance_percentage < 50;
+          AND attendance_percentage < 70;
       `);
     
     const avg = await pool
@@ -594,7 +593,7 @@ app.get('/place/:dept', async (req, res) => {
         FROM vw_Attendance_Stats
         WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
           AND Semester = @semester
-          AND attendance_percentage < 60;
+          AND attendance_percentage BETWEEN 70 AND 80;
           
       `);
     
@@ -608,7 +607,7 @@ app.get('/place/:dept', async (req, res) => {
         FROM vw_Attendance_Stats
         WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
           AND Semester = @semester
-          AND attendance_percentage BETWEEN 60 AND 80;
+          AND attendance_percentage BETWEEN 80 AND 90;
       `);
     
     const excel = await pool
@@ -621,7 +620,7 @@ app.get('/place/:dept', async (req, res) => {
         FROM vw_Attendance_Stats
         WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
           AND Semester = @semester
-          AND attendance_percentage BETWEEN 80 AND 100;
+          AND attendance_percentage BETWEEN 90 AND 100;
       `);
         const studentatt = await pool
         .request()
@@ -629,43 +628,21 @@ app.get('/place/:dept', async (req, res) => {
         .input('semester',   sql.VarChar(10), sem)
         .query(`
            SELECT 
-  name,
+  Name,
   attendance_percentage,
   leaves
 FROM vw_Attendance_Stats
-WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
-  AND Semester = @semester
-  AND Today_Status = 'Present';
+WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%') AND Semester = @semester
+  AND Today_Status = 'Absent';
 
  `);
- const staffatt = await pool
-        .request()
-        .input('department', sql.VarChar, dept)
-        .query(`
-        	 SELECT 
-  s.name,
-  COUNT(CASE WHEN a.status = 'Present' THEN 1 END) * 100.0 / COUNT(*) AS attendance_percentage,
-  SUM(CASE WHEN a.status = 'Absent' THEN 1 ELSE 0 END) AS leaves
-FROM staffattendance s
-JOIN attendance_staff a ON s.staff_id = a.staff_id
-WHERE s.department =@department
-  AND s.staff_id IN (
-    SELECT a.staff_id 
-    FROM attendance_staff
-    WHERE a.status = 'Present'
-      AND CAST(a.date AS DATE) = CAST(GETDATE() AS DATE)
-  )
-GROUP BY s.name
- `);
-  
   
       res.status(200).json({
         excellent: excel.recordset,
         good1: good.recordset,
         average: avg.recordset,
         poor1: poor.recordset,
-        studentattended:studentatt.recordset,
-        staffattended:staffatt.recordset    
+        studentattended:studentatt.recordset 
       });
   
     } catch (err) {
@@ -737,7 +714,7 @@ app.get('/facultytask/:dept', async (req, res) => {
     const result = await pool
       .request()
       .input('dept', sql.VarChar, dept)
-      .query(`SELECT * FROM faculty_work4 WHERE Department = @dept`);
+      .query(`SELECT * FROM Staff_To_DO WHERE Department = @dept`);
 console.log(result.recordset);
     res.status(200).json(result.recordset);
 
@@ -983,7 +960,6 @@ app.get('/studentacadamicdet/:dept', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 app.get("/dashattdet/:dept", async (req, res) => {
   const dept = req.params.dept;
 
@@ -992,41 +968,34 @@ app.get("/dashattdet/:dept", async (req, res) => {
     const result = await pool
       .request()
       .input('department', sql.VarChar, dept)
-      .input('Class', `I ${dept}`)
+      .input('Class', sql.VarChar, `I ${dept}`)
       .query(`
-        
-
-WITH WorkingDays AS (
-   SELECT Date1 AS att_date
-FROM Academic_Calendar
-WHERE Status = 'Working Day'
-  AND Date1 <= CAST(GETDATE() AS DATE)
-),
-StudentMaster AS (
-    SELECT Reg_Number, Name
-    FROM Student_Master
-    WHERE Department = @department or Class LIKE @Class + '%'
-),
-StudentAttendance AS (
-    SELECT Reg_Number, att_date
-    FROM Student_Attendance
-    WHERE Period IS NOT NULL
-    GROUP BY Reg_Number, att_date
-)
-
-SELECT 
-    sm.Reg_Number,
-    sm.Name,
-    COUNT(wd.att_date) AS Total_Working_Days,
-    COUNT(CASE WHEN sa.att_date IS NOT NULL THEN 1 END) AS Full_Day_Absents,
-    COUNT(CASE WHEN sa.att_date IS  NULL THEN 1 END) AS Present_Days,
-    CAST(100.0 * COUNT(CASE WHEN sa.att_date IS  NULL THEN 1 END) / COUNT(wd.att_date) AS DECIMAL(5,2)) AS attendance
-FROM StudentMaster sm
-CROSS JOIN WorkingDays wd
-LEFT JOIN StudentAttendance sa 
-    ON sa.Reg_Number = sm.Reg_Number AND sa.att_date = wd.att_date
-GROUP BY sm.Reg_Number, sm.Name;
-
+        SELECT 
+            sm.Reg_Number,
+            sm.Name,
+            CAST(
+                100.0 * COUNT(CASE WHEN sa.att_date IS NULL OR sa.Att_Status != 'A' OR sa.Att_Status IS NULL THEN 1 END) 
+                / COUNT(wd.Date1) 
+                AS DECIMAL(5,2)
+            ) AS attendance
+        FROM 
+            Student_Master sm
+        CROSS JOIN 
+            (SELECT Date1 
+             FROM Academic_Calendar 
+             WHERE Status = 'Working Day' 
+               AND Date1 <= CAST(GETDATE() AS DATE)) wd
+        LEFT JOIN 
+            (SELECT Reg_Number, att_date, Att_Status
+             FROM Student_Subject_Hour
+             WHERE Period IS NOT NULL
+             GROUP BY Reg_Number, att_date, Att_Status) sa
+        ON sa.Reg_Number = sm.Reg_Number AND sa.att_date = wd.Date1
+        WHERE 
+            sm.Department = @department 
+            or sm.Class = @Class
+        GROUP BY 
+            sm.Reg_Number, sm.Name
       `);
 
     res.json(result.recordset);
@@ -1035,6 +1004,7 @@ GROUP BY sm.Reg_Number, sm.Name;
     res.status(500).json({ message: "failed" });
   }
 });
+
 app.get('/transport/:dept', async (req, res) => {
   try {
     const dept = req.params.dept;
@@ -1138,51 +1108,6 @@ app.get('/allhosteldata/:block', async (req, res) => {
 });
 
 
-// app.get('/allhostelleavedata/:block', async (req, res) => {
-//   try {
-//     const block = req.params.block;
-//     const pool = await poolPromise;
-
-//     // Step 1: Get Mobile numbers from SQL Server
-//     const result = await pool
-//       .request()
-//       .query(`
-//         SELECT v.Mobile
-//         FROM Student_Master v
-//         WHERE v.Reg_Number IN (
-//             SELECT Reg_Number
-//             FROM vw_Attendance_Stats
-//             WHERE Today_Status = 'Present'
-//         )
-//         AND v.Hosteler = 'yes'
-//       `);
-
-//     const mobileNumbers = result.recordset.map(row => row.Mobile);
-
-//     // Step 2: Match with MySQL by Mobile
-//     const getMatchingFromMySQL = async (mobileNumbers) => {
-//       if (mobileNumbers.length === 0) return [];
-//       const placeholders = mobileNumbers.map(() => '?').join(',');
-//       const mysqlPool1 = await mysql.createPool(dbConfigs[block]);
-//       const [rows] = await mysqlPool1.query(
-//         `SELECT * FROM staff_master WHERE Mobile IN (${placeholders})`,
-//         mobileNumbers
-//       );
-//       await mysqlPool1.end();
-//       return rows;
-//     };
-
-//     const matchedRecords = await getMatchingFromMySQL(mobileNumbers);
-
-//     // Step 3: Send response
-//     res.status(200).json(matchedRecords);
-
-//   } catch (err) {
-//     console.error("Error fetching hostel data:", err);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-
 app.get('/allhostelleavedata/:block', async (req, res) => {
   try {
     const block = req.params.block;
@@ -1231,11 +1156,484 @@ app.get('/allhostelleavedata/:block', async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+app.post('/wadernlogin', async (req, res) => {
+  const { username, password } = req.body;
+console.log(req.body)
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('username', username)
+      .input('Password', password)
+      .query('SELECT * FROM users WHERE username = @username AND password = @Password');
+
+    const user = result.recordset[0]; // or use result.recordset.length > 0
+
+    res
+      .status(user ? 200 : 401)
+      .send(user ? "Login success" : "Unauthorized");
+    
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
 
 
+app.get('/parentsem/:regno', async (req, res) => {
+  try {
+    const regno = req.params.regno;
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', regno)
+      .query(`
+        SELECT 
+          Reg_Number,
+          Name,
+          Semester,
+          AvgGradePoint 
+        FROM dbo.semester_grade_average 
+        WHERE Reg_Number = @regno
+      `);
+
+    const records = result.recordset;
+    if (!records.length) {
+      return res.status(404).json({ message: 'No data for ' + regno });
+    }
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
+const studentData = [
+  { regNumber: "R001", semester: "I", avgGradePoint: 7.8 },
+  { regNumber: "R001", semester: "II", avgGradePoint: 8.5 },
+  { regNumber: "R001", semester: "III", avgGradePoint: 9.2 },
+  { regNumber: "R002", semester: "I", avgGradePoint: 8.0 },
+  { regNumber: "R002", semester: "II", avgGradePoint: 8.9 },
+];
+// app.get('/api/semester-data', (req, res) => {
+//   res.json(studentData);
+// });
+
+app.get('/api/semester-data/:regno', async (req, res) => {
+  try {
+    const regno = req.params.regno;
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', regno)  // bind the parameter
+      .query(`
+        SELECT 
+          Reg_Number,
+          Name,
+          Semester,
+          AvgGradePoint 
+        FROM dbo.semester_grade_average 
+        WHERE Reg_Number = @regno
+      `);  // notice @regno here
+
+    const records = result.recordset;
+    if (!records.length) {
+      return res.status(404).json({ message: 'No data for ' + regno });
+    }
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.get('/api/semester-dat/:regno', async (req, res) => {
+  try {
+    const regno = req.params.regno;
+    const semester = req.query.semester;  // e.g. ?semester=I
+    const pool = await poolPromise;
+
+    // First query: CA1
+    const result1 = await pool
+      .request()
+      .input('regno', sql.VarChar, regno)
+      .input('Semester', sql.VarChar, semester)
+      .query(`
+        SELECT ROUND(AVG(Mark), 2) AS AvgCAT1
+        FROM Exam_Marks
+        WHERE Exam_Name = 'CA1'
+          AND Reg_Number = @regno
+          AND Semester   = @Semester;
+      `);
+
+    // Second query: CA2
+    const result2 = await pool
+      .request()
+      .input('regno', sql.VarChar, regno)
+      .input('Semester', sql.VarChar, semester)
+      .query(`
+        SELECT ROUND(AVG(Mark), 2) AS AvgCAT2
+        FROM Exam_Marks
+        WHERE Exam_Name = 'CA2'
+          AND Reg_Number = @regno
+          AND Semester   = @Semester;
+      `);
+
+    // Query for semester data
+    const sem = await pool
+      .request()
+      .input('regno', regno)
+      .input('Semester', sql.VarChar, semester)  // bind the parameter
+      .query(`
+        SELECT 
+          Reg_Number,
+          Name,
+          Semester,
+          AvgGradePoint 
+        FROM dbo.semester_grade_average 
+        WHERE Reg_Number = @regno AND Semester   = @Semester;
+      `);  // notice @regno here
+
+    // If no CA1 data, return 404
+    if (!result1.recordset.length) {
+      return res
+        .status(404)
+        .json({ message: 'No data found for the given student and semester.' });
+    }
+
+    const ca1 = result1.recordset[0].AvgCAT1;
+    const ca2 = (result2.recordset[0] || { AvgCAT2: 0 }).AvgCAT2;
+
+    // Scale and round
+    const avg1 = parseFloat(((ca1 / 75) * 10).toFixed(2));
+    const avg2 = parseFloat(((ca2 / 75) * 10).toFixed(2));
+
+    // Extract AvgGradePoint from the semester data (if exists)
+    const avgGradePoint = sem.recordset.length ? sem.recordset[0].AvgGradePoint : 0;
+
+    // Send as an array under AvgGradePoint
+    res.json([
+      { AvgGradePoint: avg1, Semester: 'cat1' },
+      { AvgGradePoint: avg2, Semester: 'cat2' },
+      { AvgGradePoint: avgGradePoint, Semester: 'sem' }
+    ]);
+
+  } catch (error) {
+    console.error('Error fetching semester data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+app.get('/api/par-cgpaatt-data/:regno', async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const regno = req.params.regno;
   
+    // Step 1: Get CGPA and Arrear_Status
+    const semResult = await pool
+      .request()
+      
+      .input('regno', regno) // bind the parameter
+      .query(`
+        SELECT CGPA, Arrear_Status ,Name
+        FROM Student_Master 
+        WHERE Reg_Number = @regno
+      `);
+
+    // Step 2: Get attendance_percentage
+    const attendanceResult = await pool
+      .request()
+      .input('regno', regno) // bind the parameter
+      .query(`
+        SELECT attendance_percentage 
+        FROM vw_Attendance_Stats 
+        WHERE Reg_Number = @regno
+      `);
+
+    // Check if data exists
+    if (semResult.recordset.length > 0 && attendanceResult.recordset.length > 0) {
+      const studentData = semResult.recordset[0];
+      const attendanceData = attendanceResult.recordset[0];
+
+      res.json({
+        Name: studentData.Name,
+        CGPA: studentData.CGPA,
+        Arrear_Status: studentData.Arrear_Status,
+        Attendance_Percentage: attendanceData.attendance_percentage
+      });
+    } else {
+      res.status(404).json({ message: 'No data found for the given register number.' });
+    }
+  } catch (err) {
+    console.error("Error fetching student data:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get('/api/subdata/:regno', async (req, res) => {
+  try {
+    const regno = req.params.regno;
+    const pool = await poolPromise;
+    const semester = req.query.semester;  // e.g. ?semester=I
+    const result = await pool
+      .request()
+      .input('regno', regno)
+      .input('Semester', sql.VarChar, semester)   // bind the parameter
+      .query(`
+        SELECT 
+          Course_Title,
+         Grade
+          
+        FROM Exam_Marks
+        WHERE Reg_Number = @regno and Semester=@Semester
+      `);  // notice @regno here
+
+    const records = result.recordset;
+    if (!records.length) {
+      return res.status(404).json({ message: 'No data for ' + regno });
+    }
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get("/studentfulldaywise/:regno", async (req, res) => {
+  const regno = req.params.regno;
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', sql.VarChar, regno)
+      .query(`
+        WITH CalendarDays AS (
+          SELECT Date1, Status 
+          FROM Academic_Calendar
+          WHERE Date1 <= CAST(GETDATE() AS DATE)
+        ),
+        StudentAttendance AS (
+          SELECT Reg_Number, att_date, Att_Status
+          FROM Student_Subject_Hour
+          WHERE Period IS NOT NULL
+          GROUP BY Reg_Number, att_date, Att_Status
+        )
+        SELECT 
+          cd.Date1 AS AttendanceDate,
+          CASE 
+            WHEN cd.Status != 'Working Day' THEN 'Holiday'
+            WHEN sa.Att_Status = 'A' THEN 'Absent'
+            WHEN sa.Att_Status IS NOT NULL THEN 'Present'
+            ELSE 'Present' 
+          END AS Status
+        FROM 
+          CalendarDays cd
+        LEFT JOIN 
+          StudentAttendance sa 
+        ON 
+          sa.att_date = cd.Date1 AND sa.Reg_Number = @regno
+        ORDER BY cd.Date1
+      `);
+
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("error:", err);
+    res.status(500).json({ message: "failed" });
+  }
+});
+app.get('/studentdaywise1/:regno/:date', async (req, res) => {
+  try {
+    const { regno, date } = req.params;
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', sql.VarChar, regno)
+      .input('date', sql.VarChar, date)
+      .query(`SELECT Period, Course_Title, Att_Status 
+              FROM Student_Subject_Hour 
+              WHERE Reg_Number = @regno AND Att_Date = @date`);
+
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("error:", err);
+    res.status(500).json({ message: "failed" });
+  }
+});
+
+
+app.get('/api/teacher-status/:dept', async (req, res) => {
+  const dept = req.params.dept;
+  const today = new Date().toISOString().split('T')[0];
+
+  try {
+    const sqlPool = await poolPromise;
+
+    // 1. Get staff from SQL Server
+    const staffQuery = `
+      SELECT Staff_Name, Staff_Code, Department, Mobile
+      FROM Staff_Master 
+      WHERE Staff_Code IS NOT NULL
+      ${dept ? `AND Department = '${dept}'` : ''}
+    `;
+    const staffResult = await sqlPool.request().query(staffQuery);
+
+    // 2. Get today's attendance from MySQL
+    const [attendanceData] = await mysqlPool.query(
+      `SELECT dd.Punch_Date, dd.Remark, dd.Mobile
+       FROM dd
+       WHERE DATE(dd.Punch_Date) = CURDATE()
+       ${dept ? `AND dd.Department = ?` : ''}`,
+      [dept]
+    );
+
+    // 3. Create status map for attendance
+    const statusMap = {};
+    attendanceData.forEach(row => {
+      const remark = row.Remark?.toLowerCase();
+      if (remark !== 'not punched') {
+        statusMap[row.Mobile] = 'Present';
+      }
+    });
+
+    // 4. Get LOP data from MySQL
+    const [lopResults] = await mysqlPool.query(
+      `SELECT Staff_Name, LOP_Count 
+       FROM staff_lop_count
+       WHERE Department = ?`,
+      [dept]
+    );
+
+    // 5. Categorize LOP
+    const lopData = {
+      poor1: lopResults.filter(r => r.LOP_Count > 5),
+      average: lopResults.filter(r => r.LOP_Count > 3 && r.LOP_Count <= 5),
+      good1: lopResults.filter(r => r.LOP_Count > 1 && r.LOP_Count <= 3),
+      excellent: lopResults.filter(r => r.LOP_Count <= 1)
+    };
+
+    // 6. Prepare final report (staff + today's attendance)
+    const report = staffResult.recordset.map(staff => ({
+      Staff_Name: staff.Staff_Name,
+      Staff_Code: staff.Staff_Code,
+      Today_Status: statusMap[staff.Mobile] || '-'
+    }));
+
+    // 7. Return everything
+    res.json({
+      todayStatus: report,
+      lopCategory: lopData
+    });
+
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: 'Internal Server Error', details: err.message });
+  }
+});
+
+
+
+
+app.get("/api/children/:regno", async (req, res) => {
+  const regno = req.params.regno;
+
+  try {
+    const pool = await poolPromise;
+
+    // Step 1: Get the parent's mobile number from the given register number
+    const mobileResult = await pool
+      .request()
+      .input("regno", sql.VarChar, regno)
+      .query("SELECT Father_Mobile FROM Student_Master WHERE Reg_Number = @regno");
+
+    if (mobileResult.recordset.length === 0)
+      return res.json({ siblings: [] });
+
+    const mobile = mobileResult.recordset[0].Father_Mobile;
+
+    // Step 2: Fetch all children with the same mobile number
+    const siblingsResult = await pool
+      .request()
+      .input("regno", sql.VarChar, regno)
+      .input("mobile", sql.VarChar, mobile)
+      .query("SELECT Reg_Number, Name FROM Student_Master WHERE Father_Mobile = @mobile and Reg_Number!=@regno");
+
+    res.json({ siblings: siblingsResult.recordset });
+  } catch (err) {
+    console.error("SQL Server Error:", err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+
+
+
+
+app.get("/api/siblingdata/:regno", async (req, res) => {
+  const regno = req.params.regno;
+
+  try {
+    const pool = await poolPromise;
+
+    // Step 1: Get the parent's mobile number from the given register number
+    const siblingsResult = await pool
+      .request()
+      .input("regno", sql.VarChar, regno)
+      .query("SELECT Reg_Number, Name FROM Student_Master WHERE Reg_Number = @regno");
+
+    res.json(siblingsResult.recordset);
+  } catch (err) {
+    console.error("SQL Server Error:", err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+app.post('/parentlogin', async (req, res) => {
+  const { regno, Password } = req.body;
+console.log(req.body)
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', regno)
+      .input('Password', Password)
+      .query('SELECT * FROM parentlogin WHERE Reg_Number = @regno AND Password = @Password');
+
+    const user = result.recordset[0]; // or use result.recordset.length > 0
+
+    res
+      .status(user ? 200 : 401)
+      .send(user ? "Login success" : "Unauthorized");
+    
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+
+app.get('/api/incidents/:regno', async (req, res) => {
+  const regno = req.params.regno;
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input('regno', sql.VarChar, regno)
+      .query('SELECT * FROM student_incidents WHERE Reg_Number = @regno');
+
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

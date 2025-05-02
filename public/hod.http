@@ -51,20 +51,20 @@ GET http://localhost:3000/attendanceup/?department=agri&semester=II
 GET http://localhost:3000/searchUsers?search=ram&department=agri
 
 ####
-GET http://localhost:3000/hos/agri
+GET http://localhost:3000/par-cgpaatt-data/22AG003
 
 ### Get hostelers absent today from department (eg: CSE)
-GET http://localhost:3000/hos/agri
+GET http://localhost:3000/wadernlogin
 
 ### Get students with CGPA <= 5 from a specific department
-GET http://localhost:3000/hosteldata/agri
+GET http://localhost:3000/dashattdet/agri
 
 ####
 ### Get students with CGPA <= 5 from a specific department
 
 GET http://localhost:3000/allhosteldata
-
-GET http://localhost:3000/hosteldata/agri
+#####
+GET http://localhost:3000/dashattdet/agri
 
 ### Get students with CGPA <= 5 from a specific department
 http://localhost:3000/studentatt1?department=agri&semester=II
@@ -85,16 +85,73 @@ GET http://localhost:3000/hosteldat/nri2
 Content-Type: application/json
 
 ###
+GET http://localhost:3000/attendanceup/?department=AGRI &semester=II HTTP/1.1
 
 ### Get hostel data from nri3 table
 GET http://localhost:3000/hosteldat/nri3
 Content-Type: application/json
 
 ###
+GET http://localhost:3000/api/teacher-attendance-summary HTTP/1.1
+Content-Type: application/json
 
 ### Get hostel data from nri4 table
 GET http://localhost:3000/hosteldat/nri4
 Content-Type: application/json
+
+
+######
+POST http://localhost:3000/parentlogin
+Content-Type: application/json
+
+{
+  "regno": "23cs092",
+  "Password": "12345"
+}
+###
+GET http://localhost:3000/api/teacher-daily-status/dept?department=CSE
+
+
+GET http://localhost:3000/api/semester-dat/22AG003?semester=I
+
+### Get Semester Data by Registration Number
+GET http://localhost:3000/api/incidents/23IT120 HTTP/1.1
+Content-Type: application/json
+
+#######
+GET http://localhost:3000/api/incidents/23cs092
+
+GET http://localhost:3000/api/children/22AG003 HTTP/1.1
+Content-Type: application/json
+###
+GET http://localhost:3000/api/subdata/22AG003?semester=I
+
+####
+GET http://localhost:3000/api/siblingdata/23cs092
+
+### Get student day-wise attendance
+GET http://localhost:3000/studentdaywise1/23CS065/2025-02-21
+
+
+### Get student rank by regno
+GET http://localhost:3000/api/teacher-daily-status
+
+####
+
+GET http://localhost:3000/api/teacher-daily-summary/2025-04-28 HTTP/1.1
+Content-Type: application/json
+
+
+####
+GET http://localhost:3000/api/teacher-daily-summary1/2025-04-30?mobile=9095627270
+
+
+
+#####
+GET http://localhost:3000/api/teacher-status/CSE
+Accept: application/json
+
+ GET http://localhost:3000/api/teacher-daily-status
 
 
 

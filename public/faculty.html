@@ -30,6 +30,8 @@
                 <i>📋</i>
                 <span>Attendance</span>
             </li>
+            <li>   <i>🚌</i>                             
+                <span>Transport</span>  </li>
             <li>   <i>🚪</i> 
             <span>Logout</span>  </li>
         </div>
@@ -78,47 +80,17 @@
         </div>
         
         
-        <!-- <div class="card">
-            <h2 class="card-title"><i>📊</i> Faculty Performance</h2>
-            <div class="performance-item">
-                <div class="performance-icon icon-green">✓</div>
-                <div class="performance-content">
-                    <div class="performance-date">22 Nov</div>
-                    <div class="performance-text">Completed "Advanced Teaching Methods" workshop</div>
-                </div>
-            </div>
-            <div class="performance-item">
-                <div class="performance-icon icon-blue">⭐</div>
-                <div class="performance-content">
-                    <div class="performance-date">17 Nov</div>
-                    <div class="performance-text">Received excellent student feedback for CS101 Introduction to Programming</div>
-                </div>
-                <div class="performance-action">Read more</div>
-            </div>
-            <div class="performance-item">
-                <div class="performance-icon icon-purple">👥</div>
-                <div class="performance-content">
-                    <div class="performance-date">15 Nov</div>
-                    <div class="performance-text">Joined the committee "Curriculum Development"</div>
-                </div>
-            </div>
-            <div class="performance-item">
-                <div class="performance-icon icon-orange">📝</div>
-                <div class="performance-content">
-                    <div class="performance-date">12 Nov</div>
-                    <div class="performance-text">Published research paper "AI Integration in Education"</div>
-                </div>
-                <div class="performance-action">View paper</div>
-            </div>
-            <a href="#" class="view-all">View All Performance Records</a>
-        </div>
-         -->
+        
         <div class="card">
             <h2 class="card-title"><i>📋</i> Faculty Tasks</h2>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <a href="addTask.html" id="addTaskLink">
+                    <button class="btn-add" id="addTaskBtn"><span>+</span> Add Task</button>
+                  </a></div>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Staff Name</th>
+                        <th>Staff Id</th>
                         <th>To-Do</th>
                         <th>Assigned_Date</th>
                         <th>Status</th>
@@ -139,17 +111,7 @@
         // Add event listener to the Add Faculty button
         const urlParams = new URLSearchParams(window.location.search);
         const dept = urlParams.get('dept');
-        // document.getElementById('addFacultyBtn').addEventListener('click', function() {
-        //     // Navigate to the add faculty page
-        //     window.location.href = `addfaculty.html?dept=${dept}`;
-        // });
-        
-        // Add event listener for navigation to dashboard
-        // document.getElementById('dashboardLink').addEventListener('click', function() {
-        //     // Navigate to the dashboard page
-        //     window.location.href = 'dashboard.html';
-        // });
-        
+       
         
         // Add event listeners for all sidebar menu items
         document.addEventListener('DOMContentLoaded', function() {
@@ -184,13 +146,10 @@
                         case 'attendance':
                             window.location.href = `attendance.html?dept=${dept}`;
                             break;
-                        case 'reports':
-                            window.location.href = 'reports.html';
+                            case 'transport':
+                            window.location.href = `Transport.html?dept=${dept}`;
                             break;
-                        case 'settings':
-                            window.location.href = 'settings.html';
-                            break;
-                        case 'logout':
+                       case 'logout':
                             // Handle logout functionality
                             alert('Logging out...');
                             window.location.href = 'login.html';
@@ -230,11 +189,11 @@ console.log(data)
         data.forEach(course => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${course.Work_Assign_By}</td>
+                <td>${course.Staff_id}</td>
                 <td>${course.Work_Details}</td>
+                <td>${course.  Work_Assign_Dt}</td>
                 <td>${course.Completion_Status}</td>
                 <td>${course.Target_Dt}</td>
-                <td>${course.Work_Assign_Dt}</td>
             `;
             tableBody.appendChild(row);
         });
@@ -299,7 +258,7 @@ document.getElementById("viewAllBtn").addEventListener("click", function (e) {
     window.location.href = `facultyinfo.html?dept=${dept}`;
 });
 
-
+document.getElementById("addTaskLink").href = `addTask.html?dept=${dept}`;
     </script>
 </body>
 </html>

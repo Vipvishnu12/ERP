@@ -209,12 +209,6 @@
                 <i>📅</i> Attendance
             </div>
             <div class="sidebar-menu-item">
-                <i>📄</i> Reports
-            </div>
-            <div class="sidebar-menu-item">
-                <i>⚙</i> Settings
-            </div>
-            <div class="sidebar-menu-item">
                 <i>🚪</i> Logout
             </div>
         </div>
@@ -372,9 +366,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     'faculty.html': 2,
     'Placement.Html': 3,
     'Attendance.html': 4,
-    'reports.html': 5,
-    'settings.html': 6,
-    'login.html': 7
+    'Transport':5,
+    'login.html': 6
   };
 
   // Get current file name from URL
@@ -390,7 +383,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   menuItems[2].addEventListener('click', () => window.location.href = `faculty.html?dept=${dept}`);
   menuItems[3].addEventListener('click', () => window.location.href = `Placement.Html?dept=${dept}`);
   menuItems[4].addEventListener('click', () => window.location.href = `Attendance.html?dept=${dept}`);
-  
+  menuItems[5].addEventListener('click', () => window.location.href = `Transport.html?dept=${dept}`);
+  menuItems[6].addEventListener('click', () => window.location.href = `login.html`);
 });
 
     </script>

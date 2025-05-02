@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - Student Academic Monitoring</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .student-details h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .student-details p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .progress-container {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            background-color: var(--success);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        th {
+            color: var(--gray);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        
+        .cgpa-chart {
+            width: 100%;
+            height: 250px;
+        }
+        .semester-select {
+    margin: 20px 0;
+}
+
+.subject-results table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.subject-results th, .subject-results td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.subject-results th {
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.subject-results tbody tr:hover {
+    background-color: #f8f9fa;
+}
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #842029;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #664d03;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .alert-icon {
+            font-size: 18px;
+        }
+        
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+        }
+        
+        .timetable-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            border-radius: 4px;
+        }
+        
+        .timetable-cell {
+            background-color: #e9ecef;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 12px;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .subject {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .time {
+            font-size: 10px;
+            color: var(--gray);
+        }
+
+        .full-width {
+            grid-column: span 3;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="student-info">
+                <div class="student-avatar">RS</div>
+                <div class="student-details">
+                    <h2 id="name">--</h2>
+                    <p id='regno'>--</p>
+                    <p  id="sibling"></p>
+                    <div id="regnoButtons"></div>
+
+                </div>
+            </div>
+            <div class="user-actions">
+                <!-- Removed Download Report and Contact Faculty buttons -->
+            </div>
+        </header>
+        
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Current CGPA</h3>
+                </div>
+                <h2 id='cgpa' style="font-size: 32px; color: var(--primary); text-align: center; margin-bottom: 10px;">--</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 86%; background-color: var(--primary);"></div>
+                </div>
+                <p style="text-align: center; color: var(--gray); font-size: 14px;">Top 15% in the class</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Attendance</h3>
+                </div>
+                <h2 id='att' style="font-size: 32px; color: var(--warning); text-align: center; margin-bottom: 10px;">--</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 82%; background-color: var(--warning);"></div>
+                </div>
+                <p style="text-align: center; color: var(--gray); font-size: 14px;">Minimum required: 75%</p>
+                <!-- Removed View Details button and attendance details -->
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Academic Standing</h3>
+                </div>
+                <h2 id='arrear' style="font-size: 28px; color: var(--success); text-align: center; margin-bottom: 10px;">--</h2>
+                <div style="text-align: center; color: var(--gray); font-size: 14px;">
+                    <p>No pending backlogs</p>
+                    <p>Last updated: April 24, 2025</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card full-width">
+            <div class="tabs">
+                <div class="tab active" onclick="openTab(event, 'current-semester')">Current Semester</div>
+                <div class="tab" onclick="openTab(event, 'previous-semester')">Previous Semesters</div>
+                <div class="tab" onclick="openTab(event, 'timetable')">Timetable</div>
+                <div class="tab" onclick="openTab(event, 'malpractice')">Disciplinary Records</div>
+            </div>
+            
+            <div id="current-semester" class="tab-content active">
+                <h3 style="margin-bottom: 15px;">Semester 4 - Ongoing</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>CAT-1 (30)</th>
+                            <th>CAT-2 (30)</th>
+                            <th>Lab (20)</th>
+                            <th>Assignmt (20)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data Structures & Algorithms</td>
+                            <td>26</td>
+                            <td>28</td>
+                            <td>18</td>
+                            <td>17</td>
+                            <td><span class="badge badge-success">Excellent</span></td>
+                        </tr>
+                        <tr>
+                            <td>Database Management Systems</td>
+                            <td>24</td>
+                            <td>22</td>
+                            <td>16</td>
+                            <td>18</td>
+                            <td><span class="badge badge-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td>Operating Systems</td>
+                            <td>19</td>
+                            <td>21</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td><span class="badge badge-warning">Average</span></td>
+                        </tr>
+                        <tr>
+                            <td>Computer Networks</td>
+                            <td>22</td>
+                            <td>25</td>
+                            <td>17</td>
+                            <td>16</td>
+                            <td><span class="badge badge-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td>Software Engineering</td>
+                            <td>18</td>
+                            <td>16</td>
+                            <td>14</td>
+                            <td>15</td>
+                            <td><span class="badge badge-warning">Need Improvement</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px;">
+                    <h4 style="margin-bottom: 10px;">Upcoming Assessments</h4>
+                    <ul style="list-style-type: none;">
+                        <li style="padding: 10px; border-bottom: 1px solid #eaeaea;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>End Semester Exam - Operating Systems</strong>
+                                    <p style="color: var(--gray); font-size: 14px;">May 5, 2025 • 9:30 AM - 12:30 PM</p>
+                                </div>
+                                <span class="badge" style="background-color: #cfe2ff; color: #084298;">Upcoming</span>
+                            </div>
+                        </li>
+                        <li style="padding: 10px; border-bottom: 1px solid #eaeaea;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>End Semester Exam - Database Management Systems</strong>
+                                    <p style="color: var(--gray); font-size: 14px;">May 8, 2025 • 1:30 PM - 4:30 PM</p>
+                                </div>
+                                <span class="badge" style="background-color: #cfe2ff; color: #084298;">Upcoming</span>
+                            </div>
+                        </li>
+                        <li style="padding: 10px; border-bottom: 1px solid #eaeaea;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Project Submission - Software Engineering</strong>
+                                    <p style="color: var(--gray); font-size: 14px;">May 2, 2025 • 11:59 PM</p>
+                                </div>
+                                <span class="badge" style="background-color: #f8d7da; color: #842029;">Urgent</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="previous-semester" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Academic Progress</h3>
+                    <select id="semester-select" onchange="updateSemesterData()" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="all">All Semesters</option>
+                        <!-- <option value="sem3">Semester 3</option>
+                        <option value="sem2">Semester 2</option>
+                        <option value="sem1">Semester 1</option> -->
+                    </select>
+                </div>
+                
+                <div class="cgpa-chart">
+                    <canvas id="cgpaChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h4 style="margin-bottom: 15px;">Semester-wise Performance</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>SGPA</th>
+                                <th>CGPA</th>
+                                <th>Standing</th>
+                                <th>Backlogs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Semester 3</td>
+                                <td>8.7</td>
+                                <td>8.64</td>
+                                <td><span class="badge badge-success">Dean's List</span></td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Semester 2</td>
+                                <td>8.5</td>
+                                <td>8.6</td>
+                                <td><span class="badge badge-success">Good Standing</span></td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Semester 1</td>
+                                <td>8.7</td>
+                                <td>8.7</td>
+                                <td><span class="badge badge-success">Dean's List</span></td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="timetable" class="tab-content">
+                <div class="container">
+                    <header>
+                        <h1>Student Dashboard</h1>
+                        <div class="student-info">
+                            <div class="student-avatar">A</div>
+                            <div class="student-details">
+                                <h2>Student Name</h2>
+                                <p>Semester: <span id="semester-name">Semester 1</span></p>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <!-- Dropdown for semester selection -->
+                    <div class="semester-select">
+                        <label for="semester-select">Select Semester: </label>
+                        <select id="semester-select1" onchange="updateSemesterData1()">
+                            <option value="I">Semester 1</option>
+                            <option value="II">Semester 2</option>
+                            <option value="III">Semester 3</option>
+                            <option value="IV">Semester 4</option>
+                            <option value="V">Semester 5</option>
+                            <option value="VI">Semester 6</option>
+                            <option value="VII">Semester 7</option>
+                            <option value="VIII">Semester 8</option>
+                        </select>
+                    </div>
+                
+                    <!-- Subject Results -->
+                    <div class="subject-results">
+                        <h2>Subject Results</h2>
+                        <table id="result-table">
+                            <!-- Data will be populated dynamically -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="malpractice" class="tab-content">
+                <h3 style="margin-bottom: 20px;">Disciplinary Records</h3>
+                
+                <div class="alert alert-warning">
+                    <span class="alert-icon">⚠️</span>
+                    <div>
+                        <strong>Warning Notice</strong>
+                        <p>Use of mobile phone during Database Management Systems CAT-1 examination.</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Issued on: February 15, 2025 by Prof. Sharma</p>
+                    </div>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <span class="alert-icon">⛔</span>
+                    <div>
+                        <strong>Malpractice Report</strong>
+                        <p>Unauthorized material found during Operating Systems CAT-2 examination.</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Issued on: March 25, 2025 by Prof. Gupta</p>
+                    </div>
+                </div>
+                
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Incident Type</th>
+                            <th>Course</th>
+                            <th>Description</th>
+                            <th>Action Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody id="insidenttable">
+                      
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 30px;">
+                    <h4>Parent-Faculty Meeting Records</h4>
+                    <ul style="list-style-type: none; margin-top: 15px;">
+                        <li style="padding: 15px; border-bottom: 1px solid #eaeaea;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Meeting with Academic Counselor</strong>
+                                    <p style="color: var(--gray); font-size: 14px;">April 2, 2025 • Dr. Patel</p>
+                                    <p style="margin-top: 5px;">Discussion about recent disciplinary issues and academic performance. Improvement plan created.</p>
+                                </div>
+                                <span class="badge" style="background-color: #cfe2ff; color: #084298;">Completed</span>
+                            </div>
+                        </li>
+                        <li style="padding: 15px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Meeting with Department Head</strong>
+                                    <p style="color: var(--gray); font-size: 14px;">May 5, 2025 • Prof. Khanna</p>
+                                    <p style="margin-top: 5px;">Scheduled review of academic progress and disciplinary status.</p>
+                                </div>
+                                <span class="badge" style="background-color: #fff3cd; color: #664d03;">Upcoming</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+const regno = urlParams.get('regno');
+createSiblingButtons(regno);
+async function createSiblingButtons(regno) {
+  try {
+    const res = await fetch(`/api/children/${regno}`);
+    const data = await res.json();
+if(data.length!==0){ document.getElementById("sibling").innerHTML='Siblings'}
+    const container = document.getElementById("regnoButtons");
+    container.innerHTML = ""; // clear existing buttons
+
+    data.siblings.forEach(child => {
+      const btn = document.createElement("button");
+      btn.textContent = `${child.Reg_Number} - ${child.Name}`;
+      btn.onclick = () => {
+        // Reload page with selected regno in URL
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set('regno', child.Reg_Number);
+        window.location.href = newUrl.toString();
+      };
+      container.appendChild(btn);
+    });
+
+  } catch (err) {
+    console.error("Failed to load siblings:", err);
+  }
+}
+
+       // Tab functionality
+function openTab(evt, tabName) {
+    const tabContents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+    }
+    
+    const tabs = document.getElementsByClassName("tab");
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+    }
+    
+    document.getElementById(tabName).classList.add("active");
+    
+    // Find the clicked tab and add active class
+    if (evt && evt.currentTarget) {
+        evt.currentTarget.classList.add("active");
+    }
+}
+
+let student = [];
+let cgpaChart;
+async function loadStudentData(regno) {
+  try {
+    const response = await fetch(`/api/par-cgpaatt-data/${regno}`);
+    const students = await response.json(); // parse the JSON
+    document.getElementById("att").innerHTML = `${students.Attendance_Percentage}%`;
+document.getElementById("cgpa").innerHTML = `${students.CGPA}`;
+document.getElementById("name").innerHTML = `${students.Name}`;
+document.getElementById("regno").innerHTML = `${regno}`;
+
+if (students.Arrear_Status === 'nil') {
+  document.getElementById("arrear").innerHTML = `Good Standing`;
+} else {
+  document.getElementById("arrear").innerHTML = `${students.Arrear_Status}`;
+}
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+  }
+}
+
+// Example call
+loadStudentData(regno);  // or whatever regno you want
+fetch(`/api/semester-data/${regno}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (!data.length) {
+          console.error('No data for', regno);
+          return;
+        }
+        const semesterSelect = document.getElementById('semester-select');
+        // Reverse the data (latest semester first)
+        const reversedData = data.reverse();
+  
+        // Populate dropdown with semester options
+        reversedData.forEach((item, index) => {
+          const option = document.createElement("option");
+          option.value = `${item.Semester}`;
+          option.text = `Semester ${item.Semester}`;
+          semesterSelect.appendChild(option);
+        });});
+// Chart initialization function
+
+
+// on page load, initialize an empty chart
+document.addEventListener('DOMContentLoaded', () => {
+  const ctx = document.getElementById('cgpaChart').getContext('2d');
+  cgpaChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: 'SGPA',
+          data: [],
+          yAxisID: 'y1',
+          backgroundColor: 'rgba(67, 97, 238, 0.2)',
+          borderColor: 'rgba(67, 97, 238, 1)',
+          borderWidth: 2,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y1: {
+          position: 'left',
+          min: 4,
+          max: 10,
+          ticks: { stepSize: 2 }
+        }
+      }
+    }
+  });
+
+  // load “all” on first render
+  updateSemesterData();
+});
+
+function updateSemesterData() {
+  const sel = document.getElementById('semester-select').value;
+  // build URL: if “all” → no semester filter, otherwise include it
+  const url = sel === 'all'
+    ? `/api/semester-data/${regno}`
+    : `/api/semester-dat/${regno}?semester=${sel}`;
+
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      // assume API returns an array of { Semester, AvgGradePoint, Cgpa? }
+      const labels = data.map(item => item.Semester);
+      const sgpa   = data.map(item => item.AvgGradePoint);
+      
+      // Only update SGPA data
+      cgpaChart.data.labels           = labels;
+      cgpaChart.data.datasets[0].data = sgpa;
+      
+      // Remove the CGPA dataset if it's there (no CGPA data needed for this case)
+      if (cgpaChart.data.datasets[1]) {
+        cgpaChart.data.datasets.splice(1, 1);  // Remove the second dataset (CGPA)
+      }
+
+      cgpaChart.update();
+    })
+    .catch(err => console.error('Fetch error:', err));
+}
+
+
+
+
+// Sample data for subjects and results
+const semesterData = {
+    '1': [
+        { subject: 'Mathematics', result: 'A' },
+        { subject: 'Physics', result: 'B' },
+        { subject: 'Chemistry', result: 'A' },
+        { subject: 'Computer Science', result: 'A' }
+    ],
+    '2': [
+        { subject: 'Mathematics', result: 'A' },
+        { subject: 'Physics', result: 'B+' },
+        { subject: 'Chemistry', result: 'B' },
+        { subject: 'Computer Science', result: 'A+' }
+    ],
+    // Add data for other semesters (3 to 8)
+};
+function updateSemesterData1() {
+    const semesterSelect = document.getElementById('semester-select1');
+    const selectedSemester = semesterSelect.value;
+    const resultTable = document.getElementById('result-table');
+    const semesterName = document.getElementById('semester-name');
+    
+    // Update semester name
+    semesterName.textContent = `Semester ${selectedSemester}`;
+
+    // Clear previous results
+    resultTable.innerHTML = `
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+    // Fetch the data from the API for the selected semester
+    fetch(`/api/subdata/${regno}?semester=${selectedSemester}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.length) {
+                console.error('No data available for this semester');
+                return;
+            }
+
+            // Populate the table with the fetched data
+            const tbody = resultTable.querySelector('tbody');
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.Course_Title}</td><td>${item.Grade}</td>`;
+                tbody.appendChild(row);
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching semester data:', err);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateSemesterData1();
+    document.getElementById('semester-select').addEventListener('change', function() {
+        updateSemesterData();
+        updateSemesterData1();  // Refresh the table based on the selected semester
+    });
+});
+
+
+loadincidents();
+
+async function loadincidents() {
+    try {
+        const response = await fetch(`/api/incidents/${regno}`); // <-- Replace with your actual API endpoint
+        const data = await response.json();
+
+        const tableBody = document.getElementById('insidenttable');
+        tableBody.innerHTML = ""; // Clear existing data
+
+        data.forEach(course => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${course.Incident_Date}</td>
+                <td>${course.Incident_Type}</td>
+                <td>${course.Course}</td>
+                <td>${course.Description}</td>
+                <td>${course.Action_Taken}</td>
+                
+            `;
+            tableBody.appendChild(row);
+        });
+       
+    } catch (error) {
+        console.error('Error fetching course data:', error);
+        document.getElementById('course-body').innerHTML = `
+            <tr><td colspan="10">Failed to load data</td></tr>
+        `;
+    }
+}
+
+    </script>
+</body>
+</html>

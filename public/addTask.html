@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Task Management</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Container & Card Styles */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #4a6fdc;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            font-size: 1.8rem;
+            margin-right: 0.8rem;
+        }
+        
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .header-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .header-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Form Styles */
+        form {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #4a6fdc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 220, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Button Styles */
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #4a6fdc;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5dc5;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #4a6fdc;
+            border: 1px solid #4a6fdc;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f4ff;
+        }
+        
+        /* Alert Styles */
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* Return to Faculty Page Link */
+        .back-link-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #4a6fdc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #3a5dc5;
+            text-decoration: underline;
+        }
+        
+        .back-icon {
+            margin-right: 0.5rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header {
+                padding: 1.2rem;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-left {
+                margin-bottom: 0.8rem;
+            }
+            
+            .header h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back link to Faculty page -->
+        <div class="back-link-container">
+           
+              <a href="faculty.html" class="back-link" id="facultyLink">
+                <span class="back-icon">←</span> Return to Faculty Page
+              </a>
+              
+        </div>
+        
+        <!-- Success message, initially hidden -->
+        <div class="alert alert-success" id="success-alert" style="display: none;">
+            Task has been added successfully!
+        </div>
+        
+        <div class="card">
+            <div class="header">
+                <div class="header-left">
+                    <div class="icon">📋</div>
+                    <h1>Add Faculty Task</h1>
+                </div>
+                
+                <a href="faculty.html" class="header-link" id="allfaculty">View All Faculty</a>
+            </div>
+            <form id="add-task-form">
+                <div class="form-group">
+                    <label for="staff-name">Staff Name</label>
+                    <input type="text" id="staff-name" class="form-control" placeholder="Enter faculty member name" list="faculty-list" required>
+                    <datalist id="faculty-list">
+                        <option value="Dr. James Smith">
+                        <option value="Dr. Sarah Johnson">
+                        <option value="Dr. Robert Williams">
+                        <option value="Dr. Emily Brown">
+                        <option value="Dr. Michael Davis">
+                        <option value="Dr. Jessica White">
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Task Description</label>
+                    <input type="text" id="task-description" class="form-control" placeholder="Enter task description" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timeline-type">Timeline</label>
+                        <select id="timeline-type" class="form-control" required>
+                            <option value="" disabled selected>Select timeline</option>
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeline-value">Timeline Value</label>
+                        <input type="number" id="timeline-value" class="form-control" min="1" max="30" placeholder="Enter number" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="completion-date">Completion Date</label>
+                    <input type="date" id="completion-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Initial Status</label>
+                    <select id="status" class="form-control" required>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn btn-outline" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+const dept = urlParams.get('dept');
+        // DOM Elements
+        const addTaskForm = document.getElementById('add-task-form');
+        const staffNameInput = document.getElementById('staff-name');
+        const taskDescriptionInput = document.getElementById('task-description');
+        const timelineTypeSelect = document.getElementById('timeline-type');
+        const timelineValueInput = document.getElementById('timeline-value');
+        const completionDateInput = document.getElementById('completion-date');
+        const statusSelect = document.getElementById('status');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const successAlert = document.getElementById('success-alert');
+
+        // Set default completion date to today
+        const today = new Date();
+        const formattedDate = today.toISOString().substring(0, 10);
+        completionDateInput.value = formattedDate;
+
+        // Form Submit Handler
+        addTaskForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Gather form data
+            const taskData = {
+                staffName: staffNameInput.value,
+                taskDescription: taskDescriptionInput.value,
+                timelineType: timelineTypeSelect.value,
+                timelineValue: timelineValueInput.value,
+                completionDate: completionDateInput.value,
+                status: statusSelect.value
+            };
+            
+            // Save task to local storage (in real app, send to server)
+            saveTask(taskData);
+            
+            // Show success message
+            successAlert.style.display = 'block';
+            
+            // Reset form
+            addTaskForm.reset();
+            completionDateInput.value = formattedDate;
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+        });
+
+        // Cancel Button Handler
+        cancelBtn.addEventListener('click', function() {
+            // Redirect to the faculty page
+            window.location.href = `faculty.html?dept=${dept}`;
+        });
+
+        // Save task to local storage
+        function saveTask(taskData) {
+            // Get existing tasks or initialize empty array
+            let tasks = JSON.parse(localStorage.getItem('facultyTasks')) || [];
+            
+            // Add new task
+            tasks.push({
+                id: Date.now(), // Simple unique ID
+                ...taskData,
+                dateAdded: new Date().toISOString()
+            });
+            
+            // Save back to local storage
+            localStorage.setItem('facultyTasks', JSON.stringify(tasks));
+            
+            // For debugging
+            console.log('Task saved:', taskData);
+            console.log('All tasks:', tasks);
+        }
+
+        // Optional: Update completion date based on timeline selection
+        function updateCompletionDate() {
+            const timelineType = timelineTypeSelect.value;
+            const timelineValue = parseInt(timelineValueInput.value);
+            
+            if (timelineType && timelineValue) {
+                const newDate = new Date();
+                
+                if (timelineType === 'days') {
+                    newDate.setDate(newDate.getDate() + timelineValue);
+                } else if (timelineType === 'weeks') {
+                    newDate.setDate(newDate.getDate() + (timelineValue * 7));
+                }
+                
+                completionDateInput.value = newDate.toISOString().substring(0, 10);
+            }
+        }
+
+        // Timeline type and value change event handlers
+        timelineTypeSelect.addEventListener('change', updateCompletionDate);
+        timelineValueInput.addEventListener('change', updateCompletionDate);
+        timelineValueInput.addEventListener('input', updateCompletionDate);
+        document.getElementById("facultyLink").href = `faculty.html?dept=${dept}`;
+        document.getElementById("allfaculty").href = `allfaculty.html?dept=${dept}`;
+    </script>
+</body>
+</html>

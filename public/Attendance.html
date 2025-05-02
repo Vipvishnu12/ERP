@@ -65,6 +65,9 @@
             <div class="sidebar-menu-item active">
                 <i>📅</i> Attendance
             </div>
+            <div class="sidebar-menu-item" id="transportMenuItem">
+                <i>🚌</i> Transport
+    </div>
             <div class="sidebar-menu-item">
                 <i>🚪</i> Logout
             </div>
@@ -89,19 +92,19 @@
 
         <div class="cards-container">
             <div class="card" onclick="showModal('Poor')">
-                <h4>Attendance < 50%</h4>
+                <h4>Attendance < 70%</h4>
                 <p id="below50">--</p>
             </div>
-            <div class="card" onclick="showModal('Good')">
-                <h4>Attendance < 60%</h4>
+            <div class="card" onclick="showModal('Average')">
+                <h4>Attendance < 80%</h4>
                 <p id="below60">--</p>
             </div>
             <div class="card" onclick="showModal('studentattended1')">
-                <h4>Today's Attendance</h4>
+                <h4>Today's Absentees</h4>
                 <p id="todayAttendance">--</p>
             </div>
-            <div class="card" onclick="showModal('staffattended1')">
-                <h4>Staff Present Today</h4>
+            <div class="card" onclick="showModalpresent()">
+                <h4>Staff Attendance</h4>
                 <p id="staffPresent">--</p>
             </div>
         </div>
@@ -124,61 +127,38 @@
             </div>
         </div>
 
-        <div id="studentModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal()">&times;</span>
-                <h3 id="modalTitle"></h3>
-                <div id="modalBody"></div>
-            </div>
-        </div>
+      <!-- Student Modal -->
+<div id="studentModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"></div>
     </div>
-
+  </div>
+  
+  <!-- Staff Modal -->
+  <div id="staffModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal1()">&times;</span>
+      <h3 id="staffModalTitle"></h3>
+      <div id="staffModalContent"></div>
+    </div>
+  </div>
+  
+  
     <script>
     // Add this at the top of your existing Attendence.js file
     document.addEventListener('DOMContentLoaded', function() {
         // Show loading indicators initially
         document.getElementById('pieChartLoading').style.display = 'block';
         document.getElementById('barChartLoading').style.display = 'block';
-        
-        // Add these lines to your original chart initialization code
-        // For example, after your charts are created and data is loaded:
-        
-        // If you're using fetch or any async method to load data, hide loaders after data loads
-        // Example with fetch:
-        /*
-        fetch('/your-api-endpoint')
-            .then(response => response.json())
-            .then(data => {
-                // Process your data and update charts
-                
-                // After charts are updated, hide the loading indicators
-                document.getElementById('pieChartLoading').style.display = 'none';
-                document.getElementById('barChartLoading').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                // Hide loaders even on error
-                document.getElementById('pieChartLoading').style.display = 'none';
-                document.getElementById('barChartLoading').style.display = 'none';
-            });
-        */
-        
-        // If you're not using fetch but have another way to load data
-        // Add this line where you finish loading and displaying your chart data:
-        // document.getElementById('pieChartLoading').style.display = 'none';
-        // document.getElementById('barChartLoading').style.display = 'none';
-        
-        // For demonstration purposes only - remove this in production
-        // This simulates data loading with a delay
         setTimeout(() => {
             document.getElementById('pieChartLoading').style.display = 'none';
             document.getElementById('barChartLoading').style.display = 'none';
         }, 2000);
     });
     
-    // If you have event handlers that reload data (like when changing semesters)
-    // Add these lines to show/hide loaders during data reloading
-    document.getElementById('semesterSelect').addEventListener('change', function() {
+document.getElementById('semesterSelect').addEventListener('change', function() {
         // Show loading indicators again
         document.getElementById('pieChartLoading').style.display = 'block';
         document.getElementById('barChartLoading').style.display = 'block';

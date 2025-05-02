@@ -9,9 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'faculty.html': 2,
     'Placement.Html': 3,
     'Attendance.html': 4,
-    'reports.html': 5,
-    'settings.html': 6,
-    'login.html': 7
+    'Transport.html':5,
+    'login.html': 6
   };
 
   // Get current file name from URL
@@ -27,9 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
   menuItems[2].addEventListener('click', () => window.location.href = `faculty.html?dept=${dept}`);
   menuItems[3].addEventListener('click', () => window.location.href = `Placement.Html?dept=${dept}`);
   menuItems[4].addEventListener('click', () => window.location.href = `Attendance.html?dept=${dept}`);
-  menuItems[5].addEventListener('click', () => window.location.href = 'reports.html');
-  menuItems[6].addEventListener('click', () => window.location.href = 'settings.html');
-  menuItems[7].addEventListener('click', () => window.location.href = 'login.html');
+  menuItems[5].addEventListener('click', () => window.location.href = `Transport.html?dept=${dept}`);
+  menuItems[6].addEventListener('click', () => window.location.href = 'login.html');
 
 });
 
@@ -57,41 +55,34 @@ const semesterSelect = document.getElementById("semesterSelect");
 console.log(result);
         dummyData["I"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+         
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+       // document.getElementById("todayAttendance").innerHTML = `${res.dummyData["I"].studentattended1.length}`;
+     //   document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
         // console.log( dummyData["II"]);
         updateCharts(); // call after data update
@@ -111,41 +102,37 @@ console.log(result);
 console.log(result);
         dummyData["II"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+         
         };
         const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
         const res = await respo.json();
        // console.log(res);
         document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+      //  document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
          console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -165,41 +152,33 @@ console.log(result);
 console.log(result);
         dummyData["III"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+       
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
          //console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -219,41 +198,33 @@ console.log(result);
 console.log(result);
         dummyData["IV"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+    
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+           //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
        //  console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -274,41 +245,37 @@ console.log(result);
 console.log(result);
         dummyData["V"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+        
         };
         const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
         const res = await respo.json();
         console.log(res);
         document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
        //  console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -329,41 +296,33 @@ console.log(result);
 console.log(result);
         dummyData["VI"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+         
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+        //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
          //console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -383,41 +342,33 @@ console.log(result);
 console.log(result);
         dummyData["VII"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
-        };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+        
+    };
+       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
        //  console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -434,44 +385,36 @@ console.log(result);
       try {
         const response = await fetch(`/studentatt1/?department=${dept}&semester=${semester}`);
         const result = await response.json();
-console.log(result);
+//console.log(result);
         dummyData["VIII"] = {
           Excellent: result.excellent.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Good: result.good1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Average: result.average.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
           Poor: result.poor1.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           }))
          , studentattended1: result.studentattended.map(item => ({
-            name: item.name,
+            name: item.Name,
             percent: item.attendance_percentage,
             leaves: item.leaves
           })),
-          staffattended1: result.staffattended.map(item => ({
-            name: item.name,
-            percent: item.attendance_percentage,
-            leaves: item.leaves
-          }))
+         
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-        document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
+       //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
               
          //console.log( dummyData["2"]);
         updateCharts(); // call after data update
@@ -484,26 +427,29 @@ console.log(result);
     }
     
   });
-
+  fetchTeacherData(dept); 
   function updateCharts() {
     const semester = semesterSelect.value;
     const data = dummyData[semester] || {};
+    document.getElementById("below50").innerHTML =data['Poor'].length;
+    document.getElementById("below60").innerHTML =data['Average'].length;
+    updatePieChart(data);
+       
+  }
+  function updatePieChart(data) {
     const counts = categories.map(cat => (data[cat] || []).length);
-
-    document.getElementById("below50").textContent = Object.values(data).flat().filter(s => s.percent < 50).length;
-    document.getElementById("below60").textContent = Object.values(data).flat().filter(s => s.percent < 60).length;
-
     const pieCtx = document.getElementById("pieChart").getContext("2d");
-    const barCtx = document.getElementById("barChart").getContext("2d");
-
+  
     if (pieChart) pieChart.destroy();
-    if (barChart) barChart.destroy();
-
+  
     pieChart = new Chart(pieCtx, {
       type: "pie",
       data: {
         labels: categories,
-        datasets: [{ data: counts, backgroundColor: colors }]
+        datasets: [{
+          data: counts,
+          backgroundColor: colors
+        }]
       },
       options: {
         onClick: (e, elements) => {
@@ -511,30 +457,111 @@ console.log(result);
             const index = elements[0].index;
             showModal(categories[index]);
           }
-        }
-      }
-    });
-
-    barChart = new Chart(barCtx, {
-      type: "bar",
-      data: {
-        labels: categories,
-        datasets: [{ label: "No. of Students", data: counts, backgroundColor: colors }]
-      },
-      options: {
-        onClick: (e, elements) => {
-          if (elements.length > 0) {
-            const index = elements[0].index;
-            showModal(categories[index]);
-          }
-        },
-        scales: {
-          y: { beginAtZero: true }
         }
       }
     });
   }
+  function showModalForStaff(category, data) {
+    const modal = document.getElementById('staffModal');
+    const modalContent = document.getElementById('staffModalContent');
+    // Generate dynamic table or content here based on `data`
+    let tableHTML = '<table><tr><th>Name</th><th>LOP</th></tr>';
+    data.forEach(student => {
+      tableHTML += `<tr><td>${student.name}</td><td>${student.count}</td></tr>`;
+    });
+    tableHTML += '</table>';
+  
+    // Insert dynamic content into the modal
+    modalContent.innerHTML = tableHTML;
+  
+    // Show the modal
+    modal.style.display = 'block'; // Change display to block to show it
+  }
+  
 
+  function updateStaffBarChart(data) {
+    
+    const counts = categories.map(cat => (data[cat] || []).length);
+    const ctx = document.getElementById("barChart").getContext("2d");
+  
+    if (barChart) barChart.destroy(); // destroy if already exists
+  
+    barChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: categories,
+        datasets: [{
+          label: "No. of Staff (by LOP)",
+          data: counts,
+          backgroundColor: colors
+        }]
+      },
+      options: {
+        onClick: (e, elements) => {
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            showModalForStaff(categories[index], data[categories[index]]);
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  let result1 = {}; // global
+
+async function fetchTeacherData(department) {
+  try {
+    const response = await fetch(`/api/teacher-status/${department}`);
+    result1 = await response.json(); // ✅ assign to global
+
+    // ✅ Update the count AFTER result1 is assigned
+    document.getElementById("staffPresent").innerHTML = `${result1.todayStatus?.length || 0}`;
+
+    const result = result1['lopCategory'] || {};
+
+    const data = {
+      Excellent: result.excellent?.map(s => ({ name: s.Staff_Name, count: s.LOP_Count })) || [],
+      Good: result.good1?.map(s => ({ name: s.Staff_Name, count: s.LOP_Count })) || [],
+      Average: result.average?.map(s => ({ name: s.Staff_Name, count: s.LOP_Count })) || [],
+      Poor: result.poor1?.map(s => ({ name: s.Staff_Name, count: s.LOP_Count })) || []
+    };
+
+    updateStaffBarChart(data); // chart rendering
+  } catch (error) {
+    console.error("Error fetching teacher data:", error);
+  }
+}
+
+  function showModalpresent() {
+    modal.style.display = "flex";
+    modalTitle.textContent = "Today Status Report";
+  //console.log(result1['todayStatus']);
+  console.log(result1);
+    const staffList = result1.todayStatus || [];
+  
+    if (staffList.length === 0) {
+      modalBody.innerHTML = "<p>No staff data available for today.</p>";
+    } else {
+    
+      modalBody.innerHTML = `
+        <table>
+          <tr><th>Name</th><th>Staff Code</th><th>Today Status</th></tr>
+          ${staffList.map(s => `
+            <tr>
+              <td>${s.Staff_Name}</td>
+              <td>${s.Staff_Code}</td>
+              <td>${s.Today_Status}</td>
+            </tr>
+          `).join("")}
+        </table>`;
+    }
+  }
+  
+  
   function showModal(category) {
     modal.style.display = "flex";
     modalTitle.textContent = category;
@@ -543,10 +570,8 @@ console.log(result);
     const data = dummyData[semester] || {};
   // console.log( student[category])
 
-    if (category.includes("Below") || category.includes("Today")) {
-      modalBody.innerHTML = `<p>No specific student data for "${category}".</p>`;
-      return;
-    }
+   
+   
     const students = data[category] || [];
     if (students.length === 0) {
       modalBody.innerHTML = "<p>No students in this category.</p>";
@@ -563,7 +588,22 @@ console.log(result);
 
   function closeModal() {
     modal.style.display = "none";
+    
   }
+  const modal1 = document.getElementById('staffModal');
+
+  function closeModal1() {
+    modal1.style.display = "none";
+  }
+  
+  // Combine all logic into one handler
+  window.onclick = function(event) {
+    if (event.target === modal1) {
+      closeModal1();
+    }
+  };
+  
+  
 
   window.onclick = function (event) {
     if (event.target === modal) closeModal();

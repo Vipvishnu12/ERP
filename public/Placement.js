@@ -8,9 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
       'faculty.html': 2,
       'Placement.Html': 3,
       'Attendance.html': 4,
-      'reports.html': 5,
-      'settings.html': 6,
-      'login.html': 7
+      'Transport.html': 5,
+      'login.html': 6
     };
   
     // Get current file name from URL
@@ -26,9 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     menuItems[2].addEventListener('click', () => window.location.href = `faculty.html?dept=${dept}`);
     menuItems[3].addEventListener('click', () => window.location.href = `Placement.Html?dept=${dept}`);
     menuItems[4].addEventListener('click', () => window.location.href = `Attendance.Html?dept=${dept}`);
-    menuItems[5].addEventListener('click', () => window.location.href = 'reports.html');
-    menuItems[6].addEventListener('click', () => window.location.href = 'settings.html');
-    menuItems[7].addEventListener('click', () => window.location.href = 'login.html');
+    menuItems[5].addEventListener('click', () => window.location.href = `Transport.html?dept=${dept}`);
+    menuItems[6].addEventListener('click', () => window.location.href = 'login.html');
   });
  
 document.addEventListener('DOMContentLoaded', async function () {

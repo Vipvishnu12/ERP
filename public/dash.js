@@ -2,7 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const dept = urlParams.get('dept');
 
 document.addEventListener('DOMContentLoaded', async function () {
-    console.log('Dashboard loaded');
+  //  console.log('Dashboard loaded');
 
     // 🔁 Fetch pie chart data
     try {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const rawData = await response.json();
 const total=  rawData.Placed+ rawData.Not_Placed+ rawData.Not_Willing+rawData.Not_Elligible;
-console.log(total);
+//console.log(total);
 document.getElementById("placed1").innerHTML = `${rawData.Placed} (${(rawData.Placed/total*100).toFixed(1)}%)`;
 document.getElementById("notplaced1").innerHTML = `${rawData.Not_Placed} (${(rawData.Not_Placed/total*100).toFixed(1)}%)`;
 document.getElementById("notwilling1").innerHTML = `${rawData.Not_Willing} (${(rawData.Not_Willing/total*100).toFixed(1)}%)`;
@@ -78,7 +78,7 @@ document.getElementById("notelligible1").innerHTML = `${rawData.Not_Elligible} (
             const res = await fetch(`/department/${dept}`);
             const data = await res.json();
 
-            console.log(data);
+            //console.log(data);
             document.getElementById("totalstudents").innerHTML = `${data.studentsCount}`;
             document.getElementById("placements").innerHTML = `${data.placedCount}`;
             document.getElementById("faculty").innerHTML = `${data.staffCount}`;
@@ -92,7 +92,7 @@ document.getElementById("notelligible1").innerHTML = `${rawData.Not_Elligible} (
            const res1 = await fetch(`/studentcount/${dept}`);
            const data1 = await res1.json();
 
-           console.log(data1);
+          // console.log(data1);
            document.getElementById("1styear").innerHTML = `1st year ${data1.year1}`;
            document.getElementById("2styear").innerHTML = `2nd year ${data1.year2}`;
            document.getElementById("3styear").innerHTML = `3rd year ${data1.year3}`;
@@ -172,24 +172,24 @@ async function loadfacperformance() {
 }
 document.getElementById('facultyMenuItem').addEventListener('click', function() {
     // Navigate to the faculty page
-  console.log(dept);
+ // console.log(dept);
     window.location.href = `faculty.html?dept=${dept}`;
 });
 document.getElementById('placementMenuItem').addEventListener('click', function() {
     // Navigate to the faculty page
-  console.log(dept);
+  //console.log(dept);
     window.location.href = `placement.html?dept=${dept}`;
 });
 document.getElementById('studentMenuItem').addEventListener('click', function() {
     // Navigate to the faculty page
-  console.log(dept);
+//  console.log(dept);
     window.location.href = `Student.html?dept=${dept}`;
 });
 
 
 document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
     // Navigate to the faculty page
-  console.log(dept);
+ // console.log(dept);
     window.location.href = `Attendance.html?dept=${dept}`;
 });
 
@@ -255,8 +255,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function createCGPAChart(cgpaData, studentData) {
         const chart = document.getElementById('cgpaChart');
         chart.innerHTML = ''; // Clear existing bars
-        console.log(cgpaData);
-        console.log(studentData);
+       // console.log(cgpaData);
+        //console.log(studentData);
         const maxValue = 50; // Update as per your max logic
     
         cgpaData.forEach((item, index) => {
@@ -298,7 +298,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${student.Reg_Number}</td>
                 <td>${student.Name}</td>
                 <td>${student.CGPA}</td>
-                <td>${student.Section}</td>
                 <td>${student.Class}</td>
                 <td>${student.Arrear_Status}</td>
             `;
