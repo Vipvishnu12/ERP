@@ -375,3 +375,195 @@ tr:hover {
     }
 }
 
+/* Add this to your sidebar.css file */
+.menu-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.dashboard-icon {
+    fill: #ffffff;
+    transition: fill 0.3s ease;
+}
+
+.sidebar-menu-item:hover .dashboard-icon {
+    fill: #e0e6ff;
+}
+
+.sidebar-menu-item.active .dashboard-icon {
+    fill: #a3b1ff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .menu-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .menu-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+    }
+    
+    /* If you want to show only icons on very small screens */
+    .sidebar-collapsed .sidebar-menu-item span {
+        display: none;
+    }
+    
+    .sidebar-collapsed .menu-icon {
+        margin-right: 0;
+    }
+}
+
+/* Add these styles to your sidebar.css file */
+
+/* Base sidebar styles - ensure fixed positioning */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 220px;
+  background-color: #4355e8;
+  color: white;
+  z-index: 100;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  padding: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+/* Menu items styling */
+.sidebar-menu-item {
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+}
+
+.sidebar-menu-item i, 
+.sidebar-menu-item svg {
+  margin-right: 10px;
+  width: 20px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+/* Responsive behavior for sidebar */
+@media (max-width: 992px) {
+  .sidebar {
+      width: 200px;
+  }
+  
+  .main-content {
+      margin-left: 200px;
+      width: calc(100% - 200px);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Collapsed sidebar by default on smaller screens */
+  .sidebar {
+      width: 60px;
+      overflow: visible;
+  }
+  
+  .sidebar-header {
+      padding: 15px 5px;
+      font-size: 0;
+  }
+  
+  .sidebar-header:after {
+      content: 'HOD';
+      font-size: 16px;
+  }
+  
+  .sidebar-menu-item {
+      padding: 15px 10px;
+      justify-content: center;
+  }
+  
+  .sidebar-menu-item span {
+      display: none;
+  }
+  
+  .sidebar-menu-item i,
+  .sidebar-menu-item svg {
+      margin-right: 0;
+      font-size: 18px;
+  }
+  
+  /* Adjust main content */
+  .main-content {
+      margin-left: 60px;
+      width: calc(100% - 60px);
+  }
+  
+  /* Show text on hover/focus for accessibility */
+  .sidebar-menu-item:hover:after,
+  .sidebar-menu-item:focus:after {
+      content: attr(data-title);
+      position: absolute;
+      left: 100%;
+      top: 0;
+      background: #4355e8;
+      padding: 15px;
+      white-space: nowrap;
+      z-index: 99;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Full collapse option for very small screens */
+  .sidebar-collapsed {
+      width: 0;
+      overflow: hidden;
+  }
+  
+  .main-content-expanded {
+      margin-left: 0;
+      width: 100%;
+  }
+  
+  /* Add a menu toggle button */
+  .menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 101;
+      background: #4355e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+  }
+} 

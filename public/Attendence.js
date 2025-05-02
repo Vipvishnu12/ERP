@@ -81,10 +81,7 @@ console.log(result);
           })),
          
         };
-       // document.getElementById("todayAttendance").innerHTML = `${res.dummyData["I"].studentattended1.length}`;
-     //   document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-        // console.log( dummyData["II"]);
+       document.getElementById("todayAttendance").innerHTML = `${dummyData["I"].studentattended1.length}`;
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -128,13 +125,8 @@ console.log(result);
           })),
          
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-       // console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-      //  document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-         console.log( dummyData["2"]);
+        document.getElementById("todayAttendance").innerHTML = `${dummyData["II"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -178,9 +170,8 @@ console.log(result);
           })),
        
         };
-       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-         //console.log( dummyData["2"]);
+        document.getElementById("todayAttendance").innerHTML = `${dummyData["III"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -224,9 +215,8 @@ console.log(result);
           })),
     
         };
-           //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-       //  console.log( dummyData["2"]);
+        document.getElementById("todayAttendance").innerHTML = `${dummyData["IV"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -271,13 +261,8 @@ console.log(result);
           })),
         
         };
-        const respo= await fetch(`/attendanceup/?department=${dept}&semester=${semester}`);
-        const res = await respo.json();
-        console.log(res);
-        document.getElementById("todayAttendance").innerHTML = `${res.studentpresent}`;
-       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-       //  console.log( dummyData["2"]);
+       document.getElementById("todayAttendance").innerHTML = `${dummyData["V"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -322,9 +307,8 @@ console.log(result);
           })),
          
         };
-        //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-         //console.log( dummyData["2"]);
+        document.getElementById("todayAttendance").innerHTML = `${dummyData["VI"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {
@@ -368,10 +352,9 @@ console.log(result);
           })),
         
     };
-       // document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-       //  console.log( dummyData["2"]);
-        updateCharts(); // call after data update
+    document.getElementById("todayAttendance").innerHTML = `${dummyData["VII"].studentattended1.length}`;
+      
+    updateCharts(); // call after data update
 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -414,9 +397,8 @@ console.log(result);
           })),
          
         };
-       //document.getElementById("staffPresent").innerHTML = `${res.staffpresent}`;
-              
-         //console.log( dummyData["2"]);
+        document.getElementById("todayAttendance").innerHTML = `${dummyData["VIII"].studentattended1.length}`;
+     
         updateCharts(); // call after data update
 
       } catch (error) {

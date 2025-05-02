@@ -41,116 +41,81 @@ console.log(req.body)
 app.get('/department/:dept', async (req, res) => {
   try {
     const dept = req.params.dept;
+    const classPrefix = `I ${dept}%`; // For LIKE filter
+
     const pool = await poolPromise;
 
-    // Total students in the department
-    const students = await pool
-      .request()
-      .input('dept', dept)
-      .input('Class', `I ${dept}`)
-      .query("SELECT COUNT(*) AS count FROM Student_Master WHERE Department = @dept or Class LIKE @Class + '%'");
-
-    // Placed students
-    const placed = await pool
-    .request()
-    .input('dept', dept)
-    .input('placed', 'yes')
-    .input('Class', `I ${dept}`)
-    .query(`
-      SELECT COUNT(*) AS count 
-      FROM Student_Master 
-      WHERE (Department = @dept OR Class LIKE CONCAT(@Class, '%')) 
-        AND placed = @placed
-    `);
-  
-  console.log('Placed students:', placed.recordset[0].count);
-  
-    // Staff count
-    const staff = await pool
-      .request()
-      .input('dept', dept)
-      .query("SELECT COUNT(*) AS count FROM Staff_Master WHERE Department = @dept");
-
-    // Non-teaching staff
-    const nonteachstaff = await pool
-      .request()
-      .input('dept', dept)
-      .query("SELECT COUNT(*) AS count FROM Staff_Master WHERE Department = @dept AND Staff_Type = 'non teaching'");
-
-    // Absent students today (query string fixed with backticks)
-    const absentees = await pool
-      .request()
-      .input('dept', dept)
+    const result = await pool.request()
+      .input('dept', sql.VarChar(50), dept)
+      .input('classPattern', sql.VarChar(50), classPrefix)
       .query(`
-      
-SELECT COUNT(*) AS Full_Day_Absent_Count
-FROM (
-    SELECT Reg_Number, att_date
-    FROM Student_Attendance
-    WHERE Period IS NOT NULL
-      AND att_date =  CAST(GETDATE() AS DATE)
- and Class  like '%'+@dept+ '%'
-    GROUP BY Reg_Number, att_date
-) AS FullAbsentList;
-
-      `);
-      const longabsentees = await pool
-      .request()
-      .input('dept', dept)
-      .query(`
-
-
+        -- All counts fetched in a single round-trip
         WITH DistinctDays AS (
-          SELECT DISTINCT att_date
-          FROM Student_Subject_Hour
-          WHERE Class LIKE '%'+@dept+'%'
-            AND att_date <= CAST(GETDATE() AS DATE)  -- Only up to today
-      ),
-      AbsentDays AS (
-          SELECT sa.Reg_Number, dd.att_date
-          FROM DistinctDays dd
-          CROSS JOIN (SELECT DISTINCT Reg_Number FROM Student_Attendance WHERE Class LIKE '%'+@dept+'%') sa
-          LEFT JOIN Student_Attendance a
+            SELECT DISTINCT att_date
+            FROM Student_Subject_Hour
+            WHERE Class LIKE '%' + @dept + '%'
+              AND att_date <= CAST(GETDATE() AS DATE)
+        ),
+        AbsentDays AS (
+            SELECT sa.Reg_Number, dd.att_date
+            FROM DistinctDays dd
+            CROSS JOIN (SELECT DISTINCT Reg_Number FROM Student_Attendance WHERE Class LIKE '%' + @dept + '%') sa
+            LEFT JOIN Student_Attendance a
               ON sa.Reg_Number = a.Reg_Number
-              AND dd.att_date = a.att_date
-              AND Class LIKE '%'+@dept+'%'
-              AND a.Period IS NOT NULL
-          WHERE a.Reg_Number IS NULL
-      ),
-      RankedAbsents AS (
-          SELECT Reg_Number, att_date,
-                 ROW_NUMBER() OVER (PARTITION BY Reg_Number ORDER BY att_date) 
-                 - DENSE_RANK() OVER (PARTITION BY Reg_Number ORDER BY att_date) AS grp
-          FROM AbsentDays
-      ),
-      GroupedAbsents AS (
-          SELECT Reg_Number, MIN(att_date) AS FromDate, MAX(att_date) AS ToDate, COUNT(*) AS Consecutive_Days
-          FROM RankedAbsents
-          GROUP BY Reg_Number, grp
-          HAVING COUNT(*) >= 5
-      )
-      SELECT COUNT(DISTINCT Reg_Number) AS Students_With_5_Consecutive_Leaves
-      FROM GroupedAbsents
-      WHERE ToDate >= DATEADD(DAY, -4, CAST(GETDATE() AS DATE));  -- Ended today or within past 4 days
-            
-
+             AND dd.att_date = a.att_date
+             AND a.Class LIKE '%' + @dept + '%'
+             AND a.Period IS NOT NULL
+            WHERE a.Reg_Number IS NULL
+        ),
+        RankedAbsents AS (
+            SELECT Reg_Number, att_date,
+              ROW_NUMBER() OVER (PARTITION BY Reg_Number ORDER BY att_date) 
+              - DENSE_RANK() OVER (PARTITION BY Reg_Number ORDER BY att_date) AS grp
+            FROM AbsentDays
+        ),
+        GroupedAbsents AS (
+            SELECT Reg_Number, MIN(att_date) AS FromDate, MAX(att_date) AS ToDate, COUNT(*) AS Consecutive_Days
+            FROM RankedAbsents
+            GROUP BY Reg_Number, grp
+            HAVING COUNT(*) >= 5
+        )
+        
+        SELECT
+          (SELECT COUNT(*) FROM Student_Master WHERE Department = @dept OR Class LIKE @classPattern) AS studentsCount,
+          (SELECT COUNT(*) FROM Student_Master WHERE (Department = @dept OR Class LIKE @classPattern) AND placed = 'yes') AS placedCount,
+          (SELECT COUNT(*) FROM Staff_Master WHERE Department = @dept) AS staffCount,
+          (SELECT COUNT(*) FROM Staff_Master WHERE Department = @dept AND Staff_Type = 'non teaching') AS nonteachstaff,
+          (SELECT COUNT(*) 
+           FROM (
+             SELECT Reg_Number, att_date
+             FROM Student_Attendance
+             WHERE Period IS NOT NULL
+               AND att_date = CAST(GETDATE() AS DATE)
+               AND Class LIKE '%' + @dept + '%'
+             GROUP BY Reg_Number, att_date
+           ) AS FullAbsentList
+          ) AS absentees,
+          (SELECT COUNT(DISTINCT Reg_Number)
+           FROM GroupedAbsents
+           WHERE ToDate >= DATEADD(DAY, -4, CAST(GETDATE() AS DATE))
+          ) AS longabs
       `);
+
+    const counts = result.recordset[0];
 
     res.status(200).json({
-      studentsCount: students.recordset[0].count,
-      placedCount: placed.recordset[0].count,
-      staffCount: staff.recordset[0].count,
-      nonteachstaff: nonteachstaff.recordset[0].count,
-      absentees: absentees.recordset[0].Full_Day_Absent_Count
-      ,longabs: longabsentees.recordset[0].Students_With_5_Consecutive_Leaves
-      // 🟢 Correct property used!
+      studentsCount: counts.studentsCount,
+      placedCount: counts.placedCount,
+      staffCount: counts.staffCount,
+      nonteachstaff: counts.nonteachstaff,
+      absentees: counts.absentees,
+      longabs: counts.longabs
     });
 
   } catch (err) {
-    res.status(500).send("Error while fetching counts: " + err.message);
+    res.status(500).send("Error while fetching department stats: " + err.message);
   }
 });
-
 
  
 app.get('/facultycounts/:dept', async (req, res) => {
@@ -564,92 +529,56 @@ app.get('/place/:dept', async (req, res) => {
     }
   });
   
-  
-  app.get('/studentatt1', async (req, res) => {
-    try {
-      const dept = req.query.department;
-      const sem = req.query.semester;
-      const pool = await poolPromise;
-      const poor = await pool
-      .request()
-      .input('Department', sql.VarChar(50), dept)
-      .input('semester',   sql.VarChar(10), sem)
-      .input('Class',      sql.VarChar(50), `I ${dept}`)
-      .query(`
-        SELECT Name, attendance_percentage, leaves
-        FROM vw_Attendance_Stats
-        WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
-          AND Semester = @semester
-          AND attendance_percentage < 70;
-      `);
-    
-    const avg = await pool
-      .request()
-      .input('Department', sql.VarChar(50), dept)
-      .input('semester',   sql.VarChar(10), sem)
-      .input('Class',      sql.VarChar(50), `I ${dept}`)
-      .query(`
-        SELECT Name, attendance_percentage, leaves
-        FROM vw_Attendance_Stats
-        WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
-          AND Semester = @semester
-          AND attendance_percentage BETWEEN 70 AND 80;
-          
-      `);
-    
-    const good = await pool
-      .request()
-      .input('Department', sql.VarChar(50), dept)
-      .input('semester',   sql.VarChar(10), sem)
-      .input('Class',      sql.VarChar(50), `I ${dept}`)
-      .query(`
-        SELECT Name, attendance_percentage, leaves
-        FROM vw_Attendance_Stats
-        WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
-          AND Semester = @semester
-          AND attendance_percentage BETWEEN 80 AND 90;
-      `);
-    
-    const excel = await pool
-      .request()
-      .input('Department', sql.VarChar(50), dept)
-      .input('semester',   sql.VarChar(10), sem)
-      .input('Class',      sql.VarChar(50), `I ${dept}`)
-      .query(`
-        SELECT Name, attendance_percentage, leaves
-        FROM vw_Attendance_Stats
-        WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%')
-          AND Semester = @semester
-          AND attendance_percentage BETWEEN 90 AND 100;
-      `);
-        const studentatt = await pool
-        .request()
-        .input('department', sql.VarChar, dept)
-        .input('semester',   sql.VarChar(10), sem)
-        .query(`
-           SELECT 
-  Name,
-  attendance_percentage,
-  leaves
-FROM vw_Attendance_Stats
-WHERE (Department = @Department OR Class LIKE 'I ' + @Department + '%') AND Semester = @semester
-  AND Today_Status = 'Absent';
+app.get('/studentatt1', async (req, res) => {
+  try {
+    const dept = req.query.department;
+    const sem = req.query.semester;
 
- `);
-  
-      res.status(200).json({
-        excellent: excel.recordset,
-        good1: good.recordset,
-        average: avg.recordset,
-        poor1: poor.recordset,
-        studentattended:studentatt.recordset 
-      });
-  
-    } catch (err) {
-      res.status(500).send("Error while fetching counts: " + err.message);
-    }
-  });
+    // Precompute Class value for optimization
+    const classVal = `%${dept}%`;
 
+    const pool = await poolPromise;
+
+    // Query with the necessary fields
+    const result = await pool
+      .request()
+      
+      .input('Semester', sql.VarChar(10), sem)
+      .input('Class', sql.VarChar(50), classVal)
+      .query(`
+        SELECT 
+          Name,
+          attendance_percentage,
+          leaves,
+          Today_Status,
+          CASE
+            WHEN attendance_percentage < 70 THEN 'poor'
+            WHEN attendance_percentage BETWEEN 70 AND 80 THEN 'average'
+            WHEN attendance_percentage BETWEEN 80 AND 90 THEN 'good'
+            WHEN attendance_percentage BETWEEN 90 AND 100 THEN 'excellent'
+            ELSE 'unknown'
+          END AS Category
+        FROM vw_Attendance_Stats
+        WHERE ( Class LIKE @Class )
+          AND Semester = @Semester
+      `);
+
+    const data = result.recordset;
+
+    const response = {
+      excellent: data.filter(d => d.Category === 'excellent'),
+      good1: data.filter(d => d.Category === 'good'),
+      average: data.filter(d => d.Category === 'average'),
+      poor1: data.filter(d => d.Category === 'poor'),
+      studentattended: data.filter(d => d.Today_Status === 'Absent')
+    };
+
+    res.status(200).json(response);
+
+  } catch (err) {
+    res.status(500).send("Error while fetching attendance: " + err.message);
+  }
+});
   let students = [
     { id: 1, name: "Vishnu", dept: "CSE" },
     { id: 2, name: "Arun", dept: "ECE" },
@@ -1631,7 +1560,60 @@ app.get('/api/incidents/:regno', async (req, res) => {
   }
 });
 
+app.post('/work/assign', async (req, res) => {
+  const { assignBy, workDetails, targetDate, assignedTo } = req.body;
 
+  try {
+    const pool = await poolPromise;
+    const now = new Date();
+    const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+
+    if (assignedTo === 'all') {
+      // Get one row per mobile number that appears 2 or more times
+      const staffList = await pool.request().query(`
+        WITH DuplicateMobiles AS (
+          SELECT Mobile
+          FROM Staff_To_DO
+          GROUP BY Mobile
+          HAVING COUNT(*) >= 2
+        ),
+        RankedStaff AS (
+          SELECT Staff_Name, Mobile,
+                 ROW_NUMBER() OVER (PARTITION BY Mobile ORDER BY Staff_Name) AS rn
+          FROM Staff_To_DO
+          WHERE Mobile IN (SELECT Mobile FROM DuplicateMobiles)
+        )
+        SELECT Staff_Name, Mobile
+        FROM RankedStaff
+        WHERE rn = 1;
+      `);
+
+      for (const staff of staffList.recordset) {
+        await pool.request()
+          .input('Staff_Name', sql.VarChar(255), staff.Staff_Name)
+          .input('Mobile', sql.VarChar(255), staff.Mobile)
+          .input('Work_Assign_By', sql.VarChar(255), assignBy)
+          .input('Work_Assign_Dt', sql.VarChar(255), formattedDate)
+          .input('Work_Details', sql.VarChar(255), workDetails)
+          .input('Completion_Status', sql.VarChar(255), 'Pending')
+          .input('Target_Dt', sql.VarChar(255), targetDate)
+          .query(`
+            INSERT INTO Staff_To_DO 
+              (Staff_Name, Mobile, Work_Assign_By, Work_Assign_Dt, Work_Details, Completion_Status, Target_Dt)
+            VALUES 
+              (@Staff_Name, @Mobile, @Work_Assign_By, @Work_Assign_Dt, @Work_Details, @Completion_Status, @Target_Dt)
+          `);
+      }
+
+      return res.status(200).json({ message: 'Work assigned to one staff per duplicate mobile number.' });
+    }
+
+    return res.status(400).json({ message: 'AssignedTo must be "all". More options can be added.' });
+
+  } catch (err) {
+    res.status(500).json({ error: 'Error assigning work: ' + err.message });
+  }
+});
 
 
 const PORT = 3000;

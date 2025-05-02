@@ -10,8 +10,9 @@
         <link rel="stylesheet" href="Placement.css">
     </head>
     <body>
-        <div>
-        <!-- Sidebar -->
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <!-- <div>
+        
         <div class="sidebar">
             <div class="sidebar-header">HOD Portal</div>
             <div class="sidebar-menu">
@@ -30,15 +31,76 @@
                 <div class="sidebar-menu-item">
                     <i>📅</i> Attendance
                 </div>
-                <div class="sidebar-menu-item" id="transportMenuItem">
-                    <i>🚌</i> Transport
-        </div>
                 <div class="sidebar-menu-item" id="logoutMenuItem">
                     <i>🚪</i> Logout
                 </div>
             </div>
         </div>
+        </div> -->
+        <!-- Sidebar -->
+<!-- <div class="sidebar">
+    <div class="sidebar-header">HOD Portal</div>
+    <div class="sidebar-menu">
+        <div class="sidebar-menu-item" id="dashboardMenuItem">
+            <svg class="menu-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <g class="dashboard-icon">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                </g>
+            </svg>
+            Dashboard
         </div>
+        <div class="sidebar-menu-item">
+            <i>👨‍🎓</i> Students
+        </div>
+        <div class="sidebar-menu-item" id="facultyMenuItem">
+            <i>👨‍🏫</i> Faculty
+        </div>
+        <div class="sidebar-menu-item active">
+            <i>💼</i> Placements
+        </div>
+        <div class="sidebar-menu-item">
+            <i>📅</i> Attendance
+        </div>
+        <div class="sidebar-menu-item" id="logoutMenuItem">
+            <i>🚪</i> Logout
+        </div>
+    </div>
+</div> -->
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">HOD Portal</div>
+    <div class="sidebar-menu">
+        <div class="sidebar-menu-item" id="dashboardMenuItem" data-title="Dashboard">
+            <svg class="menu-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                <g class="dashboard-icon" fill="#ffffff">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                </g>
+            </svg>
+            <span>Dashboard</span>
+        </div>
+        <div class="sidebar-menu-item" data-title="Students">
+            <i>👨‍🎓</i> <span>Students</span>
+        </div>
+        <div class="sidebar-menu-item" id="facultyMenuItem" data-title="Faculty">
+            <i>👨‍🏫</i> <span>Faculty</span>
+        </div>
+        <div class="sidebar-menu-item active" data-title="Placements">
+            <i>💼</i> <span>Placements</span>
+        </div>
+        <div class="sidebar-menu-item" data-title="Attendance">
+            <i>📅</i> <span>Attendance</span>
+        </div>
+        <div class="sidebar-menu-item" id="logoutMenuItem" data-title="Logout">
+            <i>🚪</i> <span>Logout</span>
+        </div>
+    </div>
+</div>
 
         <!-- Main Content -->
         <div class="main-content">

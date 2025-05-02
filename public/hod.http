@@ -1,4 +1,4 @@
-GET http://localhost:3000/studentatt1/?department=agri&semester=1
+GET http://localhost:3000/studentatt1/?department=agri&semester=II
 Content-Type: application/json
 ###
 GET http://localhost:3000/sample
@@ -64,7 +64,7 @@ GET http://localhost:3000/dashattdet/agri
 
 GET http://localhost:3000/allhosteldata
 #####
-GET http://localhost:3000/dashattdet/agri
+GET http://localhost:3000/department/agri
 
 ### Get students with CGPA <= 5 from a specific department
 http://localhost:3000/studentatt1?department=agri&semester=II
@@ -154,4 +154,39 @@ Accept: application/json
  GET http://localhost:3000/api/teacher-daily-status
 
 
+####
+### Assign work to all staff
+POST http://localhost:3000/work/assign
+Content-Type: application/json
 
+{
+  "assignBy": "shankar",
+  "workDetails": "Prepare lab setup",
+  "targetDate": "2025-04-11",
+  "assignedTo": "all"
+}
+
+####
+POST http://localhost:3000/work/assign
+Content-Type: application/json
+
+{
+  "assignBy": "Admin",
+  "workDetails": "Update course file",
+  "targetDate": "2025-05-10",
+  "assignedTo": "all",
+  "department": "agri"
+}
+
+
+
+#####
+POST http://localhost:3000/work/assign
+Content-Type: application/json
+
+{
+  "assignBy": "Principal",
+  "workDetails": "Prepare lab manuals",
+  "targetDate": "2025-05-10",
+  "assignedTo": "all"
+}
