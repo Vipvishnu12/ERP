@@ -37,10 +37,36 @@
             margin: 0 auto;
             padding: 20px;
         }
+        
+        header {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 20px;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+        
+        .back-button svg {
+            margin-right: 5px;
+        }
+        
 
         header {
             display: flex;
-            justify-content: space-between;
+            /* justify-content: space-between; */
             align-items: center;
             padding: 20px 0;
             border-bottom: 1px solid #eaeaea;
@@ -280,6 +306,12 @@
 <body>
     <div class="container">
         <header>
+            <button class="back-button" onclick="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+                Back
+            </button>
             <div class="student-info">
                 <div class="student-avatar">JD</div>
                 <div class="student-details">
@@ -355,6 +387,10 @@
     </div>
 
     <script>
+         function goBack() {
+            window.history.back();
+        }
+        
         const regno = '23CS065';
 
         function fetchDayWiseData(dateStr, title) {
