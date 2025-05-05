@@ -273,101 +273,264 @@
             font-size: 1.2rem;
             margin-right: 5px;
         }
-        
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .faculty-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
+
+            /* Sidebar toggle button */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 200;
+    }
+    
+    .sidebar-toggle button {
+        background-color: #4158D0;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar-toggle button:hover {
+        background-color: #3349b6;
+    }
+    
+    /* Improved responsive sidebar behavior */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(0);
+            transition: transform 0.3s ease;
         }
         
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                min-width: 70px;
-            }
-            
-            .sidebar-title {
-                font-size: 0.9rem;
-                padding: 15px 5px;
-            }
-            
-            .sidebar-menu li span {
-                display: none;
-            }
-            
-            .sidebar-menu li {
-                padding: 15px 0;
-                justify-content: center;
-            }
-            
-            .sidebar-menu li i {
-                margin-right: 0;
-                font-size: 1.5rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-            
-            .table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
+        .sidebar-collapsed {
+            transform: translateX(-100%);
         }
         
-        @media (max-width: 576px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .faculty-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .main-content {
-                padding: 15px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
+        .sidebar-toggle {
+            display: block;
         }
         
-        /* For very small screens */
-        @media (max-width: 350px) {
-            .sidebar {
-                width: 60px;
-                min-width: 60px;
-            }
-            
-            .main-content {
-                margin-left: 60px;
-                padding: 10px;
-            }
-            
-            .stat-card {
-                padding: 15px;
-            }
-            
-            .stat-value {
-                font-size: 1.5rem;
-            }
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+            transition: margin-left 0.3s ease;
         }
+        
+        .main-content-expanded {
+            margin-left: 70px;
+        }
+    }
+    
+    /* Prevent horizontal scrolling */
+    html, body {
+        overflow-x: hidden;
+    }
+    
+    /* Better faculty card responsiveness */
+    .faculty-card {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    
+    @media (max-width: 450px) {
+        .faculty-image {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+        }
+        
+        .faculty-info {
+            overflow: hidden;
+        }
+        
+        .faculty-name, .faculty-designation {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    
+    /* Better table responsiveness */
+    @media (max-width: 768px) {
+        .table {
+            font-size: 0.9rem;
+        }
+        
+        .table th, .table td {
+            padding: 8px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card {
+            overflow-x: auto;
+        }
+    }
+        
+/* Replace the existing @media queries with these enhanced ones */
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .faculty-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+        min-width: 70px;
+        z-index: 150;
+    }
+    
+    .sidebar-title {
+        font-size: 0.9rem;
+        padding: 15px 5px;
+    }
+    
+    .sidebar-menu li span {
+        display: none;
+    }
+    
+    .sidebar-menu li {
+        padding: 15px 0;
+        justify-content: center;
+    }
+    
+    .sidebar-menu li i {
+        margin-right: 0;
+        font-size: 1.5rem;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .main-content-expanded {
+        margin-left: 70px;
+    }
+    
+    .table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .page-header {
+        padding-top: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .faculty-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-value {
+        font-size: 1.8rem;
+    }
+    
+    .btn-add {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 350px) {
+    .sidebar {
+        width: 60px;
+        min-width: 60px;
+    }
+    
+    .sidebar-title {
+        font-size: 0.8rem;
+        padding: 12px 2px;
+    }
+    
+    .sidebar-menu li i {
+        font-size: 1.3rem;
+    }
+    
+    .sidebar-menu li {
+        padding: 12px 0;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .faculty-card {
+        padding: 10px;
+    }
+    
+    .faculty-image {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+    }
+    
+    .faculty-name {
+        font-size: 0.9rem;
+    }
+    
+    .faculty-designation, .faculty-meta {
+        font-size: 0.75rem;
+    }
+}
     </style>
 </head>
 <body>
+    <div class="sidebar-toggle">
+        <button id="sidebarToggleBtn">☰</button>
+    </div>
     <div class="sidebar">
         <div class="sidebar-title">HOD Portal</div>
         <div class="sidebar-menu">
@@ -633,6 +796,32 @@ document.getElementById("viewAllBtn").addEventListener("click", function (e) {
 });
 
 document.getElementById("addTaskLink").href = `addTask.html?dept=${dept}`;
+
+document.addEventListener('DOMContentLoaded', function() {
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        
+        // Check screen size on load
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.add('sidebar-collapsed');
+                mainContent.classList.remove('main-content-expanded');
+            }
+        }
+        
+        // Initial check
+        checkScreenSize();
+        
+        // Toggle sidebar
+        sidebarToggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-collapsed');
+            mainContent.classList.toggle('main-content-expanded');
+        });
+        
+        // Listen for window resize events
+        window.addEventListener('resize', checkScreenSize);
+    });
     </script>
 </body>
 </html>
