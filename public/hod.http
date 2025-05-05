@@ -190,3 +190,18 @@ Content-Type: application/json
   "targetDate": "2025-05-10",
   "assignedTo": "all"
 }
+
+
+
+######
+POST http://localhost:3000/work/assign
+Content-Type: application/json
+
+{
+  "assignBy": "Admin",
+  "statusSelect": "Pending",
+  "workDetails": "Prepare semester report",
+  "targetDate": "2025-05-10",
+  "assignedTo": "9524642654",
+  "dept": "agri"
+}

@@ -8,24 +8,25 @@
   <link rel="stylesheet" href="sidebar.css" />  
 </head>
 <body>
-  <!-- Sidebar (loaded dynamically) -->
-  <div id="sidebar-container"></div>
-    <div class="sidebar-menu">
-      <li class="sidebar-menu-item" id="dashboardLink">
-        <i>📊</i><span>Dashboard</span>
-      </li>
-      <li class="sidebar-menu-item active" id="studentsLink">
-        <i>👨‍🎓</i><span>Students</span>
-      </li>
-      <li class="sidebar-menu-item"><i>👨‍🏫</i><span>Faculty</span></li>
-      <li class="sidebar-menu-item"><i>🏢</i><span>Placements</span></li>
-      <li class="sidebar-menu-item"><i>📋</i><span>Attendance</span></li>
-      <li class="sidebar-menu-item">   <i>🚌</i> 
-        <span>Transport</span>  </li>
-      <li class="sidebar-menu-item"><i>🔒</i><span>Logout</span></li>  
-
-    </div>
+  <button id="toggleSidebar" class="sidebar-toggle-btn">☰</button>
+  <div id="sidebar" class="sidebar-menu">
+    <div id="sidebar-container"></div> <!-- Optional -->
+    
+    <li class="sidebar-menu-item" id="dashboardLink">
+      <i>📊</i><span>Dashboard</span>
+    </li>
+    <li class="sidebar-menu-item active" id="studentsLink">
+      <i>👨‍🎓</i><span>Students</span>
+    </li>
+    <li class="sidebar-menu-item"><i>👨‍🏫</i><span>Faculty</span></li>
+    <li class="sidebar-menu-item"><i>🏢</i><span>Placements</span></li>
+    <li class="sidebar-menu-item"><i>📋</i><span>Attendance</span></li>
+    <li class="sidebar-menu-item"><i>🚌</i><span>Transport</span></li>
+    <li class="sidebar-menu-item"><i>🔒</i><span>Logout</span></li>
   </div>
+  
+  <!-- Sidebar (loaded dynamically) -->
+  
 
   <!-- Main Content -->
   <div class="main-content">
@@ -141,7 +142,15 @@
       document.querySelector('.tab button').click();
     };
 
-  
+    
+  const toggleBtn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidebar');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+  });
+
+
   </script>
     <!-- <script src="Student.js"></script> -->
    

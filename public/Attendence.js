@@ -444,22 +444,22 @@ console.log(result);
     });
   }
   function showModalForStaff(category, data) {
-    const modal = document.getElementById('staffModal');
-    const modalContent = document.getElementById('staffModalContent');
-    // Generate dynamic table or content here based on `data`
-    let tableHTML = '<table><tr><th>Name</th><th>LOP</th></tr>';
-    data.forEach(student => {
-      tableHTML += `<tr><td>${student.name}</td><td>${student.count}</td></tr>`;
-    });
-    tableHTML += '</table>';
-  
-    // Insert dynamic content into the modal
-    modalContent.innerHTML = tableHTML;
-  
-    // Show the modal
-    modal.style.display = 'block'; // Change display to block to show it
+ 
+    modal.style.display = "flex";
+    modalTitle.textContent = category;
+
+    if (data.length === 0) {
+      modalBody.innerHTML = "<p>No students in this category.</p>";
+    } 
+    
+    else {
+      modalBody.innerHTML = `
+        <table>
+         <tr><th>Name</th><th>LOP</th></tr>
+          ${data.map(s => `<tr><td>${s.name}</td><td>${s.count}</td></tr>`).join("")}
+        </table>`;
+    }
   }
-  
 
   function updateStaffBarChart(data) {
     
@@ -532,7 +532,7 @@ async function fetchTeacherData(department) {
       modalBody.innerHTML = `
         <table>
           <tr><th>Name</th><th>Staff Code</th><th>Today Status</th></tr>
-          ${staffList.map(s => `
+               ${staffList.map(s => `
             <tr>
               <td>${s.Staff_Name}</td>
               <td>${s.Staff_Code}</td>
@@ -551,7 +551,7 @@ async function fetchTeacherData(department) {
     const semester = semesterSelect.value;
     const data = dummyData[semester] || {};
   // console.log( student[category])
-
+  
    
    
     const students = data[category] || [];

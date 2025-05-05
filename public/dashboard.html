@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enhanced HOD Dashboard</title>
+  
     <link rel="stylesheet" href="dash.css" />
     <style>
+     
+
       /* Base Styles */
       * {
         box-sizing: border-box;
@@ -178,6 +181,7 @@
         .chart-container,
         .performance-section {
           width: 100%;
+          margin-left: 0px; 
           margin-bottom: 20px;
         }
 
@@ -201,8 +205,10 @@
         }
       }
 
+
+
       @media (max-width: 768px) {
-        .sidebar {
+        /* .sidebar {
           width: 100%;
           transform: translateX(-100%);
           position: fixed;
@@ -213,7 +219,7 @@
 
         .sidebar.active {
           transform: translateX(0);
-        }
+        } */
 
         .main-content {
           margin-left: 0;
@@ -250,6 +256,70 @@
           width: 100%;
         }
       }
+
+      @media (max-width: 768px) {
+        /* .sidebar {
+          width: 100%;
+          transform: translateX(-100%);
+          position: fixed;
+          height: 100vh;
+          z-index: 1000;
+          transition: transform 0.3s ease;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        } */
+
+        .main-content {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        /* .menu-toggle {
+          display: block;
+          position: fixed;
+          top: 10px;
+          left: 10px;
+          z-index: 1001;
+          font-size: 24px;
+          cursor: pointer;
+          background: #fff;
+          padding: 5px 10px;
+          border-radius: 4px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        } */
+
+        .dashboard-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .students-container {
+          grid-template-columns: 1fr;
+        }
+
+        .attendance-filters {
+          flex-direction: column;
+        }
+
+        .filter-btn {
+          width: 100%;
+        }
+      }
+
+
+      
+/* Mobile View */
+/* @media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .chart-container,
+  .performance-section {
+    width: 100%;
+  }
+} */
 
       @media (max-width: 576px) {
         .header h1 {
@@ -309,33 +379,22 @@
     </style>
   </head>
   <body>
-    <div class="menu-toggle" id="menuToggle">☰</div>
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-header">HOD Portal</div>
-      <div class="sidebar-subheader">Department Dashboard</div>
-      <div class="sidebar-menu">
-        <div class="sidebar-menu-item active"><i>📊</i> Dashboard</div>
-        <div class="sidebar-menu-item" id="studentMenuItem">
-          <i>👨‍🎓</i> Students
-        </div>
-        <div class="sidebar-menu-item" id="facultyMenuItem">
-          <i>👨‍🏫</i> Faculty
-        </div>
-        <div class="sidebar-menu-item" id="placementMenuItem">
-          <i>💼</i> Placements
-        </div>
-        <div class="sidebar-menu-item" id="AttendanceMenuItem">
-          <i>📅</i> Attendance
-        </div>
-        <div class="sidebar-menu-item" id="transportMenuItem">
-          <i>🚌</i> Transport       
-        </div>
-        <div class="sidebar-menu-item" id="logoutMenuItem">
-          <i>🚪</i> Logout
-        </div>
-      </div>
-    </div>
+   
+<div class="menu-toggle" id="menuToggle">☰</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">HOD Portal</div>
+  <div class="sidebar-subheader">Department Dashboard</div>
+  <div class="sidebar-menu">
+    <div class="sidebar-menu-item active" id="dashboardMenuItem"><i>📊</i> Dashboard</div>
+    <div class="sidebar-menu-item" id="studentMenuItem"><i>👨‍🎓</i> Students</div>
+    <div class="sidebar-menu-item" id="facultyMenuItem"><i>👨‍🏫</i> Faculty</div>
+    <div class="sidebar-menu-item" id="placementMenuItem"><i>💼</i> Placements</div>
+    <div class="sidebar-menu-item" id="AttendanceMenuItem"><i>📅</i> Attendance</div>
+    <div class="sidebar-menu-item" id="transportMenuItem"><i>🚌</i> Transport</div>
+    <div class="sidebar-menu-item" id="logoutMenuItem"><i>🚪</i> Logout</div>
+  </div>
+</div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -530,10 +589,10 @@
 
             <div class="cgpa-x-axis">
               <!-- <div class="cgpa-x-label">Arrears</div> -->
-              <div class="cgpa-x-label">Dull<br />(0-4)</div>
-              <div class="cgpa-x-label">Average<br />(4-6)</div>
-              <div class="cgpa-x-label">Good<br />(6-8)</div>
-              <div class="cgpa-x-label">Best<br />(8-10)</div>
+              <div class="cgpa-x-label">Dull<br />(0-7)</div>
+              <div class="cgpa-x-label">Average<br />(7-8)</div>
+              <div class="cgpa-x-label">Good<br />(8-9)</div>
+              <div class="cgpa-x-label">Best<br />(9-10)</div>
             </div>
           </div>
         </div>
@@ -620,13 +679,18 @@
     <script src="dash.js"></script>
     <script>
       let students = []; // ✅ Make students global
-
       const menuToggle = document.getElementById("menuToggle");
-      const sidebar = document.querySelector(".sidebar");
+  const sidebar = document.getElementById("sidebar");
 
-      menuToggle.addEventListener("click", () => {
-        sidebar.classList.toggle("active");
-      });
+  menuToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+  });
+      // const menuToggle = document.getElementById("menuToggle");
+      // const sidebar = document.querySelector(".sidebar");
+
+      // menuToggle.addEventListener("click", () => {
+      //   sidebar.classList.toggle("active");
+      // });
 
       document.addEventListener("DOMContentLoaded", async function () {
         try {

@@ -1,78 +1,379 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Attendance Dashboard</title>
-  <link rel="stylesheet" href="Attendence.css" />
   <link rel="stylesheet" href="Sidebar.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Loading spinner styles */
-    .loading-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+
+
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  /* .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 500px;
+  } */
+  .close-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 500px;
+    max-height: 80vh; /* Limit height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }
+  
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .mobile-header {
+      display: none;
+      background: #4264E1;
+      color: white;
+      padding: 10px 15px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .menu-toggle {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 240px;
+      min-width: 200px;
+      background: #4264E1;
+      color: white;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      font-size: 20px;
+      font-weight: bold;
       text-align: center;
-      z-index: 10;
+      background: #4264E1;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
     }
     
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid #3498db;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 10px;
+  canvas {
+    max-width: 350px;
+    max-height: 350px;
+  }
+    @media screen and (max-width: 768px) {
+  .chart-wrapper canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+
+    .sidebar-menu-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-    
-    .loading-text {
-      font-size: 14px;
-      color: #666;
+
+    .sidebar-menu-item:hover,
+    .sidebar-menu-item.active {
+      background: #4264E1;
     }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    .main-content {
+      margin-left: 240px;
+      padding: 20px;
+      flex: 1;
     }
-    
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .card {
+      flex: 1 1 200px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .charts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
     .chart-wrapper {
-      position: relative;
-      min-height: 300px;
-      width: 100%;
+      flex: 1 1 400px;
+      min-width: 280px;
     }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      margin: auto;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .header select {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 9;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    @media screen and (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .mobile-header {
+        display: flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        height: 100vh;
+        width: 240px;
+        top: 0;
+        left: -100%;
+        z-index: 10;
+      }
+
+
+      
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  /* .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 500px;
+  } */
+  .close-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 500px;
+    max-height: 80vh; /* Limit height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }
+  
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 15px;
+      }
+
+      .charts-container {
+        flex-direction: column;
+      }
+
+      .card {
+        flex: 1 1 100%;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .close-btn {
+        font-size: 20px;
+      }
+
+      .modal-content {
+        padding: 15px;
+        font-size: 14px;
+      }
+
+      .card h4, .card p {
+        font-size: 14px;
+      }
+
+      .header h2 {
+        font-size: 20px;
+      }
+    }
+    .close-sidebar-btn {
+  display: none;
+  background-color: #4264E1;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+  .close-sidebar-btn {
+    display: block;
+  }
+}
+
   </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">HOD Portal</div>
-        <div class="sidebar-menu">
-            <div class="sidebar-menu-item">
-                <i>📊</i> Dashboard
-            </div>
-            <div class="sidebar-menu-item">
-                <i>👨‍🎓</i> Students
-            </div>
-            <div class="sidebar-menu-item" id="facultyMenuItem">
-                <i>👨‍🏫</i> Faculty
-            </div>
-            <div class="sidebar-menu-item">
-                <i>💼</i> Placements
-            </div>
-            <div class="sidebar-menu-item active">
-                <i>📅</i> Attendance
-            </div>
-            <div class="sidebar-menu-item" id="transportMenuItem">
-                <i>🚌</i> Transport
+
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    <h2>Attendance Dashboard</h2>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">HOD Portal</div>
+    
+  <!-- Close Button (Only shown on mobile) -->
+  <button class="close-sidebar-btn" onclick="toggleSidebar()">☰</button>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-menu-item"><i>📊</i> Dashboard</div>
+      <div class="sidebar-menu-item"><i>👨‍🎓</i> Students</div>
+      <div class="sidebar-menu-item" id="facultyMenuItem"><i>👨‍🏫</i> Faculty</div>
+      <div class="sidebar-menu-item"><i>💼</i> Placements</div>
+      <div class="sidebar-menu-item active"><i>📅</i> Attendance</div>
+      <div class="sidebar-menu-item" id="transportMenuItem"><i>🚌</i> Transport</div>
+      <div class="sidebar-menu-item"><i>🚪</i> Logout</div>
     </div>
-            <div class="sidebar-menu-item">
-                <i>🚪</i> Logout
-            </div>
-        </div>
-    </div>
+  </div>
+
+  <!-- Overlay for mobile sidebar -->
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
 
     <!-- Main Content -->
     <div class="main-content">
@@ -137,7 +438,7 @@
   </div>
   
   <!-- Staff Modal -->
-  <div id="staffModal" class="modal" style="display: none;">
+  <!-- <div id="staffModal" class="modal" style="display: none;">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal1()">&times;</span>
       <h3 id="staffModalTitle"></h3>
@@ -145,8 +446,17 @@
     </div>
   </div>
   
-  
+   -->
     <script>
+      
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  }
+
+
     // Add this at the top of your existing Attendence.js file
     document.addEventListener('DOMContentLoaded', function() {
         // Show loading indicators initially

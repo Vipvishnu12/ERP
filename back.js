@@ -179,7 +179,7 @@ app.get('/placement/:dept', async (req, res) => {
       .input('dept', dept)
       .input('placed', 'yes')
       .input('Class', `I ${dept}`)
-      .query("SELECT COUNT(*) AS count FROM Student_Master WHERE Department = @dept AND placed = @placed or Class LIKE @Class + '%'");
+      .query("SELECT COUNT(*) AS count FROM Student_Master WHERE (Department = @dept or Class LIKE @Class + '%') AND placed = @placed ");
 
     // Count staff in department
     
@@ -188,13 +188,13 @@ app.get('/placement/:dept', async (req, res) => {
     .input('dept', dept)
     .input('Placement_not_willing', 'yes')
     .input('Class', `I ${dept}`)
-    .query("SELECT COUNT(*) AS count FROM Student_Master WHERE Department = @dept AND Placement_not_willing = @Placement_not_willing or Class LIKE @Class + '%'");
+    .query("SELECT COUNT(*) AS count FROM Student_Master WHERE (Department = @dept or Class LIKE @Class + '%') AND Placement_not_willing = @Placement_not_willing ");
     const notelligible = await pool
     .request()
     .input('dept', dept)
     .input('not_elligible', 'nil')
     .input('Class', `I ${dept}`)
-    .query("SELECT COUNT(*) AS count FROM Student_Master WHERE Department = @dept AND Arrear_Status != @not_elligible or Class LIKE @Class + '%'");
+    .query("SELECT COUNT(*) AS count FROM Student_Master WHERE (Department = @dept or Class LIKE @Class + '%') AND Arrear_Status != @not_elligible ");
 
     //['Placed', 'Not Placed', 'Not Willing', 'Not Eligible'],
    
@@ -294,7 +294,7 @@ app.get('/place/:dept', async (req, res) => {
       .input('dept', dept)
       .input('Class', `I ${dept}`)
       .input('placed', 'yes')
-      .query("SELECT COUNT(*) AS count FROM Student_Master WHERE Department = @dept AND placed = @placed OR Class LIKE CONCAT(@Class, '%')");
+      .query("SELECT COUNT(*) AS count FROM Student_Master WHERE (Department = @dept  OR Class LIKE CONCAT(@Class, '%')) AND placed = @placed");
   
       res.status(200).json({
         total_student: students.recordset[0].count,
@@ -1559,9 +1559,8 @@ app.get('/api/incidents/:regno', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 app.post('/work/assign', async (req, res) => {
-  const { assignBy, workDetails, targetDate, assignedTo } = req.body;
+  const { assignBy, statusSelect, workDetails, targetDate, assignedTo, dept } = req.body;
 
   try {
     const pool = await poolPromise;
@@ -1569,24 +1568,15 @@ app.post('/work/assign', async (req, res) => {
     const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
 
     if (assignedTo === 'all') {
-      // Get one row per mobile number that appears 2 or more times
-      const staffList = await pool.request().query(`
-        WITH DuplicateMobiles AS (
-          SELECT Mobile
-          FROM Staff_To_DO
-          GROUP BY Mobile
-          HAVING COUNT(*) >= 2
-        ),
-        RankedStaff AS (
-          SELECT Staff_Name, Mobile,
-                 ROW_NUMBER() OVER (PARTITION BY Mobile ORDER BY Staff_Name) AS rn
-          FROM Staff_To_DO
-          WHERE Mobile IN (SELECT Mobile FROM DuplicateMobiles)
-        )
-        SELECT Staff_Name, Mobile
-        FROM RankedStaff
-        WHERE rn = 1;
+      // Assign to one staff per duplicate mobile within the department
+      const staffList = await pool.request()
+      .input('Dept', sql.VarChar(255), dept)
+      .query(`
+        SELECT Staff_Name, Mobile, Department
+        FROM Staff_Master
+        WHERE Department = @Dept
       `);
+    
 
       for (const staff of staffList.recordset) {
         await pool.request()
@@ -1595,25 +1585,55 @@ app.post('/work/assign', async (req, res) => {
           .input('Work_Assign_By', sql.VarChar(255), assignBy)
           .input('Work_Assign_Dt', sql.VarChar(255), formattedDate)
           .input('Work_Details', sql.VarChar(255), workDetails)
-          .input('Completion_Status', sql.VarChar(255), 'Pending')
+          .input('Completion_Status', sql.VarChar(255), statusSelect)
           .input('Target_Dt', sql.VarChar(255), targetDate)
+          .input('dept', sql.VarChar(255), dept)
           .query(`
             INSERT INTO Staff_To_DO 
-              (Staff_Name, Mobile, Work_Assign_By, Work_Assign_Dt, Work_Details, Completion_Status, Target_Dt)
+              (Staff_Name, Mobile, Work_Assign_By, Work_Assign_Dt, Work_Details, Completion_Status, Target_Dt,Department)
             VALUES 
-              (@Staff_Name, @Mobile, @Work_Assign_By, @Work_Assign_Dt, @Work_Details, @Completion_Status, @Target_Dt)
+              (@Staff_Name, @Mobile, @Work_Assign_By, @Work_Assign_Dt, @Work_Details, @Completion_Status, @Target_Dt,@dept)
           `);
       }
 
-      return res.status(200).json({ message: 'Work assigned to one staff per duplicate mobile number.' });
-    }
+      return res.status(200).json({ message: 'Work assigned to one staff per duplicate mobile (filtered by department).' });
 
-    return res.status(400).json({ message: 'AssignedTo must be "all". More options can be added.' });
+    } else {
+      // Assign to specific staff based on mobile (and optional department check)
+      const result = await pool.request()
+        .input('Mobile', sql.VarChar(255), assignedTo)
+        .query(`SELECT TOP 1 Staff_Name, Mobile FROM Staff_Master WHERE Mobile = @Mobile`);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).json({ message: 'Staff with given mobile and department not found.' });
+      }
+
+      const staff = result.recordset[0];
+
+      await pool.request()
+          .input('Staff_Name', sql.VarChar(255), staff.Staff_Name)
+          .input('Mobile', sql.VarChar(255), staff.Mobile)
+          .input('Work_Assign_By', sql.VarChar(255), assignBy)
+          .input('Work_Assign_Dt', sql.VarChar(255), formattedDate)
+          .input('Work_Details', sql.VarChar(255), workDetails)
+          .input('Completion_Status', sql.VarChar(255), statusSelect)
+          .input('Target_Dt', sql.VarChar(255), targetDate)
+          .input('dept', sql.VarChar(255), dept)
+          .query(`
+            INSERT INTO Staff_To_DO 
+              (Staff_Name, Mobile, Work_Assign_By, Work_Assign_Dt, Work_Details, Completion_Status, Target_Dt,Department)
+            VALUES 
+              (@Staff_Name, @Mobile, @Work_Assign_By, @Work_Assign_Dt, @Work_Details, @Completion_Status, @Target_Dt,@dept)
+          `);
+
+      return res.status(200).json({ message: 'Work assigned to specific staff in selected department.' });
+    }
 
   } catch (err) {
     res.status(500).json({ error: 'Error assigning work: ' + err.message });
   }
 });
+
 
 
 const PORT = 3000;

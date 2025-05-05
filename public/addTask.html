@@ -220,7 +220,7 @@
         <!-- Back link to Faculty page -->
         <div class="back-link-container">
            
-              <a href="faculty.html" class="back-link" id="facultyLink">
+            <a href="faculty.html?dept=" class="back-link" id="facultyLink">
                 <span class="back-icon">←</span> Return to Faculty Page
               </a>
               
@@ -238,7 +238,7 @@
                     <h1>Add Faculty Task</h1>
                 </div>
                 
-                <a href="faculty.html" class="header-link" id="allfaculty">View All Faculty</a>
+                <a href="allfaculty.html" class="header-link" id="allfaculty">View All Faculty</a>
             </div>
             <form id="add-task-form">
                 <div class="form-group">
@@ -251,18 +251,13 @@
                     <input type="text" id="task-description" class="form-control" placeholder="Enter task description" required>
                 </div>
                 <div class="form-row">
+                    <label for="staff-name">Assigned by</label>
+                    <input type="text" id="assignby" class="form-control" placeholder="Enter Your Name" list="faculty-list" required>
+                   
                     <div class="form-group">
-                        <label for="timeline-type">Timeline</label>
-                        <select id="timeline-type" class="form-control" required>
-                            <option value="" disabled selected>Select timeline</option>
-                            <option value="days">Days</option>
-                            <option value="weeks">Weeks</option>
-                        </select>
-                    </div>
+                     </div>
                     <div class="form-group">
-                        <label for="timeline-value">Timeline Value</label>
-                        <input type="number" id="timeline-value" class="form-control" min="1" max="30" placeholder="Enter number" required>
-                    </div>
+                           </div>
                 </div>
                 <div class="form-group">
                     <label for="completion-date">Completion Date</label>
@@ -280,6 +275,7 @@
                     <button type="button" class="btn btn-outline" id="cancel-btn">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add Task</button>
                 </div>
+                <div id="response"></div>
             </form>
         </div>
     </div>
@@ -290,12 +286,11 @@ const dept = urlParams.get('dept');
         // DOM Elements
         const addTaskForm = document.getElementById('add-task-form');
         const staffNameInput = document.getElementById('staff-name');
-        const taskDescriptionInput = document.getElementById('task-description');
-        const timelineTypeSelect = document.getElementById('timeline-type');
-        const timelineValueInput = document.getElementById('timeline-value');
-        const completionDateInput = document.getElementById('completion-date');
+         const completionDateInput = document.getElementById('completion-date');
         const statusSelect = document.getElementById('status');
         const cancelBtn = document.getElementById('cancel-btn');
+        const assignby= document.getElementById('assignby');
+        const taskDescriptionInput=document.getElementById('task-description');
         const successAlert = document.getElementById('success-alert');
 
         // Set default completion date to today
@@ -304,34 +299,49 @@ const dept = urlParams.get('dept');
         completionDateInput.value = formattedDate;
 
         // Form Submit Handler
-        addTaskForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Gather form data
-            const taskData = {
-                staffName: staffNameInput.value,
-                taskDescription: taskDescriptionInput.value,
-                timelineType: timelineTypeSelect.value,
-                timelineValue: timelineValueInput.value,
-                completionDate: completionDateInput.value,
-                status: statusSelect.value
-            };
-            
-            // Save task to local storage (in real app, send to server)
-            saveTask(taskData);
-            
-            // Show success message
-            successAlert.style.display = 'block';
-            
-            // Reset form
-            addTaskForm.reset();
-            completionDateInput.value = formattedDate;
-            
-            // Hide success message after 3 seconds
-            setTimeout(() => {
-                successAlert.style.display = 'none';
-            }, 3000);
-        });
+      // Form Submit Handler
+addTaskForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // Gather form data
+    const data = {
+        assignedTo: staffNameInput.value,
+        workDetails: taskDescriptionInput.value,
+        targetDate: completionDateInput.value,
+        assignBy: assignby.value,
+        statusSelect:statusSelect.value
+        ,dept:dept
+    };
+
+    try {
+    const response = await fetch('/work/assign', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    let result;
+    try {
+        result = await response.json(); // safe parse
+    } catch (jsonError) {
+        throw new Error("Server returned non-JSON data.");
+    }
+
+    document.getElementById('response').innerText = result.message || result.error;
+
+    if (response.ok) {
+        successAlert.style.display = 'block';
+        addTaskForm.reset();
+        completionDateInput.value = formattedDate;
+    }
+
+} catch (err) {
+    document.getElementById('response').innerText = 'Something went wrong!';
+    console.error(err);
+}
+});
 
         // Cancel Button Handler
         cancelBtn.addEventListener('click', function() {
@@ -340,48 +350,11 @@ const dept = urlParams.get('dept');
         });
 
         // Save task to local storage
-        function saveTask(taskData) {
-            // Get existing tasks or initialize empty array
-            let tasks = JSON.parse(localStorage.getItem('facultyTasks')) || [];
-            
-            // Add new task
-            tasks.push({
-                id: Date.now(), // Simple unique ID
-                ...taskData,
-                dateAdded: new Date().toISOString()
-            });
-            
-            // Save back to local storage
-            localStorage.setItem('facultyTasks', JSON.stringify(tasks));
-            
-            // For debugging
-            console.log('Task saved:', taskData);
-            console.log('All tasks:', tasks);
-        }
-
+      
         // Optional: Update completion date based on timeline selection
-        function updateCompletionDate() {
-            const timelineType = timelineTypeSelect.value;
-            const timelineValue = parseInt(timelineValueInput.value);
-            
-            if (timelineType && timelineValue) {
-                const newDate = new Date();
-                
-                if (timelineType === 'days') {
-                    newDate.setDate(newDate.getDate() + timelineValue);
-                } else if (timelineType === 'weeks') {
-                    newDate.setDate(newDate.getDate() + (timelineValue * 7));
-                }
-                
-                completionDateInput.value = newDate.toISOString().substring(0, 10);
-            }
-        }
-
+       
         // Timeline type and value change event handlers
-        timelineTypeSelect.addEventListener('change', updateCompletionDate);
-        timelineValueInput.addEventListener('change', updateCompletionDate);
-        timelineValueInput.addEventListener('input', updateCompletionDate);
-        document.getElementById("facultyLink").href = `faculty.html?dept=${dept}`;
+       document.getElementById("facultyLink").href = `faculty.html?dept=${dept}`;
         document.getElementById("allfaculty").href = `allfaculty.html?dept=${dept}`;
     </script>
 </body>
