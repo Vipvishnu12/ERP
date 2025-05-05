@@ -233,3 +233,57 @@ async function loadstudents() {
   }
   catch (error) {
       console.error('Error fetching course data:', error);}}
+
+      // Responsive Sidebar Toggle Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  // Function to check window width and set initial state
+  function checkWindowSize() {
+      if (window.innerWidth <= 768) {
+          // On mobile, start with sidebar hidden if no preference stored
+          const sidebarHidden = localStorage.getItem('sidebarHidden') !== 'false'; // Default to hidden
+          
+          if (sidebarHidden) {
+              sidebar.classList.add('hidden');
+              mainContent.classList.add('expanded');
+              if (sidebarToggle.querySelector('.toggle-icon')) {
+                  sidebarToggle.querySelector('.toggle-icon').textContent = '☰';
+              }
+          }
+      } else {
+          // On desktop, sidebar is always shown
+          sidebar.classList.remove('hidden');
+          mainContent.classList.remove('expanded');
+      }
+  }
+  
+  // Run on page load
+  checkWindowSize();
+  
+  // Toggle sidebar when button is clicked
+  sidebarToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('hidden');
+      mainContent.classList.toggle('expanded');
+      
+      // Save state to local storage (only for mobile view)
+      if (window.innerWidth <= 768) {
+          localStorage.setItem('sidebarHidden', sidebar.classList.contains('hidden'));
+      }
+      
+      // Change icon based on state
+      const toggleIcon = this.querySelector('.toggle-icon');
+      if (sidebar.classList.contains('hidden')) {
+          toggleIcon.textContent = '☰';
+      } else {
+          toggleIcon.textContent = '✕';
+      }
+  });
+  
+  // Listen for window resize
+  window.addEventListener('resize', function() {
+      checkWindowSize();
+  });
+});

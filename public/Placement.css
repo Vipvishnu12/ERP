@@ -21,6 +21,74 @@ body {
     height: 100vh;
 }
 
+/* Sidebar Toggle Button - Only visible on smaller screens */
+.sidebar-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #4355e8;
+    border-radius: 50%;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background-color: #3949ab;
+    transform: scale(1.05);
+}
+
+.toggle-icon {
+    font-size: 20px;
+}
+
+/* Show toggle button only on smaller screens */
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: flex; /* Show on smaller screens */
+    }
+    
+    /* Sidebar behavior on smaller screens */
+    .sidebar {
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.hidden {
+        transform: translateX(-100%);
+    }
+    
+    /* Adjust main content when sidebar is hidden */
+    .main-content {
+        transition: margin-left 0.3s ease;
+    }
+    
+    .main-content.expanded {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* For very small screens, increase toggle button visibility */
+@media (max-width: 576px) {
+    .sidebar-toggle {
+        left: 15px;
+        top: 15px;
+        width: 45px;
+        height: 45px;
+    }
+    
+    .toggle-icon {
+        font-size: 22px;
+    }
+}
+
 /* Header styling */
 header {
     background: linear-gradient(135deg, #4355e8 0%, #3949ab 100%);
