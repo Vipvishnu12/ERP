@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Department Dashboard | ClixAX - Faculty</title>
+    <link rel="stylesheet" href="sidebar.css">
     <style>
         /* Base styling */
         * {
@@ -275,34 +276,10 @@
         }
 
             /* Sidebar toggle button */
-    .sidebar-toggle {
-        display: none;
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 200;
-    }
-    
-    .sidebar-toggle button {
-        background-color: #4158D0;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    
-    .sidebar-toggle button:hover {
-        background-color: #3349b6;
-    }
     
     /* Improved responsive sidebar behavior */
     @media (max-width: 768px) {
-        .sidebar {
+        /* .sidebar {
             transform: translateX(0);
             transition: transform 0.3s ease;
         }
@@ -313,7 +290,7 @@
         
         .sidebar-toggle {
             display: block;
-        }
+        } */
         
         .main-content {
             margin-left: 0;
@@ -386,7 +363,7 @@
 }
 
 @media (max-width: 768px) {
-    .sidebar {
+    /* .sidebar {
         width: 70px;
         min-width: 70px;
         z-index: 150;
@@ -409,7 +386,7 @@
     .sidebar-menu li i {
         margin-right: 0;
         font-size: 1.5rem;
-    }
+    } */
     
     .main-content {
         margin-left: 0;
@@ -472,7 +449,7 @@
 
 /* For very small screens */
 @media (max-width: 350px) {
-    .sidebar {
+    /* .sidebar {
         width: 60px;
         min-width: 60px;
     }
@@ -488,7 +465,7 @@
     
     .sidebar-menu li {
         padding: 12px 0;
-    }
+    } */
     
     .main-content {
         padding: 8px;
@@ -529,38 +506,46 @@
 </head>
 <body>
     <div class="sidebar-toggle">
-        <button id="sidebarToggleBtn">☰</button>
-    </div>
-    <div class="sidebar">
+        <button id="menuToggle">☰</button>
+      </div>
+      <div class="sidebar" id="sidebar">
         <div class="sidebar-title">HOD Portal</div>
         <div class="sidebar-menu">
-            <li id="dashboardLink">
-                <i>📊</i>
-                <span>Dashboard</span>
-            </li>
-            <li>
-                <i>👨‍🎓</i>
-                <span>Students</span>
-            </li>
-            <li class="active">
-                <i>👨‍🏫</i>
-                <span>Faculty</span>
-            </li>
-            <li>
-                <i>🏢</i>
-                <span>Placements</span>
-            </li>
-            <li>
-                <i>📋</i>
-                <span>Attendance</span>
-            </li>
-            <li>   <i>🚌</i>                             
-                <span>Transport</span>  </li>
-            <li>   <i>🚪</i> 
-            <span>Logout</span>  </li>
+          <li class="sidebar-menu-item" id="dashboardMenuItem">
+            <i>📊</i>
+            <span>Dashboard</span>
+          </li>
+          <li class="sidebar-menu-item" id="profileMenuItem">
+            <i>👤</i>
+            <span>Profile</span>
+          </li>    
+          <li class="sidebar-menu-item" id="studentMenuItem">
+            <i>👨‍🎓</i>
+            <span>Students</span>
+          </li>
+          <li class="sidebar-menu-item active" id="facultyMenuItem">
+            <i>👨‍🏫</i>
+            <span>Faculty</span>
+          </li>
+          <li class="sidebar-menu-item" id="placementMenuItem">
+            <i>🏢</i>
+            <span>Placements</span>
+          </li>
+          <li class="sidebar-menu-item" id="AttendanceMenuItem">
+            <i>📋</i>
+            <span>Attendance</span>
+          </li>
+          <li class="sidebar-menu-item" id="transportMenuItem">
+            <i>🚌</i>
+            <span>Transport</span>
+          </li>
+          <li class="sidebar-menu-item" id="logoutMenuItem">
+            <i>🚪</i>
+            <span>Logout</span>
+          </li>
         </div>
-    </div>
-    
+      </div>
+        
     <div class="main-content">
         <div class="page-header">
             <h1 class="page-title">Faculty</h1>
@@ -797,31 +782,7 @@ document.getElementById("viewAllBtn").addEventListener("click", function (e) {
 
 document.getElementById("addTaskLink").href = `addTask.html?dept=${dept}`;
 
-document.addEventListener('DOMContentLoaded', function() {
-        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-        
-        // Check screen size on load
-        function checkScreenSize() {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.add('sidebar-collapsed');
-                mainContent.classList.remove('main-content-expanded');
-            }
-        }
-        
-        // Initial check
-        checkScreenSize();
-        
-        // Toggle sidebar
-        sidebarToggleBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('sidebar-collapsed');
-            mainContent.classList.toggle('main-content-expanded');
-        });
-        
-        // Listen for window resize events
-        window.addEventListener('resize', checkScreenSize);
-    });
     </script>
+    <script src="sidebar.js"></script>
 </body>
 </html>

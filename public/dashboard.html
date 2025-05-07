@@ -6,6 +6,7 @@
     <title>Enhanced HOD Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="dash.css" />
+    <link rel="stylesheet" href="sidebar.css" />
     <style>
      
 
@@ -207,6 +208,7 @@
 
 
 
+
       @media (max-width: 768px) {
         /* .sidebar {
           width: 100%;
@@ -379,22 +381,49 @@
     </style>
   </head>
   <body>
-   
-<div class="menu-toggle" id="menuToggle">☰</div>
-
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">HOD Portal</div>
-  <div class="sidebar-subheader">Department Dashboard</div>
-  <div class="sidebar-menu">
-    <div class="sidebar-menu-item active" id="dashboardMenuItem"><i>📊</i> Dashboard</div>
-    <div class="sidebar-menu-item" id="studentMenuItem"><i>👨‍🎓</i> Students</div>
-    <div class="sidebar-menu-item" id="facultyMenuItem"><i>👨‍🏫</i> Faculty</div>
-    <div class="sidebar-menu-item" id="placementMenuItem"><i>💼</i> Placements</div>
-    <div class="sidebar-menu-item" id="AttendanceMenuItem"><i>📅</i> Attendance</div>
-    <div class="sidebar-menu-item" id="transportMenuItem"><i>🚌</i> Transport</div>
-    <div class="sidebar-menu-item" id="logoutMenuItem"><i>🚪</i> Logout</div>
+  <!-- Sidebar (loaded dynamically) -->
+  <div class="sidebar-toggle">
+    <button id="menuToggle" class="menu-toggle">☰</button>
   </div>
-</div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">HOD Portal</div>
+    <div class="sidebar-menu">
+      <li class="sidebar-menu-item active" id="dashboardMenuItem">
+        <i>📊</i>
+        <span>Dashboard</span>
+      </li>
+      <li class="sidebar-menu-item" id="profileMenuItem">
+        <i>👤</i>
+        <span>Profile</span>
+      </li>
+      <li class="sidebar-menu-item" id="studentMenuItem">
+        <i>👨‍🎓</i>
+        <span>Students</span>
+      </li>
+      <li class="sidebar-menu-item" id="facultyMenuItem">
+        <i>👨‍🏫</i>
+        <span>Faculty</span>
+      </li>
+      <li class="sidebar-menu-item" id="placementMenuItem">
+        <i>🏢</i>
+        <span>Placements</span>
+      </li>
+      <li class="sidebar-menu-item" id="AttendanceMenuItem">
+        <i>📋</i>
+        <span>Attendance</span>
+      </li>
+      <li class="sidebar-menu-item" id="transportMenuItem">
+        <i>🚌</i>
+        <span>Transport</span>
+      </li>
+      <li class="sidebar-menu-item" id="logoutMenuItem">
+        <i>🚪</i>
+        <span>Logout</span>
+      </li>
+    </div>
+  </div>
+
+
 
     <!-- Main Content -->
     <div class="main-content">
@@ -546,7 +575,7 @@
         </div>
 
         <table class="course-table">
-          <thead>
+          <thead></thead>
             <tr>
               <th>Course Code</th>
               <th>Course Name</th>
@@ -680,141 +709,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="dash.js"></script>
-    <script>
-      let students = []; // ✅ Make students global
-      const menuToggle = document.getElementById("menuToggle");
-  const sidebar = document.getElementById("sidebar");
-
-  menuToggle.addEventListener("click", () => {
-    sidebar.classList.toggle("active");
-  });
-      // const menuToggle = document.getElementById("menuToggle");
-      // const sidebar = document.querySelector(".sidebar");
-
-      // menuToggle.addEventListener("click", () => {
-      //   sidebar.classList.toggle("active");
-      // });
-
-      document.addEventListener("DOMContentLoaded", async function () {
-        try {
-          const response = await fetch(`/dashattdet/${dept}`);
-          students = await response.json(); // ✅ Store in global variable
-          console.log(students);
-          // Initially display all students once data is fetched
-          displayStudents("all");
-        } catch (err) {
-          console.error("Error loading student academic data:", err);
-        }
-
-        // Set up filter buttons
-        const filterButtons = document.querySelectorAll(".filter-btn");
-        filterButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            filterButtons.forEach((b) => b.classList.remove("active"));
-            this.classList.add("active");
-            displayStudents(this.dataset.filter);
-          });
-        });
-      });
-
-      // Function to determine the category of attendance
-      function getAttendanceCategory(attendance) {
-        if (attendance < 50) return "critical";
-        if (attendance < 75) return "warning";
-        if (attendance < 85) return "attention";
-        return "good";
-      }
-
-      // Function to get color based on attendance
-      function getAttendanceColor(attendance) {
-        if (attendance < 50) return "#EA4335"; // critical - red
-        if (attendance < 75) return "#FBBC05"; // warning - yellow
-        if (attendance < 85) return "#4285F4"; // attention - blue
-        return "#34A853"; // good - green
-      }
-
-      // Function to create a student card
-      function createStudentCard(student) {
-        const category = getAttendanceCategory(student.attendance);
-        const color = getAttendanceColor(student.attendance);
-
-        const card = document.createElement("div");
-        card.className = `student-card ${category}`;
-        card.dataset.category = category;
-        //console.log(student.attendance);
-        card.innerHTML = `
-            <h3 class="student-name">${student.Name}</h3>
-            <div class="student-year">${student.Reg_Number}</div>
-            <div class="attendance-bar">
-                <div class="attendance-fill" style="width: ${student.attendance}%; background-color: ${color};"></div>
-            </div>
-            <div class="attendance-percentage ${category}-text">${student.attendance}% Attendance</div>
-        `;
-
-        return card;
-      }
-
-      // Function to display students based on filter
-      function displayStudents(filter = "all") {
-        const container = document.getElementById("studentsContainer");
-        container.innerHTML = "";
-
-        let filteredStudents = students;
-
-        if (filter !== "all") {
-          switch (filter) {
-            case "critical":
-              filteredStudents = students.filter((s) => s.attendance < 50);
-              break;
-            case "warning":
-              filteredStudents = students.filter(
-                (s) => s.attendance >= 50 && s.attendance < 75
-              );
-              break;
-            case "attention":
-              filteredStudents = students.filter(
-                (s) => s.attendance >= 75 && s.attendance < 85
-              );
-              break;
-            case "good":
-              filteredStudents = students.filter((s) => s.attendance >= 85);
-              break;
-          }
-        }
-
-        if (filteredStudents.length === 0) {
-          const message = document.createElement("div");
-          message.className = "no-students-message";
-          message.textContent = "No students found in this category.";
-          container.appendChild(message);
-          return;
-        }
-
-        filteredStudents.forEach((student) => {
-          container.appendChild(createStudentCard(student));
-        });
-      }
-
-      // Initialize attendance display
-      document.addEventListener("DOMContentLoaded", function () {
-        // Set up filter buttons
-        const filterButtons = document.querySelectorAll(".filter-btn");
-        filterButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            // Remove active class from all buttons
-            filterButtons.forEach((b) => b.classList.remove("active"));
-
-            // Add active class to clicked button
-            this.classList.add("active");
-
-            // Display students based on filter
-            displayStudents(this.dataset.filter);
-          });
-        });
-
-        // Initially display all students
-        displayStudents("all");
-      });
-    </script>
+    <script></script>
+    <!-- <script src="navigation.js"></script> -->
+    <script src="sidebar.js"></script>
   </body>
 </html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Portal | Department of Computer Science</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #4158D0;
+            --secondary-color: #2c3e50;
+            --light-gray: #f4f6f8;
+            --border-color: #ddd;
+            --success: #2ecc71;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            color: #333;
+            line-height: 1.6;
+            display: grid;
+            grid-template-areas:
+                "sidebar topbar"
+                "sidebar main";
+            grid-template-columns: auto 1fr;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar styling */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: #4158D0;
+            color: white;
+            width: 240px;
+            min-width: 200px;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            padding: 20px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 10px 0;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .sidebar-menu li.active {
+            background-color: rgba(255,255,255,0.2);
+            border-left: 4px solid #fff;
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        
+        /* Topbar styling */
+        .topbar {
+            grid-area: topbar;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 50;
+        }
+        
+        .search-container {
+            flex-grow: 1;
+            max-width: 500px;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .profile-container {
+            position: relative;
+        }
+        
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 150px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: var(--light-gray);
+        }
+        
+        /* Main content area */
+        main {
+            grid-area: main;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        /* Profile section */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--primary-color);
+            justify-self: center;
+        }
+        
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-details h1 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .profile-details h2 {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .contact-info div span {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        /* Content sections */
+        .content-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .section-header h2 {
+            color: var(--secondary-color);
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #3349b6;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .card .date {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        .publication-card {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .achievement-card {
+            border-left: 4px solid var(--success);
+        }
+        
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            color: var(--secondary-color);
+        }
+        
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-cancel {
+            background-color: #e74c3c;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #c0392b;
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 200;
+        }
+        
+        .sidebar-toggle button {
+            background-color: #4158D0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .sidebar-toggle button:hover {
+            background-color: #3349b6;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+            }
+            
+            .profile-img {
+                margin-bottom: 20px;
+            }
+            
+            .contact-info {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                grid-template-areas:
+                    "topbar"
+                    "main";
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px 1fr;
+            }
+            
+            .sidebar {
+                position: fixed;
+                width: 70px;
+                min-width: 70px;
+                z-index: 150;
+                transform: translateX(0);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar-collapsed {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar-title {
+                font-size: 0.9rem;
+                padding: 15px 5px;
+            }
+            
+            .sidebar-menu li span {
+                display: none;
+            }
+            
+            .sidebar-menu li {
+                padding: 15px 0;
+                justify-content: center;
+            }
+            
+            .sidebar-menu li i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+            
+            main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                transition: all 0.3s;
+            }
+            
+            main.full-width {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .topbar {
+                padding: 0 10px;
+            }
+            
+            .search-container {
+                max-width: 200px;
+            }
+            
+            .profile-btn span {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .sidebar {
+                width: 60px;
+                min-width: 60px;
+            }
+            
+            .sidebar-title {
+                font-size: 0.8rem;
+                padding: 12px 2px;
+            }
+            
+            .sidebar-menu li i {
+                font-size: 1.3rem;
+            }
+            
+            .sidebar-menu li {
+                padding: 12px 0;
+            }
+            
+            main {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-title">HOD Portal</div>
+        <div class="sidebar-menu">
+            <li id="dashboardLink">
+                <i>📊</i>
+                <span>Dashboard</span>
+            </li>
+            <li class="active">
+                <i>👤</i>
+                <span>Profile</span>
+            </li>
+            <li>
+                <i>👨‍🎓</i>
+                <span>Students</span>
+            </li>
+            <li>
+                <i>👨‍🏫</i>
+                <span>Faculty</span>
+            </li>
+            <li>
+                <i>🏢</i>
+                <span>Placements</span>
+            </li>
+            <li>
+                <i>📋</i>
+                <span>Attendance</span>
+            </li>
+            <li>
+                <i>🚌</i>                             
+                <span>Transport</span>
+            </li>
+            <li>
+                <i>🚪</i>
+                <span>Logout</span>
+            </li>
+        </div>
+    </div>
+    
+    <!-- Sidebar Toggle Button -->
+    <div class="sidebar-toggle">
+        <button id="sidebarToggleBtn">☰</button>
+    </div>
+    
+    
+    <!-- Main Content -->
+    <main>
+        <div class="content-grid">
+            <!-- Profile Section -->
+            <section class="profile-section">
+                <div class="profile-img">
+                    <img src="/api/placeholder/200/200" alt="HOD Profile Picture">
+                </div>
+                <div class="profile-details">
+                    <h1>Dr. Sarah Johnson</h1>
+                    <h2>Head of Department, Computer Science</h2>
+                    <!-- <p>Dr. Sarah Johnson is a distinguished professor with over 15 years of experience in the field of Computer Science. Her research interests include Artificial Intelligence, Machine Learning, and Data Science. She has published numerous papers in international journals and has been recognized for her contributions to the field.</p> -->
+                    
+                    <div class="contact-info">
+                        <div>
+                            <span>Email:</span> sarah.johnson@abccollege.edu
+                        </div>
+                        <div>
+                            <span>Phone:</span> (555) 123-4567
+                        </div>
+                        <div>
+                            <span>Department:</span> CS Building, Room 305
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Achievements Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>Achievements</h2>
+                    <button class="btn" id="add-achievement-btn">Add Achievement</button>
+                </div>
+                <div class="cards-grid" id="achievements-container">
+                    <div class="card achievement-card">
+                        <h3>Best Researcher Award</h3>
+                        <p>Awarded for outstanding contributions to AI research and development</p>
+                        <p class="date">November 2023</p>
+                    </div>
+                    <div class="card achievement-card">
+                        <h3>Excellence in Teaching Award</h3>
+                        <p>Recognized for innovative teaching methods and student mentorship</p>
+                        <p class="date">May 2022</p>
+                    </div>
+                    <div class="card achievement-card">
+                        <h3>Department Leadership Award</h3>
+                        <p>Acknowledged for exceptional leadership and department growth</p>
+                        <p class="date">December 2021</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Publications Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>Paper Publications</h2>
+                    <button class="btn" id="add-publication-btn">Add Publication</button>
+                </div>
+                <div class="cards-grid" id="publications-container">
+                    <div class="card publication-card">
+                        <h3>Advances in Neural Network Architectures</h3>
+                        <p>Published in International Journal of Computer Science</p>
+                        <p>Co-authors: Dr. Michael Chen, Dr. Lisa Wong</p>
+                        <p class="date">October 2024</p>
+                    </div>
+                    <div class="card publication-card">
+                        <h3>Machine Learning Applications in Healthcare</h3>
+                        <p>Published in IEEE Transactions on Medical Imaging</p>
+                        <p>Co-authors: Dr. James Wilson</p>
+                        <p class="date">June 2023</p>
+                    </div>
+                    <div class="card publication-card">
+                        <h3>Ethical Implications of AI in Education</h3>
+                        <p>Published in Journal of Educational Technology</p>
+                        <p>Co-authors: Dr. Emily Roberts, Dr. David Kim</p>
+                        <p class="date">March 2022</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Achievement Modal -->
+    <div class="modal" id="achievement-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Achievement</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="achievement-form">
+                <div class="form-group">
+                    <label for="achievement-title">Title</label>
+                    <input type="text" id="achievement-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-description">Description</label>
+                    <textarea id="achievement-description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-date">Date</label>
+                    <input type="month" id="achievement-date" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel achievement-cancel">Cancel</button>
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Publication Modal -->
+    <div class="modal" id="publication-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Publication</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="publication-form">
+                <div class="form-group">
+                    <label for="publication-title">Paper Title</label>
+                    <input type="text" id="publication-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="publication-journal">Journal/Conference</label>
+                    <input type="text" id="publication-journal" required>
+                </div>
+                <div class="form-group">
+                    <label for="publication-coauthors">Co-authors (comma separated)</label>
+                    <input type="text" id="publication-coauthors">
+                </div>
+                <div class="form-group">
+                    <label for="publication-date">Publication Date</label>
+                    <input type="month" id="publication-date" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel publication-cancel">Cancel</button>
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const main = document.querySelector('main');
+        const profileDropdownBtn = document.getElementById('profileDropdownBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const addAchievementBtn = document.getElementById('add-achievement-btn');
+        const addPublicationBtn = document.getElementById('add-publication-btn');
+        const achievementModal = document.getElementById('achievement-modal');
+        const publicationModal = document.getElementById('publication-modal');
+        const achievementForm = document.getElementById('achievement-form');
+        const publicationForm = document.getElementById('publication-form');
+        const achievementsContainer = document.getElementById('achievements-container');
+        const publicationsContainer = document.getElementById('publications-container');
+        
+        // Toggle sidebar
+        sidebarToggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            main.classList.toggle('full-width');
+        });
+        
+        // Toggle profile dropdown
+        profileDropdownBtn.addEventListener('click', () => {
+            profileDropdown.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdownBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('show');
+            }
+        });
+        
+        // Format date function
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const month = date.toLocaleString('default', { month: 'long' });
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+        }
+        
+        // Open Achievement Modal
+        addAchievementBtn.addEventListener('click', () => {
+            achievementModal.style.display = 'flex';
+        });
+        
+        // Open Publication Modal
+        addPublicationBtn.addEventListener('click', () => {
+            publicationModal.style.display = 'flex';
+        });
+        
+        // Close Modals
+        document.querySelectorAll('.close-btn, .achievement-cancel, .publication-cancel').forEach(element => {
+            element.addEventListener('click', () => {
+                achievementModal.style.display = 'none';
+                publicationModal.style.display = 'none';
+            });
+        });
+        
+        // Handle Achievement Form Submit
+        achievementForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('achievement-title').value;
+            const description = document.getElementById('achievement-description').value;
+            const date = document.getElementById('achievement-date').value;
+            
+            const achievementCard = document.createElement('div');
+            achievementCard.className = 'card achievement-card';
+            achievementCard.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <p class="date">${formatDate(date)}</p>
+            `;
+            
+            achievementsContainer.prepend(achievementCard);
+            
+            // Reset form and close modal
+            achievementForm.reset();
+            achievementModal.style.display = 'none';
+        });
+        
+        // Handle Publication Form Submit
+        publicationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('publication-title').value;
+            const journal = document.getElementById('publication-journal').value;
+            const coauthors = document.getElementById('publication-coauthors').value;
+            const date = document.getElementById('publication-date').value;
+            
+            const publicationCard = document.createElement('div');
+            publicationCard.className = 'card publication-card';
+            publicationCard.innerHTML = `
+                <h3>${title}</h3>
+                <p>Published in ${journal}</p>
+                ${coauthors ? `<p>Co-authors: ${coauthors}</p>` : ''}
+                <p class="date">${formatDate(date)}</p>
+            `;
+            
+            publicationsContainer.prepend(publicationCard);
+            
+            // Reset form and close modal
+            publicationForm.reset();
+            publicationModal.style.display = 'none';
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === achievementModal) {
+                achievementModal.style.display = 'none';
+            }
+            if (e.target === publicationModal) {
+                publicationModal.style.display = 'none';
+            }
+        });
+    </script>
+    <script src="sidebar.js"></script>
+</body>
+</html>

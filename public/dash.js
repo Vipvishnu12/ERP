@@ -311,5 +311,105 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.display = 'block';
     }
     
+    
+    let students = []; // ✅ Make students global
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        const response = await fetch(`/dashattdet/${dept}`);
+        students = await response.json(); // ✅ Store in global variable
+        console.log(students);
+        // Initially display all students once data is fetched
+        displayStudents("all");
+      } catch (err) {
+        console.error("Error loading student academic data:", err);
+      }
 
- 
+      // Set up filter buttons
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          filterButtons.forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          displayStudents(this.dataset.filter);
+        });
+      });
+    });
+
+    // Function to determine the category of attendance
+    function getAttendanceCategory(attendance) {
+      if (attendance < 50) return "critical";
+      if (attendance < 75) return "warning";
+      if (attendance < 85) return "attention";
+      return "good";
+    }
+
+    // Function to get color based on attendance
+    function getAttendanceColor(attendance) {
+      if (attendance < 50) return "#EA4335"; // critical - red
+      if (attendance < 75) return "#FBBC05"; // warning - yellow
+      if (attendance < 85) return "#4285F4"; // attention - blue
+      return "#34A853"; // good - green
+    }
+
+    // Function to create a student card
+    function createStudentCard(student) {
+      const category = getAttendanceCategory(student.attendance);
+      const color = getAttendanceColor(student.attendance);
+
+      const card = document.createElement("div");
+      card.className = `student-card ${category}`;
+      card.dataset.category = category;
+      //console.log(student.attendance);
+      card.innerHTML = `
+          <h3 class="student-name">${student.Name}</h3>
+          <div class="student-year">${student.Reg_Number}</div>
+          <div class="attendance-bar">
+              <div class="attendance-fill" style="width: ${student.attendance}%; background-color: ${color};"></div>
+          </div>
+          <div class="attendance-percentage ${category}-text">${student.attendance}% Attendance</div>
+      `;
+
+      return card;
+    }
+
+    // Function to display students based on filter
+    function displayStudents(filter = "all") {
+      const container = document.getElementById("studentsContainer");
+      container.innerHTML = "";
+
+      let filteredStudents = students;
+
+      if (filter !== "all") {
+        switch (filter) {
+          case "critical":
+            filteredStudents = students.filter((s) => s.attendance < 50);
+            break;
+          case "warning":
+            filteredStudents = students.filter(
+              (s) => s.attendance >= 50 && s.attendance < 75
+            );
+            break;
+          case "attention":
+            filteredStudents = students.filter(
+              (s) => s.attendance >= 75 && s.attendance < 85
+            );
+            break;
+          case "good":
+            filteredStudents = students.filter((s) => s.attendance >= 85);
+            break;
+        }
+      }
+
+      if (filteredStudents.length === 0) {
+        const message = document.createElement("div");
+        message.className = "no-students-message";
+        message.textContent = "No students found in this category.";
+        container.appendChild(message);
+        return;
+      }
+
+      filteredStudents.forEach((student) => {
+        container.appendChild(createStudentCard(student));
+      });
+    }
+  

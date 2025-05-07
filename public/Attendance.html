@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -344,36 +343,52 @@
 }
 
   </style>
+  <link rel="stylesheet" href="Sidebar.css" />
 </head>
 <body>
 
-  <!-- Mobile Header -->
-  <div class="mobile-header">
-    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <h2>Attendance Dashboard</h2>
+  <div class="sidebar-toggle">
+    <button id="menuToggle">☰</button>
   </div>
-
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">HOD Portal</div>
-    
-  <!-- Close Button (Only shown on mobile) -->
-  <button class="close-sidebar-btn" onclick="toggleSidebar()">☰</button>
-
+    <div class="sidebar-title">HOD Portal</div>
     <div class="sidebar-menu">
-      <div class="sidebar-menu-item"><i>📊</i> Dashboard</div>
-      <div class="sidebar-menu-item"><i>👨‍🎓</i> Students</div>
-      <div class="sidebar-menu-item" id="facultyMenuItem"><i>👨‍🏫</i> Faculty</div>
-      <div class="sidebar-menu-item"><i>💼</i> Placements</div>
-      <div class="sidebar-menu-item active"><i>📅</i> Attendance</div>
-      <div class="sidebar-menu-item" id="transportMenuItem"><i>🚌</i> Transport</div>
-      <div class="sidebar-menu-item"><i>🚪</i> Logout</div>
+      <li class="sidebar-menu-item" id="dashboardMenuItem">
+        <i>📊</i>
+        <span>Dashboard</span>
+      </li>
+      <!-- Profile menu item added below Dashboard -->
+      <li class="sidebar-menu-item" id="profileMenuItem">
+        <i>👤</i>
+        <span>Profile</span>
+      </li>
+        
+      <li class="sidebar-menu-item" id="studentMenuItem">
+        <i>👨‍🎓</i>
+        <span>Students</span>
+      </li>
+      <li class="sidebar-menu-item" id="facultyMenuItem">
+        <i>👨‍🏫</i>
+        <span>Faculty</span>
+      </li>
+      <li class="sidebar-menu-item" id="placementMenuItem">
+        <i>🏢</i>
+        <span>Placements</span>
+      </li>
+      <li class="sidebar-menu-item" id="AttendanceMenuItem">
+        <i>📋</i>
+        <span>Attendance</span>
+      </li>
+      <li class="sidebar-menu-item active" id="transportMenuItem">
+        <i>🚌</i>
+        <span>Transport</span>
+      </li>
+      <li class="sidebar-menu-item" id="logoutMenuItem">
+        <i>🚪</i>
+        <span>Logout</span>
+      </li>
     </div>
   </div>
-
-  <!-- Overlay for mobile sidebar -->
-  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
 
     <!-- Main Content -->
     <div class="main-content">
@@ -486,5 +501,6 @@ document.getElementById('semesterSelect').addEventListener('change', function() 
     </script>
     <script src="Attendence.js"></script>
     <!-- <script src="navigation.js"></script> -->
+    <script src="Sidebar.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -69,243 +69,258 @@
     </div>
 </div> -->
 <!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">HOD Portal</div>
+<div class="sidebar-toggle">
+    <button id="menuToggle">☰</button>
+  </div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">HOD Portal</div>
     <div class="sidebar-menu">
-        <div class="sidebar-menu-item" id="dashboardMenuItem" data-title="Dashboard">
-            <svg class="menu-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
-                <g class="dashboard-icon" fill="#ffffff">
-                    <rect x="3" y="3" width="7" height="9" rx="1" />
-                    <rect x="14" y="3" width="7" height="5" rx="1" />
-                    <rect x="14" y="12" width="7" height="9" rx="1" />
-                    <rect x="3" y="16" width="7" height="5" rx="1" />
-                </g>
-            </svg>
-            <span>Dashboard</span>
+      <li class="sidebar-menu-item" id="dashboardMenuItem">
+        <i>📊</i>
+        <span>Dashboard</span>
+      </li>
+      <li class="sidebar-menu-item" id="profileMenuItem">
+        <i>👤</i>
+        <span>Profile</span>
+      </li>
+      <li class="sidebar-menu-item" id="studentMenuItem">
+        <i>👨‍🎓</i>
+        <span>Students</span>
+      </li>
+      <li class="sidebar-menu-item " id="facultyMenuItem">
+        <i>👨‍🏫</i>
+        <span>Faculty</span>
+      </li>
+      <li class="sidebar-menu-item active" id="placementMenuItem">
+        <i>🏢</i>
+        <span>Placements</span>
+      </li>
+      <li class="sidebar-menu-item" id="AttendanceMenuItem">
+        <i>📋</i>
+        <span>Attendance</span>
+      </li>
+      <li class="sidebar-menu-item" id="transportMenuItem">
+        <i>🚌</i>
+        <span>Transport</span>
+      </li>
+      <li class="sidebar-menu-item" id="logoutMenuItem">
+        <i>🚪</i>
+        <span>Logout</span>
+      </li>
+    </div>
+  </div>
+
+<!-- Toggle Button for Main Content -->
+<!-- <button id="toggleContentBtn" style="margin: 16px;">Toggle Content</button> -->
+
+<!-- Main Content Wrapper -->
+<div class="main-content" id="mainContent">
+    <!-- Main Content -->
+    <div class="dashboard">
+        <div class="card" id="totalStudents">
+            <h2>Total Students Eligible</h2>
+            <div class="number" id="totstudents">--</div>
         </div>
-        <div class="sidebar-menu-item" data-title="Students">
-            <i>👨‍🎓</i> <span>Students</span>
+        <div class="card" id="placedStudents">
+            <h2>Students Placed</h2>
+            <div class="number" id="noplaced">--</div>
         </div>
-        <div class="sidebar-menu-item" id="facultyMenuItem" data-title="Faculty">
-            <i>👨‍🏫</i> <span>Faculty</span>
+        <div class="card" id="notPlacedStudents">
+            <h2>Students Not Placed</h2>
+            <div class="number" id="nonotplaced">--</div>
         </div>
-        <div class="sidebar-menu-item active" data-title="Placements">
-            <i>💼</i> <span>Placements</span>
+        <div class="card" id="placementPercentage">
+            <h2>Placement Percentage</h2>
+            <div class="number" id="place%">--</div>
         </div>
-        <div class="sidebar-menu-item" data-title="Attendance">
-            <i>📅</i> <span>Attendance</span>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-card">
+            <div class="chart-title">Company Wise Placement Distribution</div>
+            <div class="chart-wrapper">
+                <canvas id="companyPieChart" class="PieChart"></canvas>
+            </div>
         </div>
-        
-        <div class="sidebar-menu-item" id="logoutMenuItem" data-title="Logout">
-            <i>🚪</i> <span>Logout</span>
+        <div class="chart-card">
+            <div class="chart-title">Placement Trend by Year</div>
+            <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Modal for Placed Students -->
+    <div id="placedModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Placed Students Details</div>
+                <span class="close" id="closePlacedModal">&times;</span>
+            </div>
+            <div class="search-container">
+                <input type="text" id="placedSearch" placeholder="Search by name, company, or package...">
+            </div>
+            <table id="placedStudentsTable">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Package (LPA)</th>
+                        <th>Placement Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CS001</td>
+                        <td>Rahul Kumar</td>
+                        <td>Microsoft</td>
+                        <td>24.5</td>
+                        <td>15-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS007</td>
+                        <td>Priya Sharma</td>
+                        <td>Google</td>
+                        <td>32.0</td>
+                        <td>10-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS012</td>
+                        <td>Amit Singh</td>
+                        <td>Amazon</td>
+                        <td>26.5</td>
+                        <td>12-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS015</td>
+                        <td>Neha Patel</td>
+                        <td>Infosys</td>
+                        <td>8.5</td>
+                        <td>20-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS018</td>
+                        <td>Raj Malhotra</td>
+                        <td>Wipro</td>
+                        <td>7.2</td>
+                        <td>25-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS022</td>
+                        <td>Anjali Gupta</td>
+                        <td>TCS</td>
+                        <td>7.8</td>
+                        <td>18-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS025</td>
+                        <td>Vikram Joshi</td>
+                        <td>Microsoft</td>
+                        <td>24.5</td>
+                        <td>15-Sep-2024</td>
+                    </tr>
+                    <tr>
+                        <td>CS031</td>
+                        <td>Pooja Verma</td>
+                        <td>Amazon</td>
+                        <td>26.5</td>
+                        <td>12-Sep-2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for Not Placed Students -->
+    <div id="notPlacedModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Students Not Placed</div>
+                <span class="close" id="closeNotPlacedModal">&times;</span>
+            </div>
+            <div class="search-container">
+                <input type="text" id="notPlacedSearch" placeholder="Search by name or roll number...">
+            </div>
+            <table id="notPlacedStudentsTable">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>CGPA</th>
+                        <th>Interviews Attended</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CS005</td>
+                        <td>Sanjay Dubey</td>
+                        <td>7.2</td>
+                        <td>3</td>
+                        <td>In Process</td>
+                    </tr>
+                    <tr>
+                        <td>CS009</td>
+                        <td>Meera Reddy</td>
+                        <td>6.8</td>
+                        <td>2</td>
+                        <td>In Process</td>
+                    </tr>
+                    <tr>
+                        <td>CS019</td>
+                        <td>Karan Kohli</td>
+                        <td>7.5</td>
+                        <td>4</td>
+                        <td>In Process</td>
+                    </tr>
+                    <tr>
+                        <td>CS027</td>
+                        <td>Lakshmi Narayan</td>
+                        <td>6.5</td>
+                        <td>1</td>
+                        <td>Yet to Qualify</td>
+                    </tr>
+                    <tr>
+                        <td>CS032</td>
+                        <td>Rajesh Kumar</td>
+                        <td>6.9</td>
+                        <td>2</td>
+                        <td>In Process</td>
+                    </tr>
+                    <tr>    
+                        <td>CS041</td>
+                        <td>Divya Mehta</td>
+                        <td>7.8</td>
+                        <td>3</td>
+                        <td>In Process</td>
+                    </tr>
+                    <tr>
+                        <td>CS045</td>
+                        <td>Prakash Jha</td>
+                        <td>6.7</td>
+                        <td>1</td>
+                        <td>Yet to Qualify</td>
+                    </tr>
+                    <tr>
+                        <td>CS048</td>
+                        <td>Ananya Desai</td>
+                        <td>7.1</td>
+                        <td>2</td>
+                        <td>In Process</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-<div id="sidebar-toggle" class="sidebar-toggle">
-    <span class="toggle-icon">☰</span>
-</div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-
-            <div class="dashboard">
-                <div class="card" id="totalStudents">
-                    <h2>Total Students Eligible</h2>
-                    <div class="number" id="totstudents">--</div>
-                </div>
-                <div class="card" id="placedStudents">
-                    <h2>Students Placed</h2>
-                    <div class="number" id="noplaced">--</div>
-                </div>
-                <div class="card" id="notPlacedStudents">
-                    <h2>Students Not Placed</h2>
-                    <div class="number" id="nonotplaced">--</div>
-                </div>
-                <div class="card" id="placementPercentage">
-                    <h2>Placement Percentage</h2>
-                    <div class="number" id="place%">--</div>
-                </div>
-            </div>
-
-            <div class="charts-container">
-                <div class="chart-card">
-                    <div class="chart-title">Company Wise Placement Distribution</div>
-                    <div class="chart-wrapper">
-                        <canvas id="companyPieChart" class="PieChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-title">Placement Trend by Year</div>
-                    <canvas id="trendChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Modal for Placed Students -->
-            <div id="placedModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">Placed Students Details</div>
-                        <span class="close" id="closePlacedModal">&times;</span>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" id="placedSearch" placeholder="Search by name, company, or package...">
-                    </div>
-                    <table id="placedStudentsTable">
-                        <thead>
-                            <tr>
-                                <th>Roll No</th>
-                                <th>Name</th>
-                                <th>Company</th>
-                                <th>Package (LPA)</th>
-                                <th>Placement Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>CS001</td>
-                                <td>Rahul Kumar</td>
-                                <td>Microsoft</td>
-                                <td>24.5</td>
-                                <td>15-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS007</td>
-                                <td>Priya Sharma</td>
-                                <td>Google</td>
-                                <td>32.0</td>
-                                <td>10-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS012</td>
-                                <td>Amit Singh</td>
-                                <td>Amazon</td>
-                                <td>26.5</td>
-                                <td>12-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS015</td>
-                                <td>Neha Patel</td>
-                                <td>Infosys</td>
-                                <td>8.5</td>
-                                <td>20-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS018</td>
-                                <td>Raj Malhotra</td>
-                                <td>Wipro</td>
-                                <td>7.2</td>
-                                <td>25-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS022</td>
-                                <td>Anjali Gupta</td>
-                                <td>TCS</td>
-                                <td>7.8</td>
-                                <td>18-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS025</td>
-                                <td>Vikram Joshi</td>
-                                <td>Microsoft</td>
-                                <td>24.5</td>
-                                <td>15-Sep-2024</td>
-                            </tr>
-                            <tr>
-                                <td>CS031</td>
-                                <td>Pooja Verma</td>
-                                <td>Amazon</td>
-                                <td>26.5</td>
-                                <td>12-Sep-2024</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Modal for Not Placed Students -->
-            <div id="notPlacedModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">Students Not Placed</div>
-                        <span class="close" id="closeNotPlacedModal">&times;</span>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" id="notPlacedSearch" placeholder="Search by name or roll number...">
-                    </div>
-                    <table id="notPlacedStudentsTable">
-                        <thead>
-                            <tr>
-                                <th>Roll No</th>
-                                <th>Name</th>
-                                <th>CGPA</th>
-                                <th>Interviews Attended</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>CS005</td>
-                                <td>Sanjay Dubey</td>
-                                <td>7.2</td>
-                                <td>3</td>
-                                <td>In Process</td>
-                            </tr>
-                            <tr>
-                                <td>CS009</td>
-                                <td>Meera Reddy</td>
-                                <td>6.8</td>
-                                <td>2</td>
-                                <td>In Process</td>
-                            </tr>
-                            <tr>
-                                <td>CS019</td>
-                                <td>Karan Kohli</td>
-                                <td>7.5</td>
-                                <td>4</td>
-                                <td>In Process</td>
-                            </tr>
-                            <tr>
-                                <td>CS027</td>
-                                <td>Lakshmi Narayan</td>
-                                <td>6.5</td>
-                                <td>1</td>
-                                <td>Yet to Qualify</td>
-                            </tr>
-                            <tr>
-                                <td>CS032</td>
-                                <td>Rajesh Kumar</td>
-                                <td>6.9</td>
-                                <td>2</td>
-                                <td>In Process</td>
-                            </tr>
-                            <tr>    
-                                <td>CS041</td>
-                                <td>Divya Mehta</td>
-                                <td>7.8</td>
-                                <td>3</td>
-                                <td>In Process</td>
-                            </tr>
-                            <tr>
-                                <td>CS045</td>
-                                <td>Prakash Jha</td>
-                                <td>6.7</td>
-                                <td>1</td>
-                                <td>Yet to Qualify</td>
-                            </tr>
-                            <tr>
-                                <td>CS048</td>
-                                <td>Ananya Desai</td>
-                                <td>7.1</td>
-                                <td>2</td>
-                                <td>In Process</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- <script src="navigation.js"></script> -->
-        <script src="Placement.js"></script>
-    </body>
-    </html>
+<script src="Placement.js"></script>
+<script src="sidebar.js"></script>
+<script>
+// Toggle main content visibility
+document.getElementById('toggleContentBtn').addEventListener('click', function() {
+    const mainContent = document.getElementById('mainContent');
+    mainContent.style.display = (mainContent.style.display === 'none') ? '' : 'none';
+});
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@
         }
         
         /* Sidebar Styles */
-        .sidebar {
+        /* .sidebar {
             width: 250px;
             height: 100vh;
             background-color: #4264E1;
@@ -65,7 +65,7 @@
         .sidebar-menu-item i {
             margin-right: 10px;
             font-size: 1.1rem;
-        }
+        } */
         
         /* Main Content */
         .main-content {
@@ -295,39 +295,51 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
     <!-- Menu Toggle for Mobile -->
-    <button class="menu-toggle" id="menuToggle">☰</button>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">HOD Portal</div>
-        <div class="sidebar-subheader">Department Dashboard</div>
+    <div class="sidebar-toggle">
+        <button id="menuToggle">☰</button>
+      </div>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-title">HOD Portal</div>
         <div class="sidebar-menu">
-            <div class="sidebar-menu-item">
-                <i>📊</i> Dashboard
-            </div>
-            <div class="sidebar-menu-item" id="studentMenuItem">
-                <i>👨‍🎓</i> Students
-            </div>
-            <div class="sidebar-menu-item" id="facultyMenuItem">
-                <i>👨‍🏫</i> Faculty
-            </div>
-            <div class="sidebar-menu-item" id="placementMenuItem">
-                <i>💼</i> Placements
-            </div>
-            <div class="sidebar-menu-item active" id="transportMenuItem">
-                <i>🚌</i> Transport
-            </div>
-            <div class="sidebar-menu-item" id="AttendanceMenuItem">
-                <i>📅</i> Attendance
-            </div>
-            <div class="sidebar-menu-item">
-                <i>🚪</i> Logout
-            </div>
+          <li class="sidebar-menu-item" id="dashboardMenuItem">
+            <i>📊</i>
+            <span>Dashboard</span>
+          </li>
+          <li class="sidebar-menu-item" id="profileMenuItem">
+            <i>👤</i>
+            <span>Profile</span>
+          </li>
+          <li class="sidebar-menu-item" id="studentMenuItem">
+            <i>👨‍🎓</i>
+            <span>Students</span>
+          </li>
+          <li class="sidebar-menu-item " id="facultyMenuItem">
+            <i>👨‍🏫</i>
+            <span>Faculty</span>
+          </li>
+          <li class="sidebar-menu-item" id="placementMenuItem">
+            <i>🏢</i>
+            <span>Placements</span>
+          </li>
+          <li class="sidebar-menu-item" id="AttendanceMenuItem">
+            <i>📋</i>
+            <span>Attendance</span>
+          </li>
+          <li class="sidebar-menu-item active" id="transportMenuItem">
+            <i>🚌</i>
+            <span>Transport</span>
+          </li>
+          <li class="sidebar-menu-item" id="logoutMenuItem">
+            <i>🚪</i>
+            <span>Logout</span>
+          </li>
         </div>
-    </div>
+      </div>
+    
 
     <!-- Main Content -->
     <div class="main-content">
@@ -503,5 +515,6 @@
             menuItems[6].addEventListener('click', () => window.location.href = `login.html`);
         });
     </script>
+    <script src="sidebar.js"></script>
 </body>
 </html>
