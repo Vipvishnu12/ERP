@@ -15,6 +15,7 @@
         body {
             background-color: #f5f7fa;
             display: flex;
+            min-height: 100vh;
         }
         
         .sidebar {
@@ -24,6 +25,8 @@
             height: 100vh;
             padding: 20px 0;
             position: fixed;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
         
         .logo {
@@ -57,10 +60,10 @@
         }
         
         .content {
-            margin-left: 220px;
+            margin-left: 0;
             padding: 20px;
-            width: calc(100% - 220px);
-            height: 100vh;
+            width: 100%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -70,11 +73,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .header h1 {
             color: #4361ee;
             font-weight: 500;
+            font-size: 1.8rem;
         }
         
         .search-box {
@@ -83,7 +89,8 @@
             padding: 8px 15px;
             display: flex;
             align-items: center;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             border: 1px solid #e1e5eb;
         }
         
@@ -98,11 +105,12 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            padding: 20px;
+            padding: 15px;
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            margin-bottom: 20px;
         }
         
         .card-header {
@@ -110,6 +118,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .card-title {
@@ -127,7 +137,8 @@
         
         .filters {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         
         .filter-btn {
@@ -147,12 +158,14 @@
         
         .table-container {
             flex: 1;
-            overflow: auto;
+            overflow-x: auto;
+            margin-bottom: 15px;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 700px;
         }
         
         th, td {
@@ -207,6 +220,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            font-weight: 500;
         }
         
         .back-link i {
@@ -216,7 +230,9 @@
         .pagination {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         
         .page-btn {
@@ -225,7 +241,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 5px;
             border-radius: 4px;
             cursor: pointer;
             background-color: white;
@@ -237,6 +252,83 @@
             background-color: #4361ee;
             color: white;
             border-color: #4361ee;
+        }
+        
+        /* Menu toggle for mobile */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 200;
+            background: #4361ee;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                padding: 12px;
+            }
+            
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+            
+            .content {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
         }
     </style>
 </head>
@@ -265,6 +357,8 @@
             </li>
         </ul>
     </div>
+
+    <button class="menu-toggle">☰</button>
 
     <div class="content">
         <a id="facperformpage" class="back-link">
@@ -302,58 +396,55 @@
                             <th>Student Feedback</th>
                             <th>Workshops</th>
                             <th>Performance</th>
-                                   </tr>
+                        </tr>
                     </thead>
                     <tbody id="st2">
-                        <!-- student rows here -->
-                      </tbody>
+                        <!-- faculty rows here -->
+                    </tbody>
                 </table>
             </div>
             <div id="pagination" class="pagination"></div>
-
         </div>
     </div>
 
     <script>
     const urlParams = new URLSearchParams(window.location.search);
-const dept = urlParams.get('dept');
+    const dept = urlParams.get('dept');
     
-let allStudents = [];
+    let allStudents = [];
     let currentPage = 1;
     const itemsPerPage = 10;
     let searchAdded = false;
 
-function renderStudents() {
-  const start = (currentPage - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const studentsToShow = allStudents.slice(start, end);
+    function renderStudents() {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const studentsToShow = allStudents.slice(start, end);
 
-  const tbody = document.getElementById("st2");
-  tbody.innerHTML = "";
+      const tbody = document.getElementById("st2");
+      tbody.innerHTML = "";
 
-  studentsToShow.forEach(course => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${course.Staff_Code}</td>
-      <td>${course.Staff_Name}</td>
-      <td>${course.Department}</td>
-      <td>${course.Research_Papers}</td>
-      <td>${course.Student_Feedback}</td>
-      <td>${course.Workshops}</td>
-      <td>${course.Performance}</td>
-    `;
-    tbody.appendChild(row);
-  });
+      studentsToShow.forEach(course => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${course.Staff_Code}</td>
+          <td>${course.Staff_Name}</td>
+          <td>${course.Department}</td>
+          <td>${course.Research_Papers}</td>
+          <td>${course.Student_Feedback}</td>
+          <td>${course.Workshops}</td>
+          <td>${course.Performance}</td>
+        `;
+        tbody.appendChild(row);
+      });
 
-  if (!searchAdded) {
-    addSearchFunctionality();
-    searchAdded = true;
-  }
+      if (!searchAdded) {
+        addSearchFunctionality();
+        searchAdded = true;
+      }
 
-  renderPaginationControls();
-}
-
-
+      renderPaginationControls();
+    }
 
     function renderPaginationControls() {
       const totalPages = Math.ceil(allStudents.length / itemsPerPage);
@@ -383,67 +474,64 @@ function renderStudents() {
         })
         .catch(err => console.error("Error:", err));
         
+      // Mobile menu toggle
+      const menuToggle = document.querySelector('.menu-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+      }
     });
     
     function addSearchFunctionality() {
-  const searchInput = document.getElementById('searchInput');
-  searchInput.addEventListener('keyup', function () {
-    const searchTerm = searchInput.value.toLowerCase();
-    const tableRows = document.querySelectorAll('#st2 tr');
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('keyup', function () {
+        const searchTerm = searchInput.value.toLowerCase();
+        const tableRows = document.querySelectorAll('#st2 tr');
 
-    tableRows.forEach(row => {
-      const facultyName = row.cells[1].textContent.toLowerCase();
-      const facultyDept = row.cells[2].textContent.toLowerCase();
-      if (facultyName.includes(searchTerm) || facultyDept.includes(searchTerm)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
+        tableRows.forEach(row => {
+          const facultyName = row.cells[1].textContent.toLowerCase();
+          const facultyDept = row.cells[2].textContent.toLowerCase();
+          if (facultyName.includes(searchTerm) || facultyDept.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    document.getElementById("facperformpage").addEventListener("click", function (e) {
+        e.preventDefault(); // prevent default anchor behavior
+        window.location.href = `dashboard.html?dept=${dept}`;
     });
-  });
-}
-document.getElementById("facperformpage").addEventListener("click", function (e) {
-    e.preventDefault(); // prevent default anchor behavior
-    window.location.href = `dashboard.html?dept=${dept}`;
-});
 
-// document.addEventListener('DOMContentLoaded', function () {
-  
-  
-// });
+    document.getElementById('facultyMenuItem').addEventListener('click', function() {
+        window.location.href = `faculty.html?dept=${dept}`;
+    });
 
-document.getElementById('facultyMenuItem').addEventListener('click', function() {
-    // Navigate to the faculty page
-  console.log(dept);
-    window.location.href = `faculty.html?dept=${dept}`;
-});
-document.getElementById('placementMenuItem').addEventListener('click', function() {
-    // Navigate to the faculty page
-  console.log(dept);
-    window.location.href = `placement.html?dept=${dept}`;
-});
-document.getElementById('studentMenuItem').addEventListener('click', function() {
-    // Navigate to the faculty page
-  console.log(dept);
-    window.location.href = `Student.html?dept=${dept}`;
-});
+    document.getElementById('placementMenuItem').addEventListener('click', function() {
+        window.location.href = `placement.html?dept=${dept}`;
+    });
 
+    document.getElementById('studentMenuItem').addEventListener('click', function() {
+        window.location.href = `Student.html?dept=${dept}`;
+    });
 
-document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
-    // Navigate to the faculty page
-  console.log(dept);
-    window.location.href = `Attendance.html?dept=${dept}`;
-});
-document.getElementById('dash').addEventListener('click', function() {
-    // Navigate to the faculty page
-  console.log(dept);
-    window.location.href = `dashboard.html?dept=${dept}`;
-});
-document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
-    e.preventDefault(); // prevent default anchor behavior
-    window.location.href = `login.html`;
-});
+    document.getElementById('AttendanceMenuItem').addEventListener('click', function() {
+        window.location.href = `Attendance.html?dept=${dept}`;
+    });
+
+    document.getElementById('dash').addEventListener('click', function() {
+        window.location.href = `dashboard.html?dept=${dept}`;
+    });
+
+    document.getElementById("logoutMenuItem").addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.href = `login.html`;
+    });
     </script>
-   
 </body>
 </html>

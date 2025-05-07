@@ -70,8 +70,10 @@ GET http://localhost:3000/department/agri
 http://localhost:3000/studentatt1?department=agri&semester=II
 
 ### Get students with CGPA <= 5 from a specific department
-GET http://localhost:3000/excellentstudentacadamicdet/agri
+GET http://localhost:3000/performancetop3t/cse
 
+####
+GET http://localhost:3000/performancetop3/cse
 
 
 ### Get hostel data from nri1 table

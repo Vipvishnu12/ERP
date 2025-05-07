@@ -293,6 +293,28 @@
     font-weight: bold;
   }
   
+  .back-link {
+    background-color: #4f46e5; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .back-link:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05); /* Slight zoom */
+  }
+  
+  .back-link:active {
+    background-color: #3e8e41;
+    transform: scale(0.98); /* Slight shrink on click */
+  }
+
+  
   .workshop-icon {
     background-color: rgba(46, 204, 113, 0.2);
     color: #2ecc71;
@@ -416,13 +438,12 @@
   }
   td{
     padding:12px 15px;
-  }
   .data-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
   }
-  
+}
   .data-table th, .data-table td {
     padding: 12px 15px;
     text-align: left;

@@ -2,91 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Assign Work</title>
+  <title>Forgot Password - OTP</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      background: #eef1f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
+
     .container {
       background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-    input, textarea, select, button {
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    input, button {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 1em;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
     }
+
+    input {
+      border: 1px solid #ccc;
+    }
+
     button {
-      background: #4a6fdc;
+      background: #007bff;
       color: white;
       border: none;
-      cursor: pointer;
     }
+
     button:hover {
-      background: #3a5dc5;
+      background: #0056b3;
     }
+
+    .hidden { display: none; }
+
+    .msg {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Assign Work</h2>
-    <form id="assignForm">
-      <label>Assigned By:</label>
-      <input type="text" id="assignBy" required>
 
-      <label>Work Details:</label>
-      <textarea id="workDetails" rows="4" required></textarea>
+<div class="container">
+  <h2>Forgot Password</h2>
 
-      <label>Target Date:</label>
-      <input type="date" id="targetDate" required>
-
-      <label>Assign To:</label>
-      <select id="assignedTo" required>
-        <option value="all">All (One Per Duplicate Mobile)</option>
-        <!-- Add more options like specific users if needed -->
-      </select>
-
-      <button type="submit">Assign</button>
-    </form>
-
-    <p id="message" style="margin-top: 20px; font-weight: bold;"></p>
+  <div id="step1">
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <button onclick="sendOtp()">Send OTP</button>
   </div>
 
-  <script>
-    document.getElementById('assignForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
+  <div id="step2" class="hidden">
+    <input type="text" id="otp" placeholder="Enter OTP" required>
+    <input type="password" id="newPassword" placeholder="New Password" required>
+    <button onclick="verifyOtp()">Verify & Reset</button>
+  </div>
 
-      const assignBy = document.getElementById('assignBy').value;
-      const workDetails = document.getElementById('workDetails').value;
-      const targetDate = document.getElementById('targetDate').value;
-      const assignedTo = document.getElementById('assignedTo').value;
+  <div id="message" class="msg"></div>
+</div>
 
-      const response = await fetch('/work/assign', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ assignBy, workDetails, targetDate, assignedTo })
-      });
+<script>
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const message = document.getElementById('message');
 
-      const result = await response.json();
-      const messageEl = document.getElementById('message');
+  function sendOtp() {
+    const dept = document.getElementById('email').value.trim();
+    if (!dept) return showMessage("Please enter a valid email", "error");
 
-      if (response.ok) {
-        messageEl.textContent = result.message;
-        messageEl.style.color = 'green';
-      } else {
-        messageEl.textContent = result.message || result.error;
-        messageEl.style.color = 'red';
+    fetch('http://localhost:3000/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dept })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showMessage(data.message, "success");
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
       }
-    });
-  </script>
+    })
+    .catch(() => showMessage("Failed to send OTP", "error"));
+  }
+
+  function verifyOtp() {
+    const email = document.getElementById('email').value.trim();
+    const otp = document.getElementById('otp').value.trim();
+    const  newPassword = document.getElementById('newPassword').value.trim();
+console.log(email);
+console.log(otp);
+console.log(newPassword);
+
+    if (!otp || ! newPassword) return showMessage("Enter OTP and new password", "error");
+
+    fetch('http://localhost:3000/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp, newPassword })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showMessage("Password reset successful!", "success");
+        setTimeout(() => window.location.href = "login.html", 1500);
+      } else {
+        showMessage(data.message, "error");
+      }
+    })
+    .catch(() => showMessage("Error verifying OTP", "error"));
+  }
+
+  function showMessage(text, type) {
+    message.innerText = text;
+    message.className = `msg ${type}`;
+  }
+</script>
+
 </body>
 </html>

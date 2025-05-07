@@ -390,9 +390,8 @@
          function goBack() {
             window.history.back();
         }
-        
-        const regno = '23CS065';
-
+        const urlParams = new URLSearchParams(window.location.search);
+const regno = urlParams.get('regno');
         function fetchDayWiseData(dateStr, title) {
             document.getElementById('day-details-title').textContent = `Absence Details - ${title}`;
             fetch(`/studentdaywise1/${regno}/${dateStr}`)

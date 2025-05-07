@@ -59,8 +59,8 @@ app.get('/department/:dept', async (req, res) => {
         AbsentDays AS (
             SELECT sa.Reg_Number, dd.att_date
             FROM DistinctDays dd
-            CROSS JOIN (SELECT DISTINCT Reg_Number FROM Student_Attendance WHERE Class LIKE '%' + @dept + '%') sa
-            LEFT JOIN Student_Attendance a
+            CROSS JOIN (SELECT DISTINCT Reg_Number FROM Student_Subject_Hour WHERE Class LIKE '%' + @dept + '%') sa
+            LEFT JOIN Student_Subject_Hour a
               ON sa.Reg_Number = a.Reg_Number
              AND dd.att_date = a.att_date
              AND a.Class LIKE '%' + @dept + '%'
@@ -88,7 +88,7 @@ app.get('/department/:dept', async (req, res) => {
           (SELECT COUNT(*) 
            FROM (
              SELECT Reg_Number, att_date
-             FROM Student_Attendance
+             FROM Student_Subject_Hour
              WHERE Period IS NOT NULL
                AND att_date = CAST(GETDATE() AS DATE)
                AND Class LIKE '%' + @dept + '%'
@@ -766,7 +766,13 @@ app.get('/performancetop3/:dept', async (req, res) => {
       .request()
       .input('dept', sql.VarChar, dept)
       .query(`
-        SELECT TOP 3 Staff_Name, Performance, Workshops, Research_Papers
+        SELECT TOP 3 Staff_Name, 
+          Performance, 
+          Workshops,
+          Staff_Code,
+          Student_Feedback,
+          Research_Papers,
+          Department
         FROM Staff_Master
         WHERE Department = @dept
         ORDER BY Staff_Name;
@@ -1634,6 +1640,67 @@ app.post('/work/assign', async (req, res) => {
   }
 });
 
+const cors = require('cors');
+
+const nodemailer = require('nodemailer');
+
+// Middleware
+app.use(cors());
+
+
+let otpStore = {};  // In-memory store for OTPs
+
+// Create transporter with Gmail
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,  // Use email from .env
+    pass: process.env.EMAIL_PASS   // Use app password from .env
+  }
+});
+
+// POST: Send OTP
+app.post('/send-otp', (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  // Generate OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  otpStore[email] = otp;
+
+  // Send OTP via email
+  const mailOptions = {
+    from: process.env.EMAIL_USER,  // Use the email from .env
+    to: email,
+    subject: 'Your OTP Code',
+    text: `Your OTP is ${otp}`
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error('Error sending OTP email:', err); // Detailed error log
+      return res.status(500).json({ message: 'Failed to send OTP', error: err });
+    }
+    console.log('Email sent:', info.response);
+    res.json({ message: 'OTP sent successfully' });
+  });
+  
+});
+
+// POST: Verify OTP
+app.post('/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+
+  // Check if OTP exists for the provided email
+  if (otpStore[email] === otp) {
+    delete otpStore[email];  // OTP is used, remove it from store
+    res.json({ success: true, message: 'OTP verified' });
+  } else {
+    res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+});
 
 
 const PORT = 3000;

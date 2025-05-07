@@ -155,10 +155,13 @@ async function loadfacperformance() {
         data.forEach(course => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${course.Staff_Name}</td>
-                <td>${course.Research_Papers}</td>
-                <td>${course.Workshops}</td>
-                <td>${course.Performance}</td>
+                <td>${course.Staff_Code}</td>
+      <td>${course.Staff_Name}</td>
+      <td>${course.Department}</td>
+      <td>${course.Research_Papers}</td>
+      <td>${course.Student_Feedback}</td>
+      <td>${course.Workshops}</td>
+      <td>${course.Performance}</td>
                     `;
             tableBody.appendChild(row);
         });
@@ -211,9 +214,9 @@ document.getElementById("transportMenuItem").addEventListener("click", function 
     e.preventDefault(); // prevent default anchor behavior
     window.location.href = `transport.html?dept=${dept}`;
 });
-
-document.getElementById("facultyLink").href = `search.html?dept=${dept}`;
-
+document.getElementById('facultyLink').onclick = function () {
+    window.location.href = `search.html?dept=${dept}`;
+  };
 document.addEventListener('DOMContentLoaded', async function () {
     // ✅ Fetch and process student academic data
     try {

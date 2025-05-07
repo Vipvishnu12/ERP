@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enhanced HOD Dashboard</title>
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="dash.css" />
     <style>
      
@@ -400,7 +400,10 @@
     <div class="main-content">
       <div class="header">
         <h1>Department Dashboard</h1>
-        <a id="facultyLink" class="back-link">Search</a>
+        <button id="facultyLink" class="back-link">
+          <i class="fas fa-search"></i> Search
+        </button>
+
       </div>
 
       <!-- Stats Cards -->
@@ -512,17 +515,17 @@
             <div class="performance-title">Faculty Performance</div>
           </div>
 
-          <table id="facultyTable">
+          <table id="facultyTable"  class="course-table">
             <thead>
               <tr>
-                <!-- <th>Faculty ID</th> -->
+                <th>Faculty ID</th>
                 <th>Name</th>
-                <!-- <th>Department</th> -->
+                <th>Department</th>
                 <th>Research Papers</th>
-                <!-- <th>Student Feedback</th> -->
+                <th>Student Feedback</th>
                 <th>Workshops</th>
                 <th>Performance</th>
-                <!-- <th>Action</th> -->
+            
               </tr>
             </thead>
             <tbody id="datacontainer"></tbody>
